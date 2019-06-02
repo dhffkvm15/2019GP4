@@ -1,1 +1,1 @@
-include ':app'
+include ':app', ':OpenVokaturi-3-0-android'
