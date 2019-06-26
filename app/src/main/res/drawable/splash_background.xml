@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <!-- TODO 스플래시 배경색 변경 -->
+    <item
+        android:drawable="@color/colorPrimary"/>
+
+    <item
+        android:width="200dp"
+        android:height="200dp"
+        android:gravity="center">
+        <bitmap
+            android:src="@drawable/logo"
+            android:gravity="fill_horizontal|fill_vertical" />
+    </item>
+</layer-list>

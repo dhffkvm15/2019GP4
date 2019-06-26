@@ -1,6 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="colorPrimary">#008577</color>
+    <color name="colorPrimary">#000000</color>
     <color name="colorPrimaryDark">#00574B</color>
     <color name="colorAccent">#D81B60</color>
+
+    <!-- TODO 향 이름 바꾸기 -->
+    <color name = "A">#FF9232CC</color>
+    <color name = "B">#FFADC8E6</color>
+    <color name = "C">#FFF08080</color>
+    <color name = "D">#FFFFB6C1</color>
+    <color name = "E">#FFFFFF00</color>
+    <color name = "F">#FFFF0000</color>
+
 </resources>

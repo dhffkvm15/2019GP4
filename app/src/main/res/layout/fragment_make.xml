@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="커스터 마이징"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="50dp"/>
+
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/fragment_make_line1"
+        android:layout_marginTop="150dp"
+        android:orientation="horizontal">
+
+        <Button
+            android:layout_width="120dp"
+            android:layout_height="120dp"
+            android:id="@+id/fragment_make_button1"
+            android:background="@drawable/circlebutton"
+            android:layout_marginLeft="15dp"
+            android:text="z"
+            android:textColor="#FFFFFF"
+            />
+
+        <Button
+            android:layout_width="120dp"
+            android:layout_height="120dp"
+            android:id="@+id/fragment_make_button2"
+            android:background="@drawable/circlebutton"
+            android:layout_marginLeft="10dp"
+            android:text="z"
+            android:textColor="#FFFFFF"/>
+
+        <Button
+            android:layout_width="120dp"
+            android:layout_height="120dp"
+            android:id="@+id/fragment_make_button3"
+            android:background="@drawable/circlebutton"
+            android:layout_marginLeft="10dp"
+            android:text="z"
+            android:textColor="#FFFFFF"/>
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/fragment_make_line1"
+        android:id="@+id/fragment_make_line2"
+        android:layout_marginTop="30dp"
+        android:orientation="horizontal"
+        android:textColor="#FFFFFF">
+
+        <Button
+            android:layout_width="120dp"
+            android:layout_height="120dp"
+            android:id="@+id/fragment_make_button4"
+            android:background="@drawable/circlebutton"
+            android:layout_marginLeft="15dp"
+            android:text="z"
+            android:textColor="#FFFFFF"/>
+
+        <Button
+            android:layout_width="120dp"
+            android:layout_height="120dp"
+            android:id="@+id/fragment_make_button5"
+            android:background="@drawable/circlebutton"
+            android:layout_marginLeft="10dp"
+            android:text="z"
+            android:textColor="#FFFFFF"/>
+
+        <Button
+            android:layout_width="120dp"
+            android:layout_height="120dp"
+            android:id="@+id/fragment_make_button6"
+            android:background="@drawable/circlebutton"
+            android:layout_marginLeft="10dp"
+            android:text="z"
+            android:textColor="#FFFFFF"/>
+
+    </LinearLayout>
+
+</RelativeLayout>
