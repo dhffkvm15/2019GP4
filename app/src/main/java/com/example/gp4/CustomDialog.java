@@ -2,6 +2,7 @@ package com.example.gp4;
 
 import android.app.Dialog;
 import android.content.Context;
+import android.graphics.Color;
 import android.graphics.PorterDuff;
 import android.graphics.drawable.Drawable;
 import android.view.View;
@@ -10,6 +11,7 @@ import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.Spinner;
 
+/* 카트리지에 향 종류를 입력하는 다이얼 로그 */
 class CustomDialog {
     private Context context;
     private int num;
@@ -49,62 +51,41 @@ class CustomDialog {
             @Override
             public void onClick(View v) {
                 String[] tmpScent = context.getResources().getStringArray(R.array.scentname);
+                String[] scentColor = context.getResources().getStringArray(R.array.scentcolor); // 컬러 색상 가져오기
 
                 button.setText(tmpScent[num].toString()); // 버튼 텍스트 변경
 
                 Drawable drawable = context.getResources().getDrawable(R.drawable.circlebutton);
 
                  //todo 향 이름 변경하기 및 색상 변경하기
+                // 향 이름에 따라 버튼 색상 변경
+                String tmpColor = "#FF";
                 switch (tmpScent[num].toString()){
                     case "A":
-                        drawable.setColorFilter(0xFF9232CC, PorterDuff.Mode.SRC_ATOP);
-                        if(android.os.Build.VERSION.SDK_INT < android.os.Build.VERSION_CODES.JELLY_BEAN) {
-                            button.setBackgroundDrawable(drawable);
-                        } else {
-                            button.setBackground(drawable);
-                        }
+                        tmpColor += scentColor[0];
                         break;
                     case "B":
-                        drawable.setColorFilter(0xFFADC8E6, PorterDuff.Mode.SRC_ATOP);
-                        if(android.os.Build.VERSION.SDK_INT < android.os.Build.VERSION_CODES.JELLY_BEAN) {
-                            button.setBackgroundDrawable(drawable);
-                        } else {
-                            button.setBackground(drawable);
-                        }
+                        tmpColor += scentColor[1];
                         break;
                     case "C":
-                        drawable.setColorFilter(0xFFF08080, PorterDuff.Mode.SRC_ATOP);
-                        if(android.os.Build.VERSION.SDK_INT < android.os.Build.VERSION_CODES.JELLY_BEAN) {
-                            button.setBackgroundDrawable(drawable);
-                        } else {
-                            button.setBackground(drawable);
-                        }
+                        tmpColor += scentColor[2];
                         break;
                     case "D":
-                        drawable.setColorFilter(0xFFFFB6C1, PorterDuff.Mode.SRC_ATOP);
-                        if(android.os.Build.VERSION.SDK_INT < android.os.Build.VERSION_CODES.JELLY_BEAN) {
-                            button.setBackgroundDrawable(drawable);
-                        } else {
-                            button.setBackground(drawable);
-                        }
+                        tmpColor += scentColor[3];
                         break;
                     case "E":
-                        drawable.setColorFilter(0xFFFFFF00, PorterDuff.Mode.SRC_ATOP);
-                        if(android.os.Build.VERSION.SDK_INT < android.os.Build.VERSION_CODES.JELLY_BEAN) {
-                            button.setBackgroundDrawable(drawable);
-                        } else {
-                            button.setBackground(drawable);
-                        }
+                        tmpColor += scentColor[4];
                         break;
                     case "F":
-                        drawable.setColorFilter(0xFFFF0000, PorterDuff.Mode.SRC_ATOP);
-                        if(android.os.Build.VERSION.SDK_INT < android.os.Build.VERSION_CODES.JELLY_BEAN) {
-                            button.setBackgroundDrawable(drawable);
-                        } else {
-                            button.setBackground(drawable);
-                        }
+                        tmpColor += scentColor[5];
                         break;
 
+                }
+                drawable.setColorFilter(Color.parseColor(tmpColor), PorterDuff.Mode.SRC_ATOP);
+                if(android.os.Build.VERSION.SDK_INT < android.os.Build.VERSION_CODES.JELLY_BEAN) {
+                    button.setBackgroundDrawable(drawable);
+                } else {
+                    button.setBackground(drawable);
                 }
                 dialog.dismiss(); // 다이얼로그 종료
             }

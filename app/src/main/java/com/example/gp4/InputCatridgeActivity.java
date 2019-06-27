@@ -10,6 +10,9 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.Toast;
 
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+
 import org.json.JSONArray;
 
 import java.util.ArrayList;
@@ -52,32 +55,34 @@ public class InputCatridgeActivity extends AppCompatActivity {
         register = (Button)findViewById(R.id.input_catridge_register_button);
     }
 
-    // 확인 버튼 클릭 시
+    // 확인(register) 버튼 클릭 시
     public void OKregister(View view) {
-        ArrayList<String> arrayList = new ArrayList<String>();
-        arrayList.add(button1.getText().toString());
-        arrayList.add(button2.getText().toString());
-        arrayList.add(button3.getText().toString());
-        arrayList.add(button4.getText().toString());
-        arrayList.add(button5.getText().toString());
-        arrayList.add(button6.getText().toString()); // arrayList 배열에 각각 설정한 향 이름 넣기
-
-        if(arrayList.get(0).equals("z") || arrayList.get(1).equals("z") || arrayList.get(2).equals("z")
-        || arrayList.get(3).equals("z") || arrayList.get(4).equals("z") || arrayList.get(5).equals("z")){ // 선택 안 한 창이 있으면
+        if( button1.getText().toString().equals("z") || button2.getText().toString().equals("z") || button3.getText().toString().equals("z")
+        || button4.getText().toString().equals("z") || button5.getText().toString().equals("z") || button6.getText().toString().equals("z")){
+            // 선택 안 한 창이 있으면
             Toast.makeText(getApplicationContext(), "빈 칸이 있습니다.", Toast.LENGTH_LONG).show();
         }else{
-            JSONArray jsonArray = new JSONArray();
-            for(int i=0; i<arrayList.size(); i++){
-                jsonArray.put(arrayList.get(i));
-            }
+            FirebaseDatabase firebaseDatabase = FirebaseDatabase.getInstance(); // 파이어베이스 불러오기
+            DatabaseReference databaseReference = firebaseDatabase.getReference("catridge");
+            DatabaseReference pushReference = databaseReference.push();
+            pushReference.child("1").setValue(new CatridgeInfo(button1.getText().toString(), 100));
+            pushReference.child("2").setValue(new CatridgeInfo(button2.getText().toString(), 100));
+            pushReference.child("3").setValue(new CatridgeInfo(button3.getText().toString(), 100));
+            pushReference.child("4").setValue(new CatridgeInfo(button4.getText().toString(), 100));
+            pushReference.child("5").setValue(new CatridgeInfo(button5.getText().toString(), 100));
+            pushReference.child("6").setValue(new CatridgeInfo(button6.getText().toString(), 100));
+
+            String pushId = pushReference.getKey(); // key 값 가져오기
+            Log.v("태그", "푸시아이디 확인 : " + pushId);
+
             SharedPreferences sharedPreferences = getSharedPreferences("UserInfo", MODE_PRIVATE);
             SharedPreferences.Editor editor = sharedPreferences.edit();
-            editor.putString("scent", jsonArray.toString());
-            editor.commit(); // 저장 완료
+            editor.putString("pushID", pushId);
+            editor.commit(); // pushId 내부저장소에 저장 완료
 
             startActivity(new Intent(this, MainActivity.class));
-
         }
+
     }
 
     class BtnOnClickListener implements Button.OnClickListener {
@@ -110,3 +115,30 @@ public class InputCatridgeActivity extends AppCompatActivity {
     }
 
 }
+
+
+// 내부저장소에 카트리지 정보 저장하기
+//        ArrayList<String> arrayList = new ArrayList<String>();
+//            arrayList.add(button1.getText().toString());
+//            arrayList.add(button2.getText().toString());
+//            arrayList.add(button3.getText().toString());
+//            arrayList.add(button4.getText().toString());
+//            arrayList.add(button5.getText().toString());
+//            arrayList.add(button6.getText().toString()); // arrayList 배열에 각각 설정한 향 이름 넣기
+//
+//            if(arrayList.get(0).equals("z") || arrayList.get(1).equals("z") || arrayList.get(2).equals("z")
+//                    || arrayList.get(3).equals("z") || arrayList.get(4).equals("z") || arrayList.get(5).equals("z")){ // 선택 안 한 창이 있으면
+//                Toast.makeText(getApplicationContext(), "빈 칸이 있습니다.", Toast.LENGTH_LONG).show();
+//            }else{
+//            JSONArray jsonArray = new JSONArray();
+//            for(int i=0; i<arrayList.size(); i++){
+//                jsonArray.put(arrayList.get(i));
+//            }
+//            SharedPreferences sharedPreferences = getSharedPreferences("UserInfo", MODE_PRIVATE);
+//            SharedPreferences.Editor editor = sharedPreferences.edit();
+//            editor.putString("scent", jsonArray.toString());
+//            editor.commit(); // 저장 완료
+//
+//            startActivity(new Intent(this, MainActivity.class));
+//
+//        }

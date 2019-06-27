@@ -35,7 +35,6 @@
             android:layout_width="150dp"
             android:layout_height="30dp"
             android:layout_marginLeft="20dp"
-            android:layout_marginTop="8dp"
             android:inputType="text"/>
 
     </LinearLayout>
@@ -98,7 +97,6 @@
             android:layout_width="150dp"
             android:layout_height="30dp"
             android:layout_marginLeft="50dp"
-            android:layout_marginTop="8dp"
             android:inputType="number"/>
 
     </LinearLayout>

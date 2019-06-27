@@ -17,7 +17,7 @@ import com.google.gson.GsonBuilder;
 
 import java.util.UUID;
 
-// 이름, 성별, 연령 입력 받기
+// 사용자 정보 (이름, 성별, 연령) 입력 받기
 public class RegisterActivity extends AppCompatActivity {
 
     private EditText editTextName;
