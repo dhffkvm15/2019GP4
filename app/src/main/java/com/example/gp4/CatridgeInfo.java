@@ -1,7 +1,9 @@
 package com.example.gp4;
 
+import java.io.Serializable;
+
 /* 사용자가 가지고 있는 카트리지 정보 (향 종류, 잔량)을 저장하기 위한 클래스 - 파이어베이스에 저장 */
-public class CatridgeInfo {
+public class CatridgeInfo implements Serializable {
     String name; // 향 종류
     int rest; // 잔량 - 단위 %
 

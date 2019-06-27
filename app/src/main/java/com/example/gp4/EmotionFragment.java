@@ -10,6 +10,10 @@ import android.view.ViewGroup;
 
 public class EmotionFragment extends Fragment {
 
+    public static EmotionFragment newInstance(){
+        return new EmotionFragment();
+    }
+
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {

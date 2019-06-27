@@ -17,6 +17,7 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.SeekBar;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -50,6 +51,10 @@ public class MakeFragment extends Fragment {
     private SeekBar seekBar4;
     private SeekBar seekBar5;
     private SeekBar seekBar6;
+    private SeekBar timeSeekBar;
+
+    private int time = 120; // 동작 시간을 저장할 변수
+    private TextView timeView;
 
     private CatridgeInfo[] catridgeInfos = {};
     private CatridgeInfo catridgeInfo1 = new CatridgeInfo("", 3);
@@ -60,6 +65,11 @@ public class MakeFragment extends Fragment {
     private CatridgeInfo catridgeInfo6 = new CatridgeInfo("", 3);
 
     private Button turnon;
+
+    public static MakeFragment newInstance(){
+        return new MakeFragment();
+    }
+
 
     @Nullable
     @Override
@@ -98,22 +108,67 @@ public class MakeFragment extends Fragment {
         seekBar5.setOnSeekBarChangeListener(sbcListener);
         seekBar6 = (SeekBar) viewGroup.findViewById(R.id.make_fragment_seekbar6);
         seekBar6.setOnSeekBarChangeListener(sbcListener);
+        timeSeekBar = (SeekBar) viewGroup.findViewById(R.id.make_fragment_seekbar_time);
+        timeView = (TextView) viewGroup.findViewById(R.id.make_fragment_textview_time);
 
         turnon = (Button) viewGroup.findViewById(R.id.make_fragment_turnon_button);
 
         settingButton(); // 각 향의 종류, 잔량 등을 표시해주는 함수
 
+        // 시간 설정하는 시크바 작동시킬 때
+        timeSeekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+            @Override
+            public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
+                time = progress;
+                timeView.setText(String.valueOf(time) + "분");
+            }
+
+            @Override
+            public void onStartTrackingTouch(SeekBar seekBar) {
+
+            }
+
+            @Override
+            public void onStopTrackingTouch(SeekBar seekBar) {
+
+            }
+        });
+
         // 동작 버튼 눌렀을 때
         turnon.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Log.v("태그", "태그 확인 동작 버튼 누름");
-                Log.v("태그", "1번째 향 정보 : " +catridgeInfo1.getName() +" " + catridgeInfo1.getRest());
-                Log.v("태그", "2번째 향 정보 : " +catridgeInfo2.getName() +" " + catridgeInfo2.getRest());
-                Log.v("태그", "3번째 향 정보 : " +catridgeInfo3.getName() +" " + catridgeInfo3.getRest());
-                Log.v("태그", "4번째 향 정보 : " +catridgeInfo4.getName() +" " + catridgeInfo4.getRest());
-                Log.v("태그", "5번째 향 정보 : " +catridgeInfo5.getName() +" " + catridgeInfo5.getRest());
-                Log.v("태그", "6번째 향 정보 : " +catridgeInfo6.getName() +" " + catridgeInfo6.getRest());
+
+                boolean bool = true;
+
+                if(time == 0){
+                    bool = false;
+                    Toast.makeText(getContext(), "시간 설정이 잘못되었습니다.", Toast.LENGTH_LONG).show();
+                }
+
+                if( bool == true && catridgeInfo1.getRest() == 0 && catridgeInfo2.getRest() == 0 && catridgeInfo3.getRest() ==0
+                        && catridgeInfo4.getRest() == 0 && catridgeInfo5.getRest() == 0 && catridgeInfo6.getRest() == 0 ){
+                    bool = false;
+                    Toast.makeText(getContext(), "카트리지가 모두 닫혀있습니다.", Toast.LENGTH_LONG).show();
+                }
+
+                // 동작시켜야 할 때
+                if(bool){
+                    Log.v("태그", "태그 확인 동작 버튼 누름");
+
+                    Fragment turnonfragment = new TurnonFragment();
+                    Bundle bundle = new Bundle();
+                    bundle.putSerializable("obj1", catridgeInfo1);
+                    bundle.putSerializable("obj2", catridgeInfo2);
+                    bundle.putSerializable("obj3", catridgeInfo3);
+                    bundle.putSerializable("obj4", catridgeInfo4);
+                    bundle.putSerializable("obj5", catridgeInfo5);
+                    bundle.putSerializable("obj6", catridgeInfo6);
+                    bundle.putInt("time", time);
+                    turnonfragment.setArguments(bundle);
+
+                    ((MainActivity)getActivity()).replaceFragment(turnonfragment);
+                }
 
             }
         });
@@ -226,7 +281,7 @@ public class MakeFragment extends Fragment {
         return string;
     }
 
-    // 시크바 동작할 때
+    // 향 비율 조정하는 시크바 동작할 때
     public class SBCListener implements SeekBar.OnSeekBarChangeListener{
         @Override
         public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {

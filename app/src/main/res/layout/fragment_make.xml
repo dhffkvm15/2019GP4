@@ -245,12 +245,29 @@
 
     </LinearLayout>
 
+    <SeekBar
+        android:layout_width="match_parent"
+        android:layout_height="20dp"
+        android:layout_below="@id/fragment_make_line2"
+        android:layout_margin="5dp"
+        android:id="@+id/make_fragment_seekbar_time"
+        android:max="120"
+        android:progress="120" />
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="120분"
+        android:gravity="center"
+        android:layout_below="@id/make_fragment_seekbar_time"
+        android:id="@+id/make_fragment_textview_time"/>
+
     <Button
         android:layout_width="100dp"
         android:layout_height="50dp"
         android:id="@+id/make_fragment_turnon_button"
         android:text="동작"
-        android:layout_below="@id/fragment_make_line2"
+        android:layout_below="@id/make_fragment_textview_time"
         android:layout_marginTop="5dp"
         android:layout_centerHorizontal="true" />
 
