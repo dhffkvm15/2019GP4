@@ -154,7 +154,7 @@ public class MakeFragment extends Fragment {
 
                 // 동작시켜야 할 때
                 if(bool){
-                    Log.v("태그", "태그 확인 동작 버튼 누름");
+                    //Log.v("태그", "태그 확인 동작 버튼 누름");
 
                     Fragment turnonfragment = new TurnonFragment();
                     Bundle bundle = new Bundle();
