@@ -92,24 +92,91 @@ public class InputCatridgeActivity extends AppCompatActivity {
         @Override
         public void onClick(View v) {
            CustomDialog customDialog = new CustomDialog(InputCatridgeActivity.this);
+            final String[] tmpName = new String[1];
             switch (v.getId()){
                 case R.id.input_catridge_button1:
                     customDialog.callFunction(button1);
+                    customDialog.setDialogListener(new CustomDialog.CustomDialogListener() {
+                        @Override
+                        public void onPositiveClicked(String name) {
+                            tmpName[0] = name;
+                        }
+
+                        @Override
+                        public void onNegativeClicked() {
+
+                        }
+                    });
                     break;
                 case R.id.input_catridge_button2 :
                     customDialog.callFunction(button2);
+                    customDialog.setDialogListener(new CustomDialog.CustomDialogListener() {
+                        @Override
+                        public void onPositiveClicked(String name) {
+                            tmpName[0] = name;
+                        }
+
+                        @Override
+                        public void onNegativeClicked() {
+
+                        }
+                    });
                     break;
                 case R.id.input_catridge_button3 :
                     customDialog.callFunction(button3);
+                    customDialog.setDialogListener(new CustomDialog.CustomDialogListener() {
+                        @Override
+                        public void onPositiveClicked(String name) {
+                            tmpName[0] = name;
+                        }
+
+                        @Override
+                        public void onNegativeClicked() {
+
+                        }
+                    });
                     break;
                 case R.id.input_catridge_button4 :
                     customDialog.callFunction(button4);
+                    customDialog.setDialogListener(new CustomDialog.CustomDialogListener() {
+                        @Override
+                        public void onPositiveClicked(String name) {
+                            tmpName[0] = name;
+                        }
+
+                        @Override
+                        public void onNegativeClicked() {
+
+                        }
+                    });
                     break;
                 case R.id.input_catridge_button5 :
-                    customDialog.callFunction(button5);
+                   customDialog.callFunction(button5);
+                    customDialog.setDialogListener(new CustomDialog.CustomDialogListener() {
+                        @Override
+                        public void onPositiveClicked(String name) {
+                            tmpName[0] = name;
+                        }
+
+                        @Override
+                        public void onNegativeClicked() {
+
+                        }
+                    });
                     break;
                 case R.id.input_catridge_button6 :
                     customDialog.callFunction(button6);
+                    customDialog.setDialogListener(new CustomDialog.CustomDialogListener() {
+                        @Override
+                        public void onPositiveClicked(String name) {
+                            tmpName[0] = name;
+                        }
+
+                        @Override
+                        public void onNegativeClicked() {
+
+                        }
+                    });
                     break;
 
             }

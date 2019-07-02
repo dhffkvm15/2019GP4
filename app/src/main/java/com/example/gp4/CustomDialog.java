@@ -16,10 +16,21 @@ class CustomDialog {
     private Context context;
     private int num;
 
+    private CustomDialogListener customDialogListener;
+
 
     public CustomDialog(Context context){
         this.context = context;
         num = -1;
+    }
+
+    interface CustomDialogListener{
+        void onPositiveClicked(String name);
+        void onNegativeClicked();
+    }
+
+    public void setDialogListener(CustomDialogListener customDialogListener){
+        this.customDialogListener = customDialogListener;
     }
 
     public void callFunction(final Button button){
@@ -89,8 +100,9 @@ class CustomDialog {
                 } else {
                     button.setBackground(drawable);
                 }
-                dialog.dismiss(); // 다이얼로그 종료
 
+                customDialogListener.onPositiveClicked(tmpScent[num].toString()); // 값 전달
+                dialog.dismiss(); // 다이얼로그 종료
             }
         });
 

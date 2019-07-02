@@ -74,6 +74,7 @@ public class MakeFragment extends Fragment {
         return new MakeFragment();
     }
 
+    private android.content.res.Resources resources;
 
     @Nullable
     @Override
@@ -81,22 +82,24 @@ public class MakeFragment extends Fragment {
 
         ViewGroup viewGroup = (ViewGroup) inflater.inflate(R.layout.fragment_make, container, false);
 
+        resources = getActivity().getResources();
+
         SharedPreferences sharedPreferences = this.getActivity().getSharedPreferences("UserInfo", Context.MODE_PRIVATE);
         pushId = sharedPreferences.getString("pushID", ""); // 저장되어 있는 pushId 불러오기
 
-       // ButtonOnclick buttonOnclick = new ButtonOnclick();
+        ButtonOnclick buttonOnclick = new ButtonOnclick();
         button1 = (Button) viewGroup.findViewById(R.id.fragment_make_button1);
-        //button1.setOnClickListener(buttonOnclick);
+        button1.setOnClickListener(buttonOnclick);
         button2 = (Button) viewGroup.findViewById(R.id.fragment_make_button2);
-        //button2.setOnClickListener(buttonOnclick);
+        button2.setOnClickListener(buttonOnclick);
         button3 = (Button) viewGroup.findViewById(R.id.fragment_make_button3);
-        //button3.setOnClickListener(buttonOnclick);
+        button3.setOnClickListener(buttonOnclick);
         button4 = (Button) viewGroup.findViewById(R.id.fragment_make_button4);
-        //button4.setOnClickListener(buttonOnclick);
+        button4.setOnClickListener(buttonOnclick);
         button5 = (Button) viewGroup.findViewById(R.id.fragment_make_button5);
-        //button5.setOnClickListener(buttonOnclick);
+        button5.setOnClickListener(buttonOnclick);
         button6 = (Button) viewGroup.findViewById(R.id.fragment_make_button6);
-        //button6.setOnClickListener(buttonOnclick);
+        button6.setOnClickListener(buttonOnclick);
         buttons = new Button[]{button1, button2, button3, button4, button5, button6};
 
         textView1 = (TextView) viewGroup.findViewById(R.id.make_fragment_textview1);
@@ -213,6 +216,9 @@ public class MakeFragment extends Fragment {
                 @SuppressLint("Range")
                 @Override
                 public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                    datas.clear();
+                    rest.clear();
+
                     for(DataSnapshot snapshot : dataSnapshot.getChildren()){
                         CatridgeInfo catridgeInfo = snapshot.getValue(CatridgeInfo.class);
                         datas.add(catridgeInfo.getName());
@@ -228,11 +234,14 @@ public class MakeFragment extends Fragment {
 
                         textViews[i].setText(rest.get(i) + "%"); // 현재 남아 있는 잔량 표시하기
 
+                        seekBars[i].setProgress(3);
+                        seekBars[i].setEnabled(true); // 초기화
+
                         if(rest.get(i) == 0){ // 잔량이 없을 경우
                             seekBars[i].setProgress(0); // 0으로 프로그레스 바 이동
                             seekBars[i].setEnabled(false); // 못 움직이도록
                             catridgeInfos[i].setRest(0);
-                             }
+                        }
 
                         buttons[i].setText(datas.get(i)); // 버튼에 향 종류 표시
 
@@ -257,7 +266,8 @@ public class MakeFragment extends Fragment {
                                 break;
 
                         }
-                        drawable = getContext().getResources().getDrawable(R.drawable.circlebutton2);
+                        drawable = resources.getDrawable(R.drawable.circlebutton2);
+                       // drawable = getActivity().getResources().getDrawable(R.drawable.circlebutton2);
                         drawable.setColorFilter(Color.parseColor(tmpColor), PorterDuff.Mode.SRC_ATOP);
                         if(android.os.Build.VERSION.SDK_INT < android.os.Build.VERSION_CODES.JELLY_BEAN) {
                             buttons[i].setBackgroundDrawable(drawable);
@@ -344,71 +354,120 @@ public class MakeFragment extends Fragment {
     }
 
     // 카트리지 향 클릭 할 때, 카트리지 정보 교체
-//    class ButtonOnclick implements Button.OnClickListener{
-//
-//        @Override
-//        public void onClick(View v) {
-//            YesNoDialog yesNoDialog = new YesNoDialog(getActivity());
-//            CustomDialog customDialog = new CustomDialog(getActivity());
-//
-//            // 향의 종류를 새 것으로 바꿀 때에는
-//            if( yesNoDialog.callFunction() == 1){
-//                Map<String, Object> map = new HashMap<String, Object>();
-//                switch (v.getId()){
-//                    case R.id.fragment_make_button1 :
-//                        customDialog.callFunction(button1);
-//                        map.put("1", new CatridgeInfo(buttons[0].getText().toString(), 100));
-//
-//                        FirebaseDatabase.getInstance().getReference("catridge").child(pushId)
-//                                    .updateChildren(map);
-//
-//                        break;
-//                    case R.id.fragment_make_button2 :
-//                        customDialog.callFunction(button2);
-//                        map.put("2", new CatridgeInfo(buttons[1].getText().toString(), 100));
-//
-//                        FirebaseDatabase.getInstance().getReference("catridge").child(pushId)
-//                                    .updateChildren(map);
-//                        break;
-//                    case R.id.fragment_make_button3 :
-//                        customDialog.callFunction(button3);
-//                            map.put("3", new CatridgeInfo(buttons[2].getText().toString(), 100));
-//
-//                            FirebaseDatabase.getInstance().getReference("catridge").child(pushId)
-//                                    .updateChildren(map);
-//                        break;
-//                    case R.id.fragment_make_button4 :
-//                        customDialog.callFunction(button4);
-//                            map.put("4", new CatridgeInfo(buttons[3].getText().toString(), 100));
-//
-//                            FirebaseDatabase.getInstance().getReference("catridge").child(pushId)
-//                                    .updateChildren(map);
-//                        break;
-//                    case R.id.fragment_make_button5 :
-//                        customDialog.callFunction(button5);
-//                            map.put("5", new CatridgeInfo(buttons[4].getText().toString(), 100));
-//
-//                            FirebaseDatabase.getInstance().getReference("catridge").child(pushId)
-//                                    .updateChildren(map);
-//                        break;
-//                    case R.id.fragment_make_button6 :
-//                       customDialog.callFunction(button6);
-//                            map.put("6", new CatridgeInfo(buttons[5].getText().toString(), 100));
-//
-//                            FirebaseDatabase.getInstance().getReference("catridge").child(pushId)
-//                                    .updateChildren(map);
-//                        break;
-//
-//                }
-//
-//            }else{ // 향의 종류를 그대로 가지고 있을 때
-//
-//            }
-//
-//
-//
-//        }
-//    }
+    class ButtonOnclick implements Button.OnClickListener{
+
+        Map<String, Object> taskMap = new HashMap<String, Object>();
+        CatridgeInfo catridgeInfo = new CatridgeInfo();
+        @Override
+        public void onClick(View v) {
+            CustomDialog customDialog = new CustomDialog(getActivity());
+            switch (v.getId()){
+                case R.id.fragment_make_button1:
+                    customDialog.callFunction(button1);
+                    customDialog.setDialogListener(new CustomDialog.CustomDialogListener() {
+                        @Override
+                        public void onPositiveClicked(String name) {
+                            catridgeInfo = new CatridgeInfo(name, 100);
+                            taskMap.put("1", catridgeInfo);
+                            FirebaseDatabase.getInstance().getReference("catridge").child(pushId).updateChildren(taskMap);
+                        }
+
+                        @Override
+                        public void onNegativeClicked() {
+
+                        }
+                    });
+
+                    break;
+                case R.id.fragment_make_button2 :
+                    customDialog.callFunction(button2);
+                    customDialog.setDialogListener(new CustomDialog.CustomDialogListener() {
+                        @Override
+                        public void onPositiveClicked(String name) {
+                            catridgeInfo = new CatridgeInfo(name, 100);
+                            taskMap.put("2", catridgeInfo);
+                            FirebaseDatabase.getInstance().getReference("catridge").child(pushId).updateChildren(taskMap);
+                        }
+
+                        @Override
+                        public void onNegativeClicked() {
+
+                        }
+                    });
+                    break;
+                case R.id.fragment_make_button3 :
+                    customDialog.callFunction(button3);
+                    customDialog.setDialogListener(new CustomDialog.CustomDialogListener() {
+                        @Override
+                        public void onPositiveClicked(String name) {
+                            catridgeInfo = new CatridgeInfo(name, 100);
+                            taskMap.put("3", catridgeInfo);
+                            FirebaseDatabase.getInstance().getReference("catridge").child(pushId).updateChildren(taskMap);
+                        }
+
+                        @Override
+                        public void onNegativeClicked() {
+
+                        }
+                    });
+
+                    break;
+                case R.id.fragment_make_button4 :
+                       customDialog.callFunction(button4);
+                    customDialog.setDialogListener(new CustomDialog.CustomDialogListener() {
+                        @Override
+                        public void onPositiveClicked(String name) {
+                            catridgeInfo = new CatridgeInfo(name, 100);
+                            taskMap.put("4", catridgeInfo);
+                            FirebaseDatabase.getInstance().getReference("catridge").child(pushId).updateChildren(taskMap);
+                        }
+
+                        @Override
+                        public void onNegativeClicked() {
+
+                        }
+                    });
+                    break;
+                case R.id.fragment_make_button5 :
+                    customDialog.callFunction(button5) ;
+                    customDialog.setDialogListener(new CustomDialog.CustomDialogListener() {
+                        @Override
+                        public void onPositiveClicked(String name) {
+                            catridgeInfo = new CatridgeInfo(name, 100);
+                            taskMap.put("5", catridgeInfo);
+                            FirebaseDatabase.getInstance().getReference("catridge").child(pushId).updateChildren(taskMap);
+                        }
+
+                        @Override
+                        public void onNegativeClicked() {
+
+                        }
+                    });
+
+                    break;
+                case R.id.fragment_make_button6 :
+                    customDialog.callFunction(button6);
+                    customDialog.setDialogListener(new CustomDialog.CustomDialogListener() {
+                        @Override
+                        public void onPositiveClicked(String name) {
+                            catridgeInfo = new CatridgeInfo(name, 100);
+                            taskMap.put("6", catridgeInfo);
+                            FirebaseDatabase.getInstance().getReference("catridge").child(pushId).updateChildren(taskMap);
+                        }
+
+                        @Override
+                        public void onNegativeClicked() {
+
+                        }
+                    });
+                    break;
+            }
+
+
+        }
+    }
+
+
 }
 
 // 내부 저장소 사용시 settingButton 함수 else 문 안

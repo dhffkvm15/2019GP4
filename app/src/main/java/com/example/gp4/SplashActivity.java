@@ -24,10 +24,10 @@ public class SplashActivity extends Activity {
 
         SharedPreferences sharedPreferences = getSharedPreferences("UserInfo", MODE_PRIVATE);
         //정보 삭제를 위한 코드
-//        SharedPreferences.Editor editor = sharedPreferences.edit();
-//        editor.clear();
-//        editor.commit();
-//        Log.v("확인", "정보 삭제 확인"); // 여기까지 정보 삭제 코드
+    //        SharedPreferences.Editor editor = sharedPreferences.edit();
+    //        editor.clear();
+    //        editor.commit();
+    //        Log.v("확인", "정보 삭제 확인"); // 여기까지 정보 삭제 코드
 
         String tmpInfo = sharedPreferences.getString("Info", ""); // UserInfo 파일에서 Info에 저장되어 있는 값 불러오기
         String tmpId = sharedPreferences.getString("pushID", ""); // UserInfo 파일에서 pushID 값 불러오기
