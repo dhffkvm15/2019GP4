@@ -16,6 +16,7 @@ class CustomDialog {
     private Context context;
     private int num;
 
+
     public CustomDialog(Context context){
         this.context = context;
         num = -1;
@@ -24,6 +25,7 @@ class CustomDialog {
     public void callFunction(final Button button){
         final Dialog dialog = new Dialog(context);
         dialog.requestWindowFeature(Window.FEATURE_NO_TITLE); // 타이틀 바 없애기
+        dialog.setCancelable(false); // 백버튼 막기
         dialog.setContentView(R.layout.custom_dialog);
         dialog.show(); // 다이얼로그 보여주기
 
@@ -88,6 +90,7 @@ class CustomDialog {
                     button.setBackground(drawable);
                 }
                 dialog.dismiss(); // 다이얼로그 종료
+
             }
         });
 
@@ -98,6 +101,7 @@ class CustomDialog {
                 dialog.dismiss(); // 다이얼로그 종료
             }
         });
+
     }
 
 }

@@ -1,8 +1,48 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="colorPrimary">#000000</color>
-    <color name="colorPrimaryDark">#00574B</color>
-    <color name="colorAccent">#D81B60</color>
+    <color name="colorPrimary">#8064a3</color>
+    <color name="colorPrimaryDark">#7F64A2</color>
+    <color name="colorAccent">#c0b2d1</color>
+    <color name="colorBackgroundAccent">#d99694</color>
+    <color name="colorBackground"> #e6b9b8</color>
+    <color name="lightcoral">#f3dcdc</color>
+    <color name="coral">#FFB5A6</color>
+    <color name="coralLight">#FFD0C7</color>
+    <color name="myblack">#0D0D0D</color>
+    <color name="lightgray">#ececec</color>
+    <color name="gray">#ADADAD</color>
+
+
+
+
+    <color name="e">#eccbca</color>
+    <color name="colorAccent11">#FF775F</color>
+    <color name = "primarylight">#FFFFFACD</color>
+
+    <color name="coralPower">#FF9683</color>
+
+    <color name="colorPrimaryDarkfff">#6455a9</color>
+    <color name="colorAccentfff">#8475ba</color>
+    <color name="colorBackgroundfff">#CCF9E5A5</color>
+
+
+
+
+
+
+
+
+
+
+
+    <color name="darkAccent">#A63333</color>
+    <color name="darkcoral">#D9918B</color>
+    <color name="darkcoral2">#BF5656</color>
+
+    <color name="mywhite">#F0F0F2</color>
+    <color name="violet">#7F64A2</color>
+
+
 
     <!-- TODO 향 이름 바꾸기 -->
     <color name = "A">#FF9232CC</color>

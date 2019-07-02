@@ -1,6 +1,6 @@
 package com.example.gp4;
 
-/* 사용자 기기 고유값, 이름, 나이, 성별 정보를 저장하기 위한 클래스 - 내부 저장소에 저장 */
+/* 사용자 이름, 나이, 성별 정보를 저장하기 위한 클래스 - 내부 저장소에 저장 */
 
 public class UserInfo {
     String name;

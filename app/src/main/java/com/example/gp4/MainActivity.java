@@ -22,10 +22,14 @@ public class MainActivity extends AppCompatActivity {
     private MyFragment myFragment = new MyFragment();
 
     private BottomNavigationView bottomNavigationView;
+    private String after = ""; // inputCatridge에서 넘어왔는지 알아보기 위한 변수
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        Intent intent = getIntent();
+        after = intent.getStringExtra("inputCatridge");
 
         bottomNavigationView = (BottomNavigationView)findViewById(R.id.main_activity_bottomnavigationview);
 
@@ -63,5 +67,25 @@ public class MainActivity extends AppCompatActivity {
         FragmentManager fragmentManager = getSupportFragmentManager();
         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
         fragmentTransaction.replace(R.id.main_activity_framelayout, fragment).commit();
+    }
+
+    public BottomNavigationView getBottomNavigationView() {
+        return bottomNavigationView;
+    }
+
+    public interface onKeyBackPressedListener {
+        void onBackKey();
+    }
+    private onKeyBackPressedListener mOnKeyBackPressedListener;
+    public void setOnKeyBackPressedListener(onKeyBackPressedListener listener){
+        mOnKeyBackPressedListener = listener;
+    }
+
+    @Override
+    public void onBackPressed() {
+        if( after.equals("yes") ){ }
+        else{ super.onBackPressed(); }
+
+
     }
 }

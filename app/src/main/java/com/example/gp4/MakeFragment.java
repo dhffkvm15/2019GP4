@@ -25,6 +25,8 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 
 /* 커스터마이징 */
 public class MakeFragment extends Fragment {
@@ -45,6 +47,7 @@ public class MakeFragment extends Fragment {
     private TextView textView5;
     private TextView textView6;
 
+    private SeekBar[] seekBars = {};
     private SeekBar seekBar1;
     private SeekBar seekBar2;
     private SeekBar seekBar3;
@@ -66,6 +69,7 @@ public class MakeFragment extends Fragment {
 
     private Button turnon;
 
+    private String pushId; // 사용자의 푸시 아이디 값
     public static MakeFragment newInstance(){
         return new MakeFragment();
     }
@@ -76,12 +80,23 @@ public class MakeFragment extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
 
         ViewGroup viewGroup = (ViewGroup) inflater.inflate(R.layout.fragment_make, container, false);
+
+        SharedPreferences sharedPreferences = this.getActivity().getSharedPreferences("UserInfo", Context.MODE_PRIVATE);
+        pushId = sharedPreferences.getString("pushID", ""); // 저장되어 있는 pushId 불러오기
+
+       // ButtonOnclick buttonOnclick = new ButtonOnclick();
         button1 = (Button) viewGroup.findViewById(R.id.fragment_make_button1);
+        //button1.setOnClickListener(buttonOnclick);
         button2 = (Button) viewGroup.findViewById(R.id.fragment_make_button2);
+        //button2.setOnClickListener(buttonOnclick);
         button3 = (Button) viewGroup.findViewById(R.id.fragment_make_button3);
+        //button3.setOnClickListener(buttonOnclick);
         button4 = (Button) viewGroup.findViewById(R.id.fragment_make_button4);
+        //button4.setOnClickListener(buttonOnclick);
         button5 = (Button) viewGroup.findViewById(R.id.fragment_make_button5);
+        //button5.setOnClickListener(buttonOnclick);
         button6 = (Button) viewGroup.findViewById(R.id.fragment_make_button6);
+        //button6.setOnClickListener(buttonOnclick);
         buttons = new Button[]{button1, button2, button3, button4, button5, button6};
 
         textView1 = (TextView) viewGroup.findViewById(R.id.make_fragment_textview1);
@@ -108,6 +123,8 @@ public class MakeFragment extends Fragment {
         seekBar5.setOnSeekBarChangeListener(sbcListener);
         seekBar6 = (SeekBar) viewGroup.findViewById(R.id.make_fragment_seekbar6);
         seekBar6.setOnSeekBarChangeListener(sbcListener);
+        seekBars = new SeekBar[]{seekBar1, seekBar2, seekBar3, seekBar4, seekBar5, seekBar6};
+
         timeSeekBar = (SeekBar) viewGroup.findViewById(R.id.make_fragment_seekbar_time);
         timeView = (TextView) viewGroup.findViewById(R.id.make_fragment_textview_time);
 
@@ -164,6 +181,7 @@ public class MakeFragment extends Fragment {
                     bundle.putSerializable("obj4", catridgeInfo4);
                     bundle.putSerializable("obj5", catridgeInfo5);
                     bundle.putSerializable("obj6", catridgeInfo6);
+                    Log.v("태그 확인", "필수 확인 : "+catridgeInfo6.getRest());
                     bundle.putInt("time", time);
                     turnonfragment.setArguments(bundle);
 
@@ -183,15 +201,15 @@ public class MakeFragment extends Fragment {
 
         final String[] scentColor = getContext().getResources().getStringArray(R.array.scentcolor); // 컬러 색상 가져오기
 
-        SharedPreferences sharedPreferences = this.getActivity().getSharedPreferences("UserInfo", Context.MODE_PRIVATE);
-        final String tmp = sharedPreferences.getString("pushID", ""); // 저장되어 있는 향 정보 불러오기
+        //SharedPreferences sharedPreferences = this.getActivity().getSharedPreferences("UserInfo", Context.MODE_PRIVATE);
+        //final String tmp = sharedPreferences.getString("pushID", ""); // 저장되어 있는 향 정보 불러오기
 
-        if(tmp.equals("")){ // 저장된 정보가 없으면
+        if(pushId.equals("")){ // 저장된 정보가 없으면
             Log.v("태그", "태그 확인 : 저장 정보 없음");
         }else{
 
             // 향 정보 받아오기
-            FirebaseDatabase.getInstance().getReference("catridge").child(tmp).addValueEventListener(new ValueEventListener() {
+            FirebaseDatabase.getInstance().getReference("catridge").child(pushId).addValueEventListener(new ValueEventListener() {
                 @SuppressLint("Range")
                 @Override
                 public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
@@ -209,6 +227,13 @@ public class MakeFragment extends Fragment {
                         catridgeInfos[i].setName(datas.get(i)); // 카트리지 인포에 향 종류 적기
 
                         textViews[i].setText(rest.get(i) + "%"); // 현재 남아 있는 잔량 표시하기
+
+                        if(rest.get(i) == 0){ // 잔량이 없을 경우
+                            seekBars[i].setProgress(0); // 0으로 프로그레스 바 이동
+                            seekBars[i].setEnabled(false); // 못 움직이도록
+                            catridgeInfos[i].setRest(0);
+                             }
+
                         buttons[i].setText(datas.get(i)); // 버튼에 향 종류 표시
 
                         switch (datas.get(i)){
@@ -317,6 +342,73 @@ public class MakeFragment extends Fragment {
 
         }
     }
+
+    // 카트리지 향 클릭 할 때, 카트리지 정보 교체
+//    class ButtonOnclick implements Button.OnClickListener{
+//
+//        @Override
+//        public void onClick(View v) {
+//            YesNoDialog yesNoDialog = new YesNoDialog(getActivity());
+//            CustomDialog customDialog = new CustomDialog(getActivity());
+//
+//            // 향의 종류를 새 것으로 바꿀 때에는
+//            if( yesNoDialog.callFunction() == 1){
+//                Map<String, Object> map = new HashMap<String, Object>();
+//                switch (v.getId()){
+//                    case R.id.fragment_make_button1 :
+//                        customDialog.callFunction(button1);
+//                        map.put("1", new CatridgeInfo(buttons[0].getText().toString(), 100));
+//
+//                        FirebaseDatabase.getInstance().getReference("catridge").child(pushId)
+//                                    .updateChildren(map);
+//
+//                        break;
+//                    case R.id.fragment_make_button2 :
+//                        customDialog.callFunction(button2);
+//                        map.put("2", new CatridgeInfo(buttons[1].getText().toString(), 100));
+//
+//                        FirebaseDatabase.getInstance().getReference("catridge").child(pushId)
+//                                    .updateChildren(map);
+//                        break;
+//                    case R.id.fragment_make_button3 :
+//                        customDialog.callFunction(button3);
+//                            map.put("3", new CatridgeInfo(buttons[2].getText().toString(), 100));
+//
+//                            FirebaseDatabase.getInstance().getReference("catridge").child(pushId)
+//                                    .updateChildren(map);
+//                        break;
+//                    case R.id.fragment_make_button4 :
+//                        customDialog.callFunction(button4);
+//                            map.put("4", new CatridgeInfo(buttons[3].getText().toString(), 100));
+//
+//                            FirebaseDatabase.getInstance().getReference("catridge").child(pushId)
+//                                    .updateChildren(map);
+//                        break;
+//                    case R.id.fragment_make_button5 :
+//                        customDialog.callFunction(button5);
+//                            map.put("5", new CatridgeInfo(buttons[4].getText().toString(), 100));
+//
+//                            FirebaseDatabase.getInstance().getReference("catridge").child(pushId)
+//                                    .updateChildren(map);
+//                        break;
+//                    case R.id.fragment_make_button6 :
+//                       customDialog.callFunction(button6);
+//                            map.put("6", new CatridgeInfo(buttons[5].getText().toString(), 100));
+//
+//                            FirebaseDatabase.getInstance().getReference("catridge").child(pushId)
+//                                    .updateChildren(map);
+//                        break;
+//
+//                }
+//
+//            }else{ // 향의 종류를 그대로 가지고 있을 때
+//
+//            }
+//
+//
+//
+//        }
+//    }
 }
 
 // 내부 저장소 사용시 settingButton 함수 else 문 안

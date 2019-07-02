@@ -12,12 +12,13 @@
     </string-array>
 
     <string-array name="scentcolor">
-        <item>9232CC</item>
-        <item>ADC8E6</item>
-        <item>F08080</item>
-        <item>FFB6C1</item>
-        <item>FFFF00</item>
-        <item>FF0000</item>
+        <item>ECCBCA</item>
+        <item>FF775F</item>
+        <item>FFFACD</item>
+        <item>FF9683</item>
+        <item>6455A9</item>
+        <item>8475BA</item>
     </string-array>
+
 
 </resources>

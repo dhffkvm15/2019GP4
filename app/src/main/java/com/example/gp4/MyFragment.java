@@ -1,6 +1,7 @@
 package com.example.gp4;
 
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -21,6 +22,7 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.google.gson.internal.bind.ArrayTypeAdapter;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -81,7 +83,7 @@ public class MyFragment extends Fragment {
         }
 
         @Override
-        public void onBindViewHolder(@NonNull RecyclerView.ViewHolder viewHolder, int i) {
+        public void onBindViewHolder(@NonNull RecyclerView.ViewHolder viewHolder, final int i) {
 
             //텍스트 올리기
             ((CustomViewHolder)viewHolder).nameview.setText(totalInfos.get(i).getName());
@@ -90,21 +92,24 @@ public class MyFragment extends Fragment {
                     +" " + totalInfos.get(i).getCatridgeInfo2().getName() + " : " + whatString(totalInfos.get(i).getCatridgeInfo2().getRest())
                     +" " + totalInfos.get(i).getCatridgeInfo3().getName() + " : " + whatString(totalInfos.get(i).getCatridgeInfo3().getRest())
                     +" " + totalInfos.get(i).getCatridgeInfo4().getName() + " : " + whatString(totalInfos.get(i).getCatridgeInfo4().getRest())
-                    +" " + totalInfos.get(i).getCatridgeInfo5().getName() + " : " + whatString(totalInfos.get(i).getCatridgeInfo5().getRest())
+                    +"\n" + totalInfos.get(i).getCatridgeInfo5().getName() + " : " + whatString(totalInfos.get(i).getCatridgeInfo5().getRest())
                     +" " + totalInfos.get(i).getCatridgeInfo6().getName() + " : " + whatString(totalInfos.get(i).getCatridgeInfo6().getRest());
 
             ((CustomViewHolder)viewHolder).infoview.setText(string);
 
-            // 클릭 시 작동하는 코드
-            //  viewHolder.itemView.setOnClickListener(new View.OnClickListener() {
-            //                @Override
-            //                public void onClick(View v) {
-            //                    Intent intent = new Intent(v.getContext(), MessageActivity.class);
-            //                    intent.putExtra("destinationUid", userModels.get(position).uid);
-            //                    ActivityOptions activityOptions = ActivityOptions.makeCustomAnimation(v.getContext(), R.anim.fromright, R.anim.toleft);
-            //                    startActivity(intent, activityOptions.toBundle());
-            //                }
-            //            });
+            // 클릭 시 작동하도록 하기
+            viewHolder.itemView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+
+                    Intent intent = new Intent(getActivity(), PlayDiffuserActivity.class);
+                    intent.putExtra("val", (Serializable) totalInfos.get(i));
+
+                    startActivity(intent);
+
+                }
+            });
+
         }
 
         @Override

@@ -17,31 +17,33 @@
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="50dp"
         android:orientation="horizontal"
         android:layout_below="@+id/register_textView1"
         android:layout_marginTop="50dp"
-        android:gravity="center"
+        android:gravity="center_horizontal"
         android:id="@+id/register_linear1">
 
         <TextView
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_height="40dp"
             android:text="이름/별칭"
-            android:textSize="20dp"/>
+            android:textSize="20dp"
+            android:layout_gravity="center_vertical"/>
 
         <EditText
             android:id="@+id/register_edittext_name"
             android:layout_width="150dp"
-            android:layout_height="30dp"
+            android:layout_height="40dp"
             android:layout_marginLeft="20dp"
-            android:inputType="text"/>
+            android:inputType="text"
+            android:layout_gravity="center_vertical" />
 
     </LinearLayout>
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="50dp"
         android:orientation="horizontal"
         android:layout_below="@+id/register_linear1"
         android:layout_marginTop="30dp"
@@ -50,19 +52,21 @@
 
         <TextView
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_height="40dp"
             android:text="성별"
-            android:textSize="20dp"/>
+            android:textSize="20dp"
+            android:layout_gravity="center_vertical"/>
 
         <RadioGroup
             android:layout_width="150dp"
-            android:layout_height="30dp"
+            android:layout_height="40dp"
             android:layout_marginLeft="55dp"
             android:orientation="horizontal"
+            android:layout_gravity="center_vertical"
             android:id="@+id/register_radiogroup_sex">
             <RadioButton
                 android:layout_width="wrap_content"
-                android:layout_height="match_parent"
+                android:layout_height="40dp"
                 android:text="남성"
                 android:textSize="20dp"
                 android:id="@+id/register_radio_M"
@@ -70,7 +74,7 @@
 
             <RadioButton
                 android:layout_width="wrap_content"
-                android:layout_height="match_parent"
+                android:layout_height="40dp"
                 android:text="여성"
                 android:textSize="20dp"
                 android:id="@+id/register_radio_F"/>
@@ -79,7 +83,7 @@
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="50dp"
         android:orientation="horizontal"
         android:layout_below="@+id/register_linear2"
         android:layout_marginTop="30dp"
@@ -88,16 +92,18 @@
 
         <TextView
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_height="40dp"
             android:text="나이"
-            android:textSize="20dp"/>
+            android:textSize="20dp"
+            android:layout_gravity="center_vertical"/>
 
         <EditText
             android:id="@+id/register_edittext_age"
             android:layout_width="150dp"
-            android:layout_height="30dp"
+            android:layout_height="40dp"
             android:layout_marginLeft="50dp"
-            android:inputType="number"/>
+            android:inputType="number"
+            android:layout_gravity="center_vertical"/>
 
     </LinearLayout>
 
@@ -110,5 +116,6 @@
         android:layout_centerHorizontal="true"
         android:text="등록"
         android:textSize="25dp"
-        android:onClick="register"/>
+        android:onClick="register"
+        android:background="@drawable/originbutton"/>
 </RelativeLayout>

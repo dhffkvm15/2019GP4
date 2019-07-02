@@ -3,15 +3,15 @@
     <item
         android:id="@+id/emotionAnalysis"
         android:icon="@drawable/baseline_sentiment_satisfied_alt_black_18dp"
-        android:title="Emotion" />
+        android:title="향 추천" />
 
     <item
         android:id="@+id/make"
         android:icon="@drawable/baseline_create_black_18dp"
-        android:title="Make" />
+        android:title="커스터마이징" />
 
     <item
         android:id="@+id/my"
         android:icon="@drawable/baseline_folder_open_black_18dp"
-        android:title="My" />
+        android:title="나의 향" />
 </menu>

@@ -81,7 +81,7 @@ public class RegisterActivity extends AppCompatActivity {
                 editor.putString("Info", tmpInfo); // JSON 으로 변환한 객체 저장
                 editor.commit(); // 저장 완료
 
-                Log.v("확인", "확인 저장완료 ");
+                //Log.v("확인", "확인 저장완료 ");
                 startActivity(new Intent(this, InputCatridgeActivity.class)); // Todo 뒤로 가기 버튼 확인해보기
              }
 

@@ -57,8 +57,8 @@ public class InputCatridgeActivity extends AppCompatActivity {
 
     // 확인(register) 버튼 클릭 시
     public void OKregister(View view) {
-        if( button1.getText().toString().equals("z") || button2.getText().toString().equals("z") || button3.getText().toString().equals("z")
-        || button4.getText().toString().equals("z") || button5.getText().toString().equals("z") || button6.getText().toString().equals("z")){
+        if( button1.getText().toString().equals("입력") || button2.getText().toString().equals("입력") || button3.getText().toString().equals("입력")
+        || button4.getText().toString().equals("입력") || button5.getText().toString().equals("입력") || button6.getText().toString().equals("입력")){
             // 선택 안 한 창이 있으면
             Toast.makeText(getApplicationContext(), "빈 칸이 있습니다.", Toast.LENGTH_LONG).show();
         }else{
@@ -73,14 +73,16 @@ public class InputCatridgeActivity extends AppCompatActivity {
             pushReference.child("6").setValue(new CatridgeInfo(button6.getText().toString(), 100));
 
             String pushId = pushReference.getKey(); // key 값 가져오기
-            Log.v("태그", "푸시아이디 확인 : " + pushId);
+            //Log.v("태그", "푸시아이디 확인 : " + pushId);
 
             SharedPreferences sharedPreferences = getSharedPreferences("UserInfo", MODE_PRIVATE);
             SharedPreferences.Editor editor = sharedPreferences.edit();
             editor.putString("pushID", pushId);
             editor.commit(); // pushId 내부저장소에 저장 완료
 
-            startActivity(new Intent(this, MainActivity.class));
+            Intent intent = new Intent(this, MainActivity.class);
+            intent.putExtra("inputCatridge", "yes");
+            startActivity(intent);
         }
 
     }
@@ -114,6 +116,10 @@ public class InputCatridgeActivity extends AppCompatActivity {
         }
     }
 
+    // 뒤로가기 막기
+    @Override
+    public void onBackPressed() {
+    }
 }
 
 
