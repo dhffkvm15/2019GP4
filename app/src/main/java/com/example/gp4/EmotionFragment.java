@@ -7,6 +7,7 @@ import android.content.pm.PackageManager;
 import android.content.res.Configuration;
 import android.hardware.Camera;
 import android.os.Bundle;
+import android.os.CountDownTimer;
 import android.os.PowerManager;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -18,6 +19,7 @@ import android.view.SurfaceHolder;
 import android.view.SurfaceView;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import java.util.concurrent.atomic.AtomicBoolean;
@@ -26,13 +28,10 @@ import java.util.concurrent.atomic.AtomicBoolean;
 
 public class EmotionFragment extends Fragment {
 
-    private static final String TAG = "HeartRateMonitor";
     private static final AtomicBoolean processing = new AtomicBoolean(false);
 
     private static SurfaceHolder surfaceHolder = null;
     private static Camera camera = null;
-    @SuppressLint("StaticFieldLeak")
-    private static View viewImage;
     @SuppressLint("StaticFieldLeak")
     private static TextView heartRate;
     @SuppressLint("StaticFieldLeak")
@@ -59,6 +58,8 @@ public class EmotionFragment extends Fragment {
     private static double beats = 0;
     private static long startTime = 0;
 
+    private static ProgressBar progressbar;
+
     public static EmotionFragment newInstance(){
         return new EmotionFragment();
     }
@@ -77,7 +78,9 @@ public class EmotionFragment extends Fragment {
 
         heartRate = (TextView)viewGroup.findViewById(R.id.fragment_emotion_textview_heart);
         imgAvgText = (TextView)viewGroup.findViewById(R.id.fragment_emotion_img_avg_text);
-        rollAvgText = (TextView)viewGroup.findViewById(R.id.fragment_emotion_rollavg_text);
+        //rollAvgText = (TextView)viewGroup.findViewById(R.id.fragment_emotion_rollavg_text);
+        progressbar = (ProgressBar)viewGroup.findViewById(R.id.fragment_emotion_progressbar);
+
         PowerManager powerManager = (PowerManager)getActivity().getSystemService(Context.POWER_SERVICE);
         wakeLock = powerManager.newWakeLock(PowerManager.FULL_WAKE_LOCK, "DoNotDimScreen");
 
@@ -116,6 +119,7 @@ public class EmotionFragment extends Fragment {
          */
         @Override
         public void onPreviewFrame(byte[] data, Camera cam) {
+
             if (data == null) throw new NullPointerException();
             Camera.Size size = cam.getParameters().getPreviewSize();
             if (size == null) throw new NullPointerException();
@@ -125,8 +129,9 @@ public class EmotionFragment extends Fragment {
             int width = size.width;
             int height = size.height;
 
+
             int imgAvg = ImageProcessing.decodeYUV420SPtoRedAvg(data.clone(), height, width);
-            // Log.i(TAG, "imgAvg="+imgAvg);
+
             if (imgAvg == 0 || imgAvg == 255) {
                 processing.set(false);
                 return;
@@ -144,8 +149,10 @@ public class EmotionFragment extends Fragment {
             int rollingAverage = (averageArrayCnt > 0) ? (averageArrayAvg / averageArrayCnt) : 0;
             TYPE newType = currentType;
 
-            imgAvgText.setText("image average:"+ Integer.toString(imgAvg));
-            rollAvgText.setText("rolling average:"+ Integer.toString(rollingAverage));
+            imgAvgText.setText("측정중 ");
+           // imgAvgText.setText("image average:"+ Integer.toString(imgAvg));
+            //rollAvgText.setText("rolling average:"+ Integer.toString(rollingAverage));
+
             if (imgAvg < rollingAverage) {
                 newType = TYPE.RED;
                 if (newType != currentType) {
@@ -171,7 +178,7 @@ public class EmotionFragment extends Fragment {
             if (totalTimeInSecs >= 10) {
                 double bps = (beats / totalTimeInSecs);
                 int dpm = (int) (bps * 60d);
-                if (dpm < 30 || dpm > 180) {
+                if (dpm < 50 || dpm > 180) {
                     startTime = System.currentTimeMillis();
                     beats = 0;
                     processing.set(false);
@@ -219,12 +226,13 @@ public class EmotionFragment extends Fragment {
          */
         @Override
         public void surfaceChanged(SurfaceHolder holder, int format, int width, int height) {
+
             android.hardware.Camera.Parameters parameters = camera.getParameters();
             parameters.setFlashMode(android.hardware.Camera.Parameters.FLASH_MODE_TORCH);
             android.hardware.Camera.Size size = getSmallestPreviewSize(width, height, parameters);
             if (size != null) {
                 parameters.setPreviewSize(size.width, size.height);
-                Log.d(TAG, "Using width=" + size.width + " height=" + size.height);
+                //Log.d("HeartRateMonitor", "Using width=" + size.width + " height=" + size.height);
             }
             camera.setParameters(parameters);
             camera.startPreview();
@@ -269,4 +277,5 @@ public class EmotionFragment extends Fragment {
             Log.v("태그", "카메라 허가 받음");
         }
     }
+
 }

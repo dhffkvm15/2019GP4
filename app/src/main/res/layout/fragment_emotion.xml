@@ -31,15 +31,31 @@
             android:textAlignment="center"
             android:textColor="@color/myblack"/>
 
-        <TextView
-            android:id="@+id/fragment_emotion_textview_heart"
-            android:layout_width="200dp"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="10dp"
-            android:text="HEART RATE"
-            android:textStyle="bold"
-            android:textSize="25dp"
-            android:layout_gravity="center_horizontal"></TextView>
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <ProgressBar
+                android:id="@+id/fragment_emotion_progressbar"
+                android:layout_width="match_parent"
+                android:layout_height="250dp"
+                android:max="100"
+                android:indeterminate="true"
+                android:progress="0"/>
+
+            <TextView
+                android:id="@+id/fragment_emotion_textview_heart"
+                android:layout_width="200dp"
+                android:layout_height="wrap_content"
+                android:text="HEART RATE"
+                android:textSize="25dp"
+                android:textStyle="bold"
+                android:gravity="center"
+                android:layout_centerHorizontal="true"
+                android:layout_centerVertical="true"></TextView>
+
+        </RelativeLayout>
+
 
         <SurfaceView
             android:id="@+id/fragment_emotion_preview"
@@ -47,7 +63,7 @@
             android:layout_height="100dp"
             android:layout_gravity="center_horizontal"
             android:layout_marginTop="10dp"></SurfaceView>
-
+<!--
         <TextView
             android:id="@+id/fragment_emotion_rollavg_text"
             android:layout_width="match_parent"
@@ -56,7 +72,7 @@
             android:text="TextView"
             android:textAlignment="center"
             android:textSize="18dp"/>
-
+-->
         <TextView
             android:id="@+id/fragment_emotion_img_avg_text"
             android:layout_width="match_parent"
