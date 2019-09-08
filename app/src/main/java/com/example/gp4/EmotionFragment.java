@@ -11,6 +11,7 @@ import android.graphics.drawable.Drawable;
 import android.hardware.Camera;
 import android.os.Bundle;
 import android.os.CountDownTimer;
+import android.os.Handler;
 import android.os.PowerManager;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -23,6 +24,7 @@ import android.view.SurfaceView;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -82,18 +84,23 @@ public class EmotionFragment extends Fragment {
     private static Button startButton;
     private static MyProgressBar myProgressBar;
 
+    private static ImageButton skipButton;
+    private Fragment fragment = new Emotion1Fragment();
+    private Bundle bundle = new Bundle();
+
     private LineChart lineChart; // 그래프
 
     public static EmotionFragment newInstance(){
         return new EmotionFragment();
     }
 
-    @SuppressLint("InvalidWakeLockTag")
+    @SuppressLint({"InvalidWakeLockTag", "WrongViewCast"})
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         final ViewGroup viewGroup = (ViewGroup)inflater.inflate(R.layout.fragment_emotion, container, false);
         startButton = (Button)viewGroup.findViewById(R.id.fragment_emotion_button_start);
+        skipButton = (ImageButton)viewGroup.findViewById(R.id.fragment_emotion_skip_button);
 
         checkCAMERAPermission(); // 카메라 권한 획득
 
@@ -116,6 +123,7 @@ public class EmotionFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 startButton.setVisibility(v.INVISIBLE); // 버튼 안보이게
+                skipButton.setVisibility(v.INVISIBLE);
 
                 myProgressBar.setStart(true); // 프로그레스 바 작동하도록
                 myProgressBar.setStartTime(System.currentTimeMillis());
@@ -126,6 +134,17 @@ public class EmotionFragment extends Fragment {
                 startTime = myProgressBar.getStartTime(); // 시작 시간 동일하도록 설정
             }
         } ) ;
+
+        // skip 버튼 클릭했을 때, 다음 액티비티로 넘어가기
+        skipButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                bundle.putInt("heartrate", 0);
+                fragment.setArguments(bundle);
+
+                ((MainActivity)getActivity()).replaceFragment(fragment); // 심박 전달
+            }
+        });
 
         // 그래프 관련
         {   // // Chart Style // //
@@ -334,11 +353,22 @@ public class EmotionFragment extends Fragment {
                             beatsArrayCnt++;
                         }
                     }
-                    int beatsAvg = (beatsArrayAvg / beatsArrayCnt);
+                    final int beatsAvg = (beatsArrayAvg / beatsArrayCnt);
 
                     myProgressBar.setFinish(true); // 텍스트가 안보이게 끔
                     heartRate.setVisibility(View.VISIBLE);
                     heartRate.setText(String.valueOf(beatsAvg) + " bpm");
+
+                    Handler handler = new Handler();
+                    handler.postDelayed(new Runnable() {
+                        @Override
+                        public void run() {
+                            bundle.putInt("heartrate", beatsAvg);
+                            fragment.setArguments(bundle);
+
+                            ((MainActivity)getActivity()).replaceFragment(fragment); // 심박 전달
+                        }
+                    },3000); // 3초 후 실행
 
                     //startTime = System.currentTimeMillis();
                     //Log.v("중요", "중요 이모션 시작시간4 : "+startTime);
