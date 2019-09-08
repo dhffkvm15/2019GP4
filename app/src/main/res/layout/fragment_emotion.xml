@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    xmlns:custom="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical"
     android:id="@+id/fragment_emotion_relativelayout">
 
@@ -32,16 +32,30 @@
             android:textColor="@color/myblack"/>
 
         <RelativeLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            android:layout_width="300dp"
+            android:layout_height="250dp"
+            android:layout_gravity="center_horizontal">
 
+            <com.example.gp4.MyProgressBar
+                android:id="@+id/fragment_emotion_progressbar"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_alignParentTop="true"
+                android:layout_centerHorizontal="true"
+                android:layout_marginTop="0dp"
+                custom:curValue="0"
+                custom:lineColor="@color/colorPrimaryDark"
+                custom:maxValue="15" />
+
+            <!--
             <ProgressBar
                 android:id="@+id/fragment_emotion_progressbar"
                 android:layout_width="match_parent"
                 android:layout_height="250dp"
                 android:max="100"
-                android:indeterminate="true"
+                android:indeterminate="false"
                 android:progress="0"/>
+             -->
 
             <TextView
                 android:id="@+id/fragment_emotion_textview_heart"
@@ -52,10 +66,22 @@
                 android:textStyle="bold"
                 android:gravity="center"
                 android:layout_centerHorizontal="true"
-                android:layout_centerVertical="true"></TextView>
+                android:layout_centerVertical="true"
+                android:visibility="invisible"></TextView>
+
+            <Button
+                android:layout_width="150dp"
+                android:layout_height="100dp"
+                android:id="@+id/fragment_emotion_button_start"
+                android:background="@drawable/circlebutton"
+                android:text="Start"
+                android:textSize="20dp"
+                android:textStyle="bold"
+                android:gravity="center"
+                android:layout_centerHorizontal="true"
+                android:layout_centerVertical="true" />
 
         </RelativeLayout>
-
 
         <SurfaceView
             android:id="@+id/fragment_emotion_preview"
@@ -79,9 +105,14 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="10dp"
             android:text="TextView"
-            android:textSize="25dp"
+            android:textSize="10dp"
             android:textAlignment="center"/>
 
+        <com.github.mikephil.charting.charts.LineChart
+            android:id="@+id/fragment_emotion_linechart"
+            android:layout_width="match_parent"
+            android:layout_height="30dp"
+            />
 
     </LinearLayout>
 

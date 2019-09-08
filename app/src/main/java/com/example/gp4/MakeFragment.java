@@ -21,6 +21,7 @@ import android.widget.Toast;
 
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
@@ -175,6 +176,27 @@ public class MakeFragment extends Fragment {
                 // 동작시켜야 할 때
                 if(bool){
                     //Log.v("태그", "태그 확인 동작 버튼 누름");
+//FirebaseDatabase firebaseDatabase = FirebaseDatabase.getInstance(); // 파이어베이스 불러오기
+//            DatabaseReference databaseReference = firebaseDatabase.getReference("catridge");
+//            DatabaseReference pushReference = databaseReference.push();
+//            pushReference.child("1").setValue(new CatridgeInfo(button1.getText().toString(), 100));
+
+                    FirebaseDatabase firebaseDatabase = FirebaseDatabase.getInstance();
+                    DatabaseReference databaseReference = firebaseDatabase.getReference();
+                    Log.v("로그 확인용 : ", "데이터레프런스 : "+ databaseReference);
+                    //데이터레프런스 : https://gpdb-2550a.firebaseio.com
+                    //databaseReference = firebaseDatabase.getReference("1Status");
+                    //Log.v("로그 확인용 : ", "데이터레프런스1 : "+ databaseReference);
+                    //데이터레프런스1 : https://gpdb-2550a.firebaseio.com/1Status
+                    Map<String, Object> taskMap = new HashMap<String, Object>();
+                    taskMap.put("1Status", catridgeInfo1.getRest());
+                    taskMap.put("2Status", catridgeInfo2.getRest());
+                    taskMap.put("3Status", catridgeInfo3.getRest());
+                    taskMap.put("4Status", catridgeInfo4.getRest());
+                    taskMap.put("5Status", catridgeInfo5.getRest());
+                    taskMap.put("6Status", catridgeInfo6.getRest());
+
+                    databaseReference.updateChildren(taskMap);
 
                     Fragment turnonfragment = new TurnonFragment();
                     Bundle bundle = new Bundle();

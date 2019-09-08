@@ -2,6 +2,8 @@ package com.example.gp4;
 
 import android.util.Log;
 
+// red pixel values 추출
+
 public abstract class ImageProcessing {
     private static int decodeYUV420SPtoRedSum(byte[] yuv420sp, int width, int height) {
         if (yuv420sp == null) return 0;
