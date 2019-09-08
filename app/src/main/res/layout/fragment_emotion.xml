@@ -14,10 +14,10 @@
 
         <TextView
             android:layout_width="match_parent"
-            android:layout_height="40dp"
+            android:layout_height="30dp"
             android:text="심박수 측정하기"
             android:textStyle="bold"
-            android:textSize="25dp"
+            android:textSize="20dp"
             android:textAlignment="center"
             android:textColor="@android:color/white"
             android:background="@color/colorPrimary"/>
@@ -25,15 +25,14 @@
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="3dp"
             android:text="카메라렌즈에 손가락을 대주세요."
-            android:textSize="18dp"
+            android:textSize="15dp"
             android:textAlignment="center"
             android:textColor="@color/myblack"/>
 
         <RelativeLayout
             android:layout_width="300dp"
-            android:layout_height="250dp"
+            android:layout_height="200dp"
             android:layout_gravity="center_horizontal">
 
             <com.example.gp4.MyProgressBar
@@ -71,7 +70,7 @@
 
             <Button
                 android:layout_width="150dp"
-                android:layout_height="100dp"
+                android:layout_height="80dp"
                 android:id="@+id/fragment_emotion_button_start"
                 android:background="@drawable/circlebutton"
                 android:text="Start"
@@ -86,13 +85,13 @@
         <SurfaceView
             android:id="@+id/fragment_emotion_preview"
             android:layout_width="200dp"
-            android:layout_height="100dp"
+            android:layout_height="80dp"
             android:layout_gravity="center_horizontal"
             android:layout_marginTop="10dp"></SurfaceView>
 
         <ImageButton
             android:layout_width="100dp"
-            android:layout_height="50dp"
+            android:layout_height="30dp"
             android:layout_gravity="right"
             android:layout_marginRight="20dp"
             android:id="@+id/fragment_emotion_skip_button"
@@ -107,20 +106,12 @@
             android:textAlignment="center"
             android:textSize="18dp"/>
 -->
-        <TextView
-            android:id="@+id/fragment_emotion_img_avg_text"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="10dp"
-            android:text="TextView"
-            android:textSize="10dp"
-            android:textAlignment="center"/>
 
         <com.github.mikephil.charting.charts.LineChart
             android:id="@+id/fragment_emotion_linechart"
             android:layout_width="match_parent"
             android:layout_height="30dp"
-            />
+            android:layout_weight="1" />
 
     </LinearLayout>
 

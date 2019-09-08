@@ -43,6 +43,8 @@ import com.github.mikephil.charting.interfaces.datasets.ILineDataSet;
 import com.github.mikephil.charting.utils.Utils;
 
 import java.util.ArrayList;
+import java.util.List;
+import java.util.Random;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 
@@ -55,8 +57,6 @@ public class EmotionFragment extends Fragment {
 
     @SuppressLint("StaticFieldLeak")
     private static TextView heartRate;
-    @SuppressLint("StaticFieldLeak")
-    private static TextView imgAvgText;
     @SuppressLint("StaticFieldLeak")
     private static TextView rollAvgText;
 
@@ -89,6 +89,12 @@ public class EmotionFragment extends Fragment {
     private Bundle bundle = new Bundle();
 
     private LineChart lineChart; // 그래프
+    private XAxis xAxis;
+    private YAxis yAxis;
+    private List<Entry> entries = new ArrayList<>();
+    private LineDataSet lineDataSet;
+    private int ranNum = 100;
+    private int ranCount = 0;
 
     public static EmotionFragment newInstance(){
         return new EmotionFragment();
@@ -110,7 +116,6 @@ public class EmotionFragment extends Fragment {
         surfaceHolder.setType(SurfaceHolder.SURFACE_TYPE_PUSH_BUFFERS);
 
         heartRate = (TextView)viewGroup.findViewById(R.id.fragment_emotion_textview_heart);
-        imgAvgText = (TextView)viewGroup.findViewById(R.id.fragment_emotion_img_avg_text);
         //rollAvgText = (TextView)viewGroup.findViewById(R.id.fragment_emotion_rollavg_text);
 
         PowerManager powerManager = (PowerManager)getActivity().getSystemService(Context.POWER_SERVICE);
@@ -147,50 +152,64 @@ public class EmotionFragment extends Fragment {
         });
 
         // 그래프 관련
-        {   // // Chart Style // //
-            lineChart = (LineChart)viewGroup.findViewById(R.id.fragment_emotion_linechart);
-            // background color
-            lineChart.setBackgroundColor(Color.WHITE);
-            // disable description text
-            lineChart.getDescription().setEnabled(false);
-            // enable touch gestures
-            lineChart.setTouchEnabled(false);
-            lineChart.setDrawGridBackground(false);
-            // enable scaling and dragging
-            lineChart.setDragEnabled(false);
-            lineChart.setScaleEnabled(false);
-            // force pinch zoom along both axis
-            lineChart.setPinchZoom(false);
-        }
+        lineChart = (LineChart)viewGroup.findViewById(R.id.fragment_emotion_linechart);
+        chartInit();
 
-        XAxis xAxis;
+        return viewGroup;
+    }
+
+    private void chartInit() {
+        // background color
+        lineChart.setBackgroundColor(Color.TRANSPARENT);
+        // disable description text
+        lineChart.getDescription().setEnabled(false);
+        lineChart.getLegend().setEnabled(false);
+        // enable touch gestures
+        lineChart.setTouchEnabled(false);
+        lineChart.setDrawGridBackground(false);
+        // enable scaling and dragging
+        lineChart.setDragEnabled(false);
+        lineChart.setScaleEnabled(false);
+        // force pinch zoom along both axis
+        lineChart.setPinchZoom(false);
+
         {   // // X-Axis Style // //
             xAxis = lineChart.getXAxis();
             // vertical grid lines
-            xAxis.enableGridDashedLine(10f, 10f, 0f);
+            xAxis.setDrawGridLines(false);
+            xAxis.setDrawAxisLine(false); // x축 숨기기
+            xAxis.setDrawLabels(false); // x축 값 숨기기
+            //xAxis.enableGridDashedLine(8, 24, 0);
+            xAxis.setPosition(XAxis.XAxisPosition.BOTTOM);
+            xAxis.setTextColor(Color.BLACK);
         }
 
-        YAxis yAxis;
         {   // // Y-Axis Style // //
             yAxis = lineChart.getAxisLeft();
             // disable dual axis (only use LEFT axis)
             lineChart.getAxisRight().setEnabled(false);
             // horizontal grid lines
-            yAxis.enableGridDashedLine(10f, 10f, 0f);
-            // axis range
-            yAxis.setAxisMaximum(200f);
-            yAxis.setAxisMinimum(-50f);
-        }
+            yAxis.setDrawGridLines(false);
+            yAxis.setDrawAxisLine(false); // y축 숨기기
+            yAxis.setDrawLabels(false); // y축 값 숨기기
+            //yAxis.enableGridDashedLine(8, 24, 0);
+            yAxis.setTextColor(Color.BLACK);
 
-       return viewGroup;
+        }
     }
 
     // 그래프 관련
     public void setData(int bpm, double time) { // int 값만 넘겨주면 될 것 같음
-//        lineChart.invalidate(); // 차트 초기화
-//        lineChart.clear();
+        lineChart.invalidate(); // 차트 초기화
+        lineChart.clear();
 
-        //Log.v("중요", "중요 셋 데이타 함수 bpm : "+bpm + " " +time);
+        //ArrayList<Entry> values = new ArrayList<>();
+        //
+        //        for (int i = 0; i < count; i++) {
+        //
+        //            float val = (float) (Math.random() * range) - 30;
+        //            values.add(new Entry(i, val, getResources().getDrawable(R.drawable.star)));
+        //        }
         ArrayList<Entry> values = new ArrayList<>(); // 차트 데이터 셋에 담겨질 데이터
         values.add(new Entry((float) time, bpm));
 
@@ -275,7 +294,7 @@ public class EmotionFragment extends Fragment {
         wakeLock.acquire(10 * 60 * 1000L);
         camera = android.hardware.Camera.open();
         startTime = 0;
-        Log.v("중요", "중요 이모션 시작시간1 : " + startTime);
+        //Log.v("중요", "중요 이모션 시작시간1 : " + startTime);
 
     }
 
@@ -299,30 +318,44 @@ public class EmotionFragment extends Fragment {
         @Override
         public void onPreviewFrame(byte[] data, Camera cam) {
 
-            if(myProgressBar.isStart()) {  //////// 여기여기
-
+            if(myProgressBar.isStart()) {
 
                 long endTime = System.currentTimeMillis();
                 double totalTimeInSecs = (endTime - startTime) / 1000d;
 
+                // 1초가 지났을 때마다 프로그레스 바 갱신
                 if (totalTimeInSecs >= curX && totalTimeInSecs < curX + 1) {
                     myProgressBar.setCurValue(curX++);
                     myProgressBar.invalidate();
                     myProgressBar.requestLayout();
+
+                    ranCount++;
+                    if( (ranCount % 4) == 0 ){
+                        lineDataSet.clear();
+                        lineChart.invalidate();
+                        lineChart.clear();  // 그래프 지우기
+                    }
+
                 }
 
+                // 15초의 시간이 다 지났을 때
                 if (myProgressBar.getCurValue() == 15) {
                     Log.v("중요", "15초 지남");
 
+                    lineDataSet.clear();
+                    lineChart.invalidate();
+                    lineChart.clear();
+
                     double bps = (beats / (totalTimeInSecs - 1));
                     int dpm = (int) (bps * 60d);
-                    Log.v("중요", "중요 이모션 시작 시간2 : " + startTime);
-                    Log.v("중요", "중요 총 시간 : " + totalTimeInSecs);
+                    //Log.v("중요", "중요 이모션 시작 시간2 : " + startTime);
+                    //Log.v("중요", "중요 총 시간 : " + totalTimeInSecs);
                     if (dpm < 50 || dpm > 180) {
 
                         Log.v("중요", "중요 다시 측정");
                         //Log.v("중요", "dpm : "+dpm);
                         //startTime = System.currentTimeMillis();
+
                         curX = 1;
                         myProgressBar.setStart(true); // 프로그레스 바 작동하도록
                         myProgressBar.setStartTime(System.currentTimeMillis());
@@ -376,7 +409,7 @@ public class EmotionFragment extends Fragment {
 
                 }
 
-                Log.v("여기", "onPreviewFrame");
+                //Log.v("여기", "onPreviewFrame");
                 if (data == null) throw new NullPointerException();
                 Camera.Size size = cam.getParameters().getPreviewSize();
                 if (size == null) throw new NullPointerException();
@@ -394,6 +427,35 @@ public class EmotionFragment extends Fragment {
                     return;
                 }
 
+                //여기 그래프 부분 추가
+                Random random = new Random();
+                entries.add(new Entry((float)totalTimeInSecs,ranNum));
+                ranNum += random.nextInt(5);
+
+                if(ranNum > 120 && ranNum <=130){
+                    ranNum = 100 + random.nextInt(10); // 100에서 109사이의 정수
+                }
+
+                lineDataSet = new LineDataSet(entries, "value");
+                //LineDataSet lineDataSet = new LineDataSet(entries, "value");
+                lineDataSet.setLineWidth(2);
+                lineDataSet.setDrawCircles(false);
+                //lineDataSet.setCircleRadius(2);
+                //lineDataSet.setCircleColor(Color.parseColor("#FFA1B4DC"));
+                //lineDataSet.setCircleHoleColor(Color.BLUE);
+                lineDataSet.setColor(Color.parseColor("#FFC0B2D1"));
+                //lineDataSet.setDrawCircleHole(true);
+                //lineDataSet.setDrawCircles(true);
+                //lineDataSet.setDrawHorizontalHighlightIndicator(false);
+                //lineDataSet.setDrawHighlightIndicators(false);
+                lineDataSet.setDrawValues(false);
+
+                LineData lineData = new LineData(lineDataSet);
+                lineChart.setData(lineData);
+                lineChart.invalidate();
+
+                //// 여기 까지 그래프
+
                 int averageArrayAvg = 0;
                 int averageArrayCnt = 0;
                 for (int i = 0; i < averageArray.length; i++) {
@@ -406,7 +468,7 @@ public class EmotionFragment extends Fragment {
                 int rollingAverage = (averageArrayCnt > 0) ? (averageArrayAvg / averageArrayCnt) : 0;
                 TYPE newType = currentType;
 
-                imgAvgText.setText("측정중 ");
+
                 // imgAvgText.setText("image average:"+ Integer.toString(imgAvg));
                 //rollAvgText.setText("rolling average:"+ Integer.toString(rollingAverage));
 
@@ -414,10 +476,27 @@ public class EmotionFragment extends Fragment {
                     newType = TYPE.RED;
                     if (newType != currentType) {
                         beats++;
-                        //////여기 고침
-                        double times = (System.currentTimeMillis() - startTime) / 1000d;
-                        setData((int) (beats / times) * 60, (System.currentTimeMillis() - startTime) / 1000d);
-                        // Log.d(TAG, "BEAT!! beats="+beats);
+
+//                        //여기 그래프 부분 추가
+//                        entries.add(new Entry((float)totalTimeInSecs,imgAvg));
+//                        lineDataSet = new LineDataSet(entries, "value");
+//                        //LineDataSet lineDataSet = new LineDataSet(entries, "value");
+//                        lineDataSet.setLineWidth(1);
+//                        lineDataSet.setCircleRadius(2);
+//                        lineDataSet.setCircleColor(Color.parseColor("#FFA1B4DC"));
+//                        lineDataSet.setCircleHoleColor(Color.BLUE);
+//                        lineDataSet.setColor(Color.parseColor("#FFA1B4DC"));
+//                        //lineDataSet.setDrawCircleHole(true);
+//                        //lineDataSet.setDrawCircles(true);
+//                        //lineDataSet.setDrawHorizontalHighlightIndicator(false);
+//                        //lineDataSet.setDrawHighlightIndicators(false);
+//                        lineDataSet.setDrawValues(false);
+//
+//                        LineData lineData = new LineData(lineDataSet);
+//                        lineChart.setData(lineData);
+//                        lineChart.invalidate();
+//                        //// 여기 까지 그래프
+
                     }
                 } else if (imgAvg > rollingAverage) {
                     newType = TYPE.GREEN;
@@ -432,6 +511,7 @@ public class EmotionFragment extends Fragment {
                     currentType = newType;
                     //image.postInvalidate();
                 }
+
 
 //            long endTime = System.currentTimeMillis();
 //            double totalTimeInSecs = (endTime - startTime) / 1000d;
