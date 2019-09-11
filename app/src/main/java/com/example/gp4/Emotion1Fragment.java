@@ -1,5 +1,6 @@
 package com.example.gp4;
 
+import android.graphics.Color;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -8,10 +9,37 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
+import android.widget.TextView;
+
+import com.github.mikephil.charting.charts.LineChart;
+import com.github.mikephil.charting.components.XAxis;
+import com.github.mikephil.charting.components.YAxis;
+import com.github.mikephil.charting.data.Entry;
+import com.github.mikephil.charting.data.LineData;
+import com.github.mikephil.charting.data.LineDataSet;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class Emotion1Fragment extends Fragment {
 
-    private int heartrate = 0;
+    private int heartrate = 0; // 전달받은 심박수
+    private List<Entry> redpixels = new ArrayList<>(); // 전달받은 red pixels 저장
+    private ArrayList xPeaks = new ArrayList(); // peak일 때의 x 값을 저장하기 위함
+    private List<Entry> hrvValue = new ArrayList<>(); // hrv 그래프화 하기 위한 리스트
+    private int hrvCount = 0;
+
+    private TextView heartbpm; // 심박수 표시 텍스트 뷰
+    private LineChart pixelGraph; // red pixels 그래프
+    private LineChart hrvGraph;
+    private ImageView stressImage; // 스트레스 지수에 따른 이미지
+    private TextView stressTextview; // 스트레스 지수 표시하는 텍스트 뷰
+
+    private XAxis pixelX;
+    private YAxis pixelY;
+    private XAxis hrvX;
+    private YAxis hrvY;
 
     public static Emotion1Fragment newInstance(){
         return new Emotion1Fragment();
@@ -22,12 +50,135 @@ public class Emotion1Fragment extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         ViewGroup viewGroup = (ViewGroup) inflater.inflate(R.layout.fragment_emotion1, container, false);
 
-        Bundle bundle = getArguments();
-        heartrate = bundle.getInt("heartrate");
-        Log.v("중요", "전달된 것 : " + heartrate);
+        heartbpm = (TextView)viewGroup.findViewById(R.id.fragment_emotion1_textview_heartrate);
+        pixelGraph = (LineChart)viewGroup.findViewById(R.id.fragment_emotion1_redchart);
+        hrvGraph = (LineChart)viewGroup.findViewById(R.id.fragment_emotion1_hrvchart);
+        stressImage = (ImageView)viewGroup.findViewById(R.id.fragment_emotion1_imageview_stress);
+        stressTextview = (TextView)viewGroup.findViewById(R.id.fragment_emotion1_textview_howstress);
 
+        setchart(); // 차트 기본 설정
+
+        init(); // 심박 표시 및 그래프 그리기
 
         return viewGroup;
+    }
+
+    // 차트 기본 설정하는 함수
+    private void setchart() {
+            pixelGraph.setBackgroundColor(Color.TRANSPARENT);
+            pixelGraph.getDescription().setEnabled(false);
+            pixelGraph.getLegend().setEnabled(false);
+            pixelGraph.setTouchEnabled(false);
+            pixelGraph.setDrawGridBackground(false);
+            pixelGraph.setDragEnabled(false);
+            pixelGraph.setScaleEnabled(false);
+            pixelGraph.setPinchZoom(false);
+
+            {
+                pixelX = pixelGraph.getXAxis();
+                pixelX.setDrawGridLines(false);
+                pixelX.setDrawAxisLine(false); // x축 숨기기
+                pixelX.setDrawLabels(false); // x축 값 숨기기
+                pixelX.setPosition(XAxis.XAxisPosition.BOTTOM);
+                pixelX.setTextColor(Color.BLACK);
+            }
+
+            {
+                pixelY = pixelGraph.getAxisLeft();
+                pixelGraph.getAxisRight().setEnabled(false);
+                pixelY.setDrawGridLines(false);
+                pixelY.setDrawAxisLine(false); // y축 숨기기
+                pixelY.setDrawLabels(false); // y축 값 숨기기
+                pixelY.setTextColor(Color.BLACK);
+
+            }
+
+        hrvGraph.setBackgroundColor(Color.TRANSPARENT);
+        hrvGraph.getDescription().setEnabled(false);
+        hrvGraph.getLegend().setEnabled(false);
+        hrvGraph.setTouchEnabled(false);
+        hrvGraph.setDrawGridBackground(false);
+        hrvGraph.setDragEnabled(false);
+        hrvGraph.setScaleEnabled(false);
+        hrvGraph.setPinchZoom(false);
+
+        {
+            hrvX = hrvGraph.getXAxis();
+            hrvX.setDrawGridLines(false);
+            hrvX.setDrawAxisLine(false); // x축 숨기기
+            hrvX.setDrawLabels(false); // x축 값 숨기기
+            hrvX.setPosition(XAxis.XAxisPosition.BOTTOM);
+            hrvX.setTextColor(Color.BLACK);
+        }
+
+        {
+            hrvY = hrvGraph.getAxisLeft();
+            hrvGraph.getAxisRight().setEnabled(false);
+            hrvY.setDrawGridLines(false);
+            hrvY.setDrawAxisLine(false); // y축 숨기기
+            hrvY.setDrawLabels(false); // y축 값 숨기기
+            hrvY.setTextColor(Color.BLACK);
+
+        }
+    }
+
+
+    // 심박 표시 및 그래프 그리는 함수
+    private void init() {
+
+        Bundle bundle = getArguments();
+        heartrate = bundle.getInt("heartrate");
+        heartbpm.setText(String.valueOf(heartrate) + " bpm"); // 심박 표시
+
+        /* red values 그래프 그리기 */
+        redpixels = bundle.getParcelableArrayList("list");
+
+        float tempa = 0 ; float tempb = 0;
+        for(int i=1; i < redpixels.size()-1; i++){
+            tempa = redpixels.get(i).getY() - redpixels.get(i-1).getY();
+            tempb = redpixels.get(i+1).getY() - redpixels.get(i).getY();
+
+            if( (tempa >0 && tempb < 0) ||
+                    (tempa >0 && tempb ==0) ||
+                    (tempa ==0 && tempb < 0)) {
+                xPeaks.add(i); // peak 부분의 x 값 넣기
+            }
+        }
+
+        Log.v("태그", "배열  : "+xPeaks );
+        Log.v("태그", "배열 길이 : " + xPeaks.size());
+        LineDataSet lineDataSet;
+        lineDataSet = new LineDataSet(redpixels, "value");
+        lineDataSet.setLineWidth(1);
+        lineDataSet.setDrawCircles(false);
+        lineDataSet.setColor(Color.parseColor("#FFC0B2D1"));
+        lineDataSet.setDrawValues(false);
+
+        LineData lineData = new LineData(lineDataSet);
+        pixelGraph.setData(lineData);
+        pixelGraph.invalidate();
+        // 여기까지 redvalues 그래프 그리기
+
+        /* hrv그래프 그리기 */
+
+        for(int i=1; i<xPeaks.size(); i++){
+            int temp = (int) xPeaks.get(i) - (int) xPeaks.get(i-1);
+            Log.v("태그", "i : " + i +" /temp:  "+temp);
+            hrvValue.add(new Entry(hrvCount++, temp));
+        }
+
+        LineDataSet lineDataSet1;
+        lineDataSet1 = new LineDataSet(hrvValue, "value");
+        lineDataSet1.setLineWidth(1);
+        lineDataSet1.setDrawCircles(false);
+        lineDataSet1.setColor(Color.parseColor("#FFC0B2D1"));
+        lineDataSet1.setDrawValues(false);
+
+        LineData lineData1 = new LineData(lineDataSet1);
+        hrvGraph.setData(lineData1);
+        hrvGraph.invalidate();
+        // 여기까지 redvalues 그래프 그리기
+
     }
 }
 

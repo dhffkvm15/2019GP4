@@ -6,12 +6,10 @@ import android.content.Context;
 import android.content.pm.PackageManager;
 import android.content.res.Configuration;
 import android.graphics.Color;
-import android.graphics.DashPathEffect;
-import android.graphics.drawable.Drawable;
 import android.hardware.Camera;
 import android.os.Bundle;
-import android.os.CountDownTimer;
 import android.os.Handler;
+import android.os.Parcelable;
 import android.os.PowerManager;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -25,22 +23,14 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageButton;
-import android.widget.ProgressBar;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.github.mikephil.charting.charts.LineChart;
-import com.github.mikephil.charting.components.Legend;
-import com.github.mikephil.charting.components.LimitLine;
 import com.github.mikephil.charting.components.XAxis;
 import com.github.mikephil.charting.components.YAxis;
 import com.github.mikephil.charting.data.Entry;
 import com.github.mikephil.charting.data.LineData;
 import com.github.mikephil.charting.data.LineDataSet;
-import com.github.mikephil.charting.formatter.IFillFormatter;
-import com.github.mikephil.charting.interfaces.dataprovider.LineDataProvider;
-import com.github.mikephil.charting.interfaces.datasets.ILineDataSet;
-import com.github.mikephil.charting.utils.Utils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -91,10 +81,12 @@ public class EmotionFragment extends Fragment {
     private LineChart lineChart; // 그래프
     private XAxis xAxis;
     private YAxis yAxis;
-    private List<Entry> entries = new ArrayList<>();
+    private List<Entry> entries = new ArrayList<>(); // 그래프화 하기 위한 리스트
+    private List<Entry> redpixels = new ArrayList<>(); // PPG signal 값 저장하기 위한 리스트 - 전달할 것임
     private LineDataSet lineDataSet;
     private int ranNum = 100;
     private int ranCount = 0;
+    private int pixelcount = 0;
 
     public static EmotionFragment newInstance(){
         return new EmotionFragment();
@@ -148,6 +140,7 @@ public class EmotionFragment extends Fragment {
                 fragment.setArguments(bundle);
 
                 ((MainActivity)getActivity()).replaceFragment(fragment); // 심박 전달
+                //TODO skip 버튼 관련 고치기
             }
         });
 
@@ -198,91 +191,6 @@ public class EmotionFragment extends Fragment {
         }
     }
 
-    // 그래프 관련
-    public void setData(int bpm, double time) { // int 값만 넘겨주면 될 것 같음
-        lineChart.invalidate(); // 차트 초기화
-        lineChart.clear();
-
-        //ArrayList<Entry> values = new ArrayList<>();
-        //
-        //        for (int i = 0; i < count; i++) {
-        //
-        //            float val = (float) (Math.random() * range) - 30;
-        //            values.add(new Entry(i, val, getResources().getDrawable(R.drawable.star)));
-        //        }
-        ArrayList<Entry> values = new ArrayList<>(); // 차트 데이터 셋에 담겨질 데이터
-        values.add(new Entry((float) time, bpm));
-
-        LineDataSet lineDataSet;
-
-        if (lineChart.getData() != null &&
-                lineChart.getData().getDataSetCount() > 0) {
-            lineDataSet = (LineDataSet) lineChart.getData().getDataSetByIndex(0);
-            lineDataSet.setValues(values);
-            lineDataSet.notifyDataSetChanged();
-            lineChart.getData().notifyDataChanged();
-            lineChart.notifyDataSetChanged();
-        } else {
-            // create a dataset and give it a type
-            lineDataSet = new LineDataSet(values, "DataSet 1");
-
-            lineDataSet.setDrawIcons(false);
-
-            // draw dashed line
-            lineDataSet.enableDashedLine(10f, 5f, 0f);
-
-            // black lines and points
-            lineDataSet.setColor(Color.BLACK);
-            lineDataSet.setCircleColor(Color.BLACK);
-
-            // line thickness and point size
-            lineDataSet.setLineWidth(1f);
-            lineDataSet.setCircleRadius(3f);
-
-            // draw points as solid circles
-            lineDataSet.setDrawCircleHole(false);
-
-            // customize legend entry
-            lineDataSet.setFormLineWidth(1f);
-            lineDataSet.setFormLineDashEffect(new DashPathEffect(new float[]{10f, 5f}, 0f));
-            lineDataSet.setFormSize(15.f);
-
-            // text size of values
-            lineDataSet.setValueTextSize(9f);
-
-            // draw selection line as dashed
-            lineDataSet.enableDashedHighlightLine(10f, 5f, 0f);
-
-            // set the filled area
-            lineDataSet.setDrawFilled(true);
-            lineDataSet.setFillFormatter(new IFillFormatter() {
-                @Override
-                public float getFillLinePosition(ILineDataSet dataSet, LineDataProvider dataProvider) {
-                    return lineChart.getAxisLeft().getAxisMinimum();
-                }
-            });
-
-            // set color of filled area
-            if (Utils.getSDKInt() >= 18) {
-                // drawables only supported on api level 18 and above
-                Drawable drawable = getContext().getDrawable(R.drawable.fade_red);
-                lineDataSet.setFillDrawable(drawable);
-            } else {
-                lineDataSet.setFillColor(Color.BLACK);
-            }
-
-            ArrayList<ILineDataSet> dataSets = new ArrayList<>();
-            dataSets.add(lineDataSet); // add the data sets
-
-            // create a data object with the data sets
-            LineData data = new LineData(dataSets);
-
-            // set data
-            lineChart.setData(data);
-        }
-    }
-
-
     @Override
     public void onConfigurationChanged(Configuration newConfig) {
         super.onConfigurationChanged(newConfig);
@@ -328,6 +236,7 @@ public class EmotionFragment extends Fragment {
                     myProgressBar.setCurValue(curX++);
                     myProgressBar.invalidate();
                     myProgressBar.requestLayout();
+
 
                     ranCount++;
                     if( (ranCount % 4) == 0 ){
@@ -397,11 +306,12 @@ public class EmotionFragment extends Fragment {
                         @Override
                         public void run() {
                             bundle.putInt("heartrate", beatsAvg);
+                            bundle.putParcelableArrayList("list", (ArrayList<? extends Parcelable>) redpixels);
                             fragment.setArguments(bundle);
 
                             ((MainActivity)getActivity()).replaceFragment(fragment); // 심박 전달
                         }
-                    },3000); // 3초 후 실행
+                    },1000); // 1초 후 실행
 
                     //startTime = System.currentTimeMillis();
                     //Log.v("중요", "중요 이모션 시작시간4 : "+startTime);
@@ -427,7 +337,9 @@ public class EmotionFragment extends Fragment {
                     return;
                 }
 
-                //여기 그래프 부분 추가
+                redpixels.add(new Entry( pixelcount++, imgAvg) );
+
+                // 그래프 관련 시작
                 Random random = new Random();
                 entries.add(new Entry((float)totalTimeInSecs,ranNum));
                 ranNum += random.nextInt(5);
@@ -453,8 +365,7 @@ public class EmotionFragment extends Fragment {
                 LineData lineData = new LineData(lineDataSet);
                 lineChart.setData(lineData);
                 lineChart.invalidate();
-
-                //// 여기 까지 그래프
+                // 여기 까지 그래프
 
                 int averageArrayAvg = 0;
                 int averageArrayCnt = 0;
@@ -467,10 +378,6 @@ public class EmotionFragment extends Fragment {
 
                 int rollingAverage = (averageArrayCnt > 0) ? (averageArrayAvg / averageArrayCnt) : 0;
                 TYPE newType = currentType;
-
-
-                // imgAvgText.setText("image average:"+ Integer.toString(imgAvg));
-                //rollAvgText.setText("rolling average:"+ Integer.toString(rollingAverage));
 
                 if (imgAvg < rollingAverage) {
                     newType = TYPE.RED;
