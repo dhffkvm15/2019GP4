@@ -1,8 +1,11 @@
 package com.example.gp4;
 
+import android.Manifest;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.support.annotation.NonNull;
 import android.support.design.widget.BottomNavigationView;
+import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
@@ -32,6 +35,7 @@ public class MainActivity extends AppCompatActivity {
         after = intent.getStringExtra("inputCatridge");
 
         bottomNavigationView = (BottomNavigationView)findViewById(R.id.main_activity_bottomnavigationview);
+
 
         // 첫 화면 지정
         //FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
@@ -85,7 +89,6 @@ public class MainActivity extends AppCompatActivity {
     public void onBackPressed() {
         if( after.equals("yes") ){ }
         else{ super.onBackPressed(); }
-
 
     }
 }

@@ -4,7 +4,8 @@
         <shape
             android:shape="oval">
             <solid android:color="@color/lightcoral"></solid>
+            <stroke android:width="3dp" android:color="@color/red"
+                android:dashWidth="5dp" android:dashGap="5dp"/>
         </shape>
     </item>
-
 </selector>

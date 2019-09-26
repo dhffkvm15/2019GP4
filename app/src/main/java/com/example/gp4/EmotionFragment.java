@@ -34,11 +34,10 @@ import com.github.mikephil.charting.data.LineDataSet;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Random;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 
-
+/* 심박 측정하는 부분 */
 public class EmotionFragment extends Fragment {
 
     private static final AtomicBoolean processing = new AtomicBoolean(false);
@@ -81,12 +80,10 @@ public class EmotionFragment extends Fragment {
     private LineChart lineChart; // 그래프
     private XAxis xAxis;
     private YAxis yAxis;
-    private List<Entry> entries = new ArrayList<>(); // 그래프화 하기 위한 리스트
-    private List<Entry> redpixels = new ArrayList<>(); // PPG signal 값 저장하기 위한 리스트 - 전달할 것임
+    private List<Entry> entries = new ArrayList<>(); // 그래프의 (x,y) 값 저장 배열
     private LineDataSet lineDataSet;
-    private int ranNum = 100;
-    private int ranCount = 0;
-    private int pixelcount = 0;
+    private int turnNum = -1; // 15초씩 도는 것이 몇번째인지 확인
+    ArrayList xPeaks = new ArrayList(); // 그래프에서 peak 값 저장할 리스트
 
     public static EmotionFragment newInstance(){
         return new EmotionFragment();
@@ -108,7 +105,6 @@ public class EmotionFragment extends Fragment {
         surfaceHolder.setType(SurfaceHolder.SURFACE_TYPE_PUSH_BUFFERS);
 
         heartRate = (TextView)viewGroup.findViewById(R.id.fragment_emotion_textview_heart);
-        //rollAvgText = (TextView)viewGroup.findViewById(R.id.fragment_emotion_rollavg_text);
 
         PowerManager powerManager = (PowerManager)getActivity().getSystemService(Context.POWER_SERVICE);
         wakeLock = powerManager.newWakeLock(PowerManager.FULL_WAKE_LOCK, "DoNotDimScreen");
@@ -129,6 +125,7 @@ public class EmotionFragment extends Fragment {
                 myProgressBar.requestLayout();
 
                 startTime = myProgressBar.getStartTime(); // 시작 시간 동일하도록 설정
+                turnNum = 0 ;
             }
         } ) ;
 
@@ -151,6 +148,7 @@ public class EmotionFragment extends Fragment {
         return viewGroup;
     }
 
+    // 차트 속성 설정
     private void chartInit() {
         // background color
         lineChart.setBackgroundColor(Color.TRANSPARENT);
@@ -202,7 +200,6 @@ public class EmotionFragment extends Fragment {
         wakeLock.acquire(10 * 60 * 1000L);
         camera = android.hardware.Camera.open();
         startTime = 0;
-        //Log.v("중요", "중요 이모션 시작시간1 : " + startTime);
 
     }
 
@@ -236,35 +233,18 @@ public class EmotionFragment extends Fragment {
                     myProgressBar.setCurValue(curX++);
                     myProgressBar.invalidate();
                     myProgressBar.requestLayout();
-
-
-                    ranCount++;
-                    if( (ranCount % 4) == 0 ){
-                        lineDataSet.clear();
-                        lineChart.invalidate();
-                        lineChart.clear();  // 그래프 지우기
-                    }
-
                 }
 
                 // 15초의 시간이 다 지났을 때
                 if (myProgressBar.getCurValue() == 15) {
-                    Log.v("중요", "15초 지남");
-
-                    lineDataSet.clear();
-                    lineChart.invalidate();
-                    lineChart.clear();
+                    //Log.v("중요", "15초 지남");
+                    turnNum++; // 턴 횟수 증가
 
                     double bps = (beats / (totalTimeInSecs - 1));
                     int dpm = (int) (bps * 60d);
-                    //Log.v("중요", "중요 이모션 시작 시간2 : " + startTime);
-                    //Log.v("중요", "중요 총 시간 : " + totalTimeInSecs);
+
                     if (dpm < 50 || dpm > 180) {
-
-                        Log.v("중요", "중요 다시 측정");
-                        //Log.v("중요", "dpm : "+dpm);
-                        //startTime = System.currentTimeMillis();
-
+                        //Log.v("중요", "중요 다시 측정");
                         curX = 1;
                         myProgressBar.setStart(true); // 프로그레스 바 작동하도록
                         myProgressBar.setStartTime(System.currentTimeMillis());
@@ -273,15 +253,10 @@ public class EmotionFragment extends Fragment {
                         myProgressBar.requestLayout();
 
                         startTime = myProgressBar.getStartTime(); // 시작 시간 동일하도록 설정
-
-                        Log.v("중요", "중요 이모션 시작시간3 : " + startTime);
                         beats = 0;
                         processing.set(false);
                         return;
                     }
-
-                    // Log.d(TAG,
-                    // "totalTimeInSecs="+totalTimeInSecs+" beats="+beats);
 
                     if (beatsIndex == beatsArraySize) beatsIndex = 0;
                     beatsArray[beatsIndex] = dpm;
@@ -301,25 +276,42 @@ public class EmotionFragment extends Fragment {
                     heartRate.setVisibility(View.VISIBLE);
                     heartRate.setText(String.valueOf(beatsAvg) + " bpm");
 
+                    // 그래프에서 peak 찾기
+                    float tempa = 0 ; float tempb = 0;
+                    for(int i=1; i < entries.size()-1; i++){
+                        tempa = entries.get(i).getY() - entries.get(i-1).getY();
+                        tempb = entries.get(i+1).getY() - entries.get(i).getY();
+
+                        if( (tempa >0 && tempb < 0) ||
+                                (tempa >0 && tempb ==0) ||
+                                (tempa ==0 && tempb < 0)) {
+                            xPeaks.add(entries.get(i).getX()); // peak 부분의 x 값 넣기
+                        }
+                    }
+
+                    turnNum = -2;
+
+                    Log.v("발표", "redpixels 개수 : " +entries.size());
+                    Log.v("발표", "xPeak 피크 : " +xPeaks);
+
+
                     Handler handler = new Handler();
                     handler.postDelayed(new Runnable() {
                         @Override
                         public void run() {
                             bundle.putInt("heartrate", beatsAvg);
-                            bundle.putParcelableArrayList("list", (ArrayList<? extends Parcelable>) redpixels);
+                            bundle.putParcelableArrayList("list", (ArrayList<? extends Parcelable>) entries);
+                            bundle.putParcelableArrayList("xpeaks", (ArrayList<? extends Parcelable>) xPeaks);
                             fragment.setArguments(bundle);
 
                             ((MainActivity)getActivity()).replaceFragment(fragment); // 심박 전달
                         }
-                    },1000); // 1초 후 실행
+                    },1000); // 0.5초 후 실행
 
-                    //startTime = System.currentTimeMillis();
-                    //Log.v("중요", "중요 이모션 시작시간4 : "+startTime);
                     beats = 0;
 
                 }
 
-                //Log.v("여기", "onPreviewFrame");
                 if (data == null) throw new NullPointerException();
                 Camera.Size size = cam.getParameters().getPreviewSize();
                 if (size == null) throw new NullPointerException();
@@ -330,27 +322,21 @@ public class EmotionFragment extends Fragment {
                 int height = size.height;
 
                 int imgAvg = ImageProcessing.decodeYUV420SPtoRedAvg(data.clone(), height, width);
-                // imgAvg = red pixel values / framesize
+                // imgAvg = red pixel values / framesize (위 함수로 나온 값에 대한 설명)
 
                 if (imgAvg == 0 || imgAvg == 255) {
                     processing.set(false);
                     return;
                 }
 
-                redpixels.add(new Entry( pixelcount++, imgAvg) );
-
-                // 그래프 관련 시작
-                Random random = new Random();
-                entries.add(new Entry((float)totalTimeInSecs,ranNum));
-                ranNum += random.nextInt(5);
-
-                if(ranNum > 120 && ranNum <=130){
-                    ranNum = 100 + random.nextInt(10); // 100에서 109사이의 정수
+                //여기 그래프
+                if(turnNum >= 0 ){
+                    entries.add(new Entry((float) totalTimeInSecs + 15*turnNum, imgAvg));
                 }
 
                 lineDataSet = new LineDataSet(entries, "value");
                 //LineDataSet lineDataSet = new LineDataSet(entries, "value");
-                lineDataSet.setLineWidth(2);
+                lineDataSet.setLineWidth(1);
                 lineDataSet.setDrawCircles(false);
                 //lineDataSet.setCircleRadius(2);
                 //lineDataSet.setCircleColor(Color.parseColor("#FFA1B4DC"));
@@ -365,6 +351,34 @@ public class EmotionFragment extends Fragment {
                 LineData lineData = new LineData(lineDataSet);
                 lineChart.setData(lineData);
                 lineChart.invalidate();
+
+                // 원래 그래프
+                // 그래프 관련 시작
+//                Random random = new Random();
+//                entries.add(new Entry((float)totalTimeInSecs,ranNum));
+//                ranNum += random.nextInt(5);
+//
+//                if(ranNum > 120 && ranNum <=130){
+//                    ranNum = 100 + random.nextInt(10); // 100에서 109사이의 정수
+//                }
+//
+//                lineDataSet = new LineDataSet(entries, "value");
+//                //LineDataSet lineDataSet = new LineDataSet(entries, "value");
+//                lineDataSet.setLineWidth(2);
+//                lineDataSet.setDrawCircles(false);
+//                //lineDataSet.setCircleRadius(2);
+//                //lineDataSet.setCircleColor(Color.parseColor("#FFA1B4DC"));
+//                //lineDataSet.setCircleHoleColor(Color.BLUE);
+//                lineDataSet.setColor(Color.parseColor("#FFC0B2D1"));
+//                //lineDataSet.setDrawCircleHole(true);
+//                //lineDataSet.setDrawCircles(true);
+//                //lineDataSet.setDrawHorizontalHighlightIndicator(false);
+//                //lineDataSet.setDrawHighlightIndicators(false);
+//                lineDataSet.setDrawValues(false);
+//
+//                LineData lineData = new LineData(lineDataSet);
+//                lineChart.setData(lineData);
+//                lineChart.invalidate();
                 // 여기 까지 그래프
 
                 int averageArrayAvg = 0;
@@ -384,25 +398,6 @@ public class EmotionFragment extends Fragment {
                     if (newType != currentType) {
                         beats++;
 
-//                        //여기 그래프 부분 추가
-//                        entries.add(new Entry((float)totalTimeInSecs,imgAvg));
-//                        lineDataSet = new LineDataSet(entries, "value");
-//                        //LineDataSet lineDataSet = new LineDataSet(entries, "value");
-//                        lineDataSet.setLineWidth(1);
-//                        lineDataSet.setCircleRadius(2);
-//                        lineDataSet.setCircleColor(Color.parseColor("#FFA1B4DC"));
-//                        lineDataSet.setCircleHoleColor(Color.BLUE);
-//                        lineDataSet.setColor(Color.parseColor("#FFA1B4DC"));
-//                        //lineDataSet.setDrawCircleHole(true);
-//                        //lineDataSet.setDrawCircles(true);
-//                        //lineDataSet.setDrawHorizontalHighlightIndicator(false);
-//                        //lineDataSet.setDrawHighlightIndicators(false);
-//                        lineDataSet.setDrawValues(false);
-//
-//                        LineData lineData = new LineData(lineDataSet);
-//                        lineChart.setData(lineData);
-//                        lineChart.invalidate();
-//                        //// 여기 까지 그래프
 
                     }
                 } else if (imgAvg > rollingAverage) {
@@ -419,117 +414,6 @@ public class EmotionFragment extends Fragment {
                     //image.postInvalidate();
                 }
 
-
-//            long endTime = System.currentTimeMillis();
-//            double totalTimeInSecs = (endTime - startTime) / 1000d;
-//
-//            if( myProgressBar.getCurValue() == 15 ){
-//                Log.v("중요", "15초 지남");
-//
-//
-//                    double bps = (beats / (totalTimeInSecs-1));
-//                    int dpm = (int) (bps * 60d);
-//                    Log.v("중요", "중요 이모션 시작 시간2 : "+startTime);
-//                    Log.v("중요", "중요 총 시간 : "+totalTimeInSecs);
-//                    if (dpm < 50 || dpm > 180) {
-//
-//                        Log.v("중요", "중요 다시 측정");
-//                        //Log.v("중요", "dpm : "+dpm);
-//                        //startTime = System.currentTimeMillis();
-//                        myProgressBar.setStart(true); // 프로그레스 바 작동하도록
-//                        myProgressBar.setStartTime(System.currentTimeMillis());
-//                        myProgressBar.setCurValue(0);
-//                        myProgressBar.invalidate();
-//                        myProgressBar.requestLayout();
-//
-//                        startTime = myProgressBar.getStartTime(); // 시작 시간 동일하도록 설정
-//
-//                        Log.v("중요", "중요 이모션 시작시간3 : "+startTime);
-//                        beats = 0;
-//                        processing.set(false);
-//                        return;
-//                    }
-//
-//                    // Log.d(TAG,
-//                    // "totalTimeInSecs="+totalTimeInSecs+" beats="+beats);
-//
-//                    if (beatsIndex == beatsArraySize) beatsIndex = 0;
-//                    beatsArray[beatsIndex] = dpm;
-//                    beatsIndex++;
-//
-//
-//                    int beatsArrayAvg = 0;
-//                    int beatsArrayCnt = 0;
-//                    for (int i = 0; i < beatsArray.length; i++) {
-//                        if (beatsArray[i] > 0) {
-//                            beatsArrayAvg += beatsArray[i];
-//                            beatsArrayCnt++;
-//                        }
-//                    }
-//                    int beatsAvg = (beatsArrayAvg / beatsArrayCnt);
-//
-//                    myProgressBar.setFinish(true); // 텍스트가 안보이게 끔
-//                    heartRate.setVisibility(View.VISIBLE);
-//                    heartRate.setText(String.valueOf(beatsAvg)+" bpm");
-//
-//                    //startTime = System.currentTimeMillis();
-//                    //Log.v("중요", "중요 이모션 시작시간4 : "+startTime);
-//                    beats = 0;
-//
-//            }
-
-                // 아래의 것이 원래 것
-//            if (totalTimeInSecs >= 15 && totalTimeInSecs <16) {
-//
-//                double bps = (beats / totalTimeInSecs);
-//                int dpm = (int) (bps * 60d);
-//                Log.v("중요", "중요 이모션 시작 시간2 : "+startTime);
-//                Log.v("중요", "중요 총 시간 : "+totalTimeInSecs);
-//                if (dpm < 50 || dpm > 180) {
-//
-//                    Log.v("중요", "중요 다시 측정");
-//                    //Log.v("중요", "dpm : "+dpm);
-//                    //startTime = System.currentTimeMillis();
-//                    myProgressBar.setStart(true); // 프로그레스 바 작동하도록
-//                    myProgressBar.setStartTime(System.currentTimeMillis());
-//                    myProgressBar.setCurValue(0);
-//                    myProgressBar.invalidate();
-//                    myProgressBar.requestLayout();
-//
-//                    startTime = myProgressBar.getStartTime(); // 시작 시간 동일하도록 설정
-//
-//                    Log.v("중요", "중요 이모션 시작시간3 : "+startTime);
-//                    beats = 0;
-//                    processing.set(false);
-//                    return;
-//                }
-//
-//                // Log.d(TAG,
-//                // "totalTimeInSecs="+totalTimeInSecs+" beats="+beats);
-//
-//                if (beatsIndex == beatsArraySize) beatsIndex = 0;
-//                beatsArray[beatsIndex] = dpm;
-//                beatsIndex++;
-//
-//
-//                int beatsArrayAvg = 0;
-//                int beatsArrayCnt = 0;
-//                for (int i = 0; i < beatsArray.length; i++) {
-//                    if (beatsArray[i] > 0) {
-//                        beatsArrayAvg += beatsArray[i];
-//                        beatsArrayCnt++;
-//                    }
-//                }
-//                int beatsAvg = (beatsArrayAvg / beatsArrayCnt);
-//
-//                myProgressBar.setFinish(true); // 텍스트가 안보이게 끔
-//                heartRate.setVisibility(View.VISIBLE);
-//                heartRate.setText(String.valueOf(beatsAvg)+" bpm");
-//
-//                //startTime = System.currentTimeMillis();
-//                //Log.v("중요", "중요 이모션 시작시간4 : "+startTime);
-//                beats = 0;
-//            }
                 processing.set(false);
 
             }
@@ -540,9 +424,6 @@ public class EmotionFragment extends Fragment {
 
         @Override
         public void surfaceCreated(SurfaceHolder holder) {
-
-
-
             try {
                 camera.setPreviewDisplay(surfaceHolder);
                 camera.setPreviewCallback(previewCallback);
@@ -557,8 +438,6 @@ public class EmotionFragment extends Fragment {
          */
         @Override
         public void surfaceChanged(SurfaceHolder holder, int format, int width, int height) {
-
-
             android.hardware.Camera.Parameters parameters = camera.getParameters();
             parameters.setFlashMode(android.hardware.Camera.Parameters.FLASH_MODE_TORCH);
             android.hardware.Camera.Size size = getSmallestPreviewSize(width, height, parameters);
@@ -568,9 +447,6 @@ public class EmotionFragment extends Fragment {
             }
             camera.setParameters(parameters);
             camera.startPreview();
-
-
-
         }
 
         /**

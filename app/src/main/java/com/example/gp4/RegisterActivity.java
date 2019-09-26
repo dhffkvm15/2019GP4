@@ -1,15 +1,22 @@
 package com.example.gp4;
 
+import android.Manifest;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.pm.PackageManager;
 import android.provider.Settings;
+import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.Gravity;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.RadioGroup;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.gson.Gson;
@@ -35,6 +42,7 @@ public class RegisterActivity extends AppCompatActivity {
         setContentView(R.layout.activity_register);
 
         init();
+        checkCAMERAPermission(); // 카메라 권한 획득
 
         radioGroup.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
             @Override
@@ -57,17 +65,35 @@ public class RegisterActivity extends AppCompatActivity {
 
     // 등록 버튼 클릭 시 - 사용자 정보 확인 및 값 저장
     public void register(View view) {
+
+        LayoutInflater inflater = getLayoutInflater();
+        View toastDesign = inflater.inflate(R.layout.toast_design, (ViewGroup)findViewById(R.id.toast_design_root));
+        TextView textView = toastDesign.findViewById(R.id.toast_design_textview); // 토스트 꾸미기 위함
+
         // 이름, 나이 중 입력한 것이 없을 때,
         if( editTextName.getText().toString().length() == 0
                 || editTextAge.getText().toString().length() == 0){
-                Toast.makeText(getApplicationContext(), "빈 칸이 있습니다.", Toast.LENGTH_LONG).show();
+
+            textView.setText("빈 칸이 있습니다.");
+            Toast toast = new Toast(getApplicationContext());
+            toast.setGravity(Gravity.BOTTOM, 0, 30);
+            toast.setDuration(Toast.LENGTH_LONG);
+            toast.setView(toastDesign);
+            toast.show();
+                //Toast.makeText(getApplicationContext(), "빈 칸이 있습니다.", Toast.LENGTH_LONG).show(); - 일반 토스트 상자
         }else{ //  빈 칸이 없을 때
             name = editTextName.getText().toString();
             age = Integer.parseInt(editTextAge.getText().toString());
 
             //나이 범위가 아닐 때
             if(age <=0 || age >= 150){
-                Toast.makeText(getApplicationContext(), "나이를 잘못입력했습니다.", Toast.LENGTH_LONG).show();
+                textView.setText("나이를 잘못입력했습니다.");
+                Toast toast = new Toast(getApplicationContext());
+                toast.setGravity(Gravity.BOTTOM, 0, 30);
+                toast.setDuration(Toast.LENGTH_LONG);
+                toast.setView(toastDesign);
+                toast.show();
+                //Toast.makeText(getApplicationContext(), "나이를 잘못입력했습니다.", Toast.LENGTH_LONG).show(); - 일반 토스트 상자
             }else{
                 UserInfo userInfo = new UserInfo(name, age, sex );
 
@@ -81,10 +107,21 @@ public class RegisterActivity extends AppCompatActivity {
                 editor.putString("Info", tmpInfo); // JSON 으로 변환한 객체 저장
                 editor.commit(); // 저장 완료
 
-                //Log.v("확인", "확인 저장완료 ");
-                startActivity(new Intent(this, InputCatridgeActivity.class)); // Todo 뒤로 가기 버튼 확인해보기
+                startActivity(new Intent(this, InputCatridgeActivity.class));
              }
 
+        }
+    }
+
+    // 카메라 권한 획득
+    public void checkCAMERAPermission() {
+        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.CAMERA)
+                != PackageManager.PERMISSION_GRANTED) {
+
+            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.CAMERA},
+                    1001);
+        } else {
+            Log.v("태그", "카메라 허가 받음");
         }
     }
 }

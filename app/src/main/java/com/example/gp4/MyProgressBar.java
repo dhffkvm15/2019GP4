@@ -110,7 +110,7 @@ public class MyProgressBar extends View {
         circle.setStyle(Paint.Style.STROKE);
 
         //startTime = System.currentTimeMillis();
-        Log.v("중요", "중요 myProgress 시작시간 : "+startTime);
+       // Log.v("중요", "중요 myProgress 시작시간 : "+startTime);
 
         // 진행바 그리기
         if(curValue != 0) {

@@ -18,12 +18,16 @@ import com.github.mikephil.charting.components.YAxis;
 import com.github.mikephil.charting.data.Entry;
 import com.github.mikephil.charting.data.LineData;
 import com.github.mikephil.charting.data.LineDataSet;
+import com.github.mikephil.charting.highlight.Highlight;
+import com.github.mikephil.charting.listener.OnChartValueSelectedListener;
 
 import java.util.ArrayList;
 import java.util.List;
 
+// 스트레스 지수 파악 및 hrv 그래프 그리는 부분
 public class Emotion1Fragment extends Fragment {
 
+    //TODO 심박 그래프 그리는 것 지우기
     private int heartrate = 0; // 전달받은 심박수
     private List<Entry> redpixels = new ArrayList<>(); // 전달받은 red pixels 저장
     private ArrayList xPeaks = new ArrayList(); // peak일 때의 x 값을 저장하기 위함
@@ -40,7 +44,7 @@ public class Emotion1Fragment extends Fragment {
     private YAxis pixelY;
     private XAxis hrvX;
     private YAxis hrvY;
-
+private ArrayList temps = new ArrayList();
     public static Emotion1Fragment newInstance(){
         return new Emotion1Fragment();
     }
@@ -122,7 +126,6 @@ public class Emotion1Fragment extends Fragment {
         }
     }
 
-
     // 심박 표시 및 그래프 그리는 함수
     private void init() {
 
@@ -132,21 +135,20 @@ public class Emotion1Fragment extends Fragment {
 
         /* red values 그래프 그리기 */
         redpixels = bundle.getParcelableArrayList("list");
+        Log.v("중요", "사이즈" + redpixels.size());
 
-        float tempa = 0 ; float tempb = 0;
-        for(int i=1; i < redpixels.size()-1; i++){
-            tempa = redpixels.get(i).getY() - redpixels.get(i-1).getY();
-            tempb = redpixels.get(i+1).getY() - redpixels.get(i).getY();
+//        float tempa = 0 ; float tempb = 0;
+//        for(int i=1; i < redpixels.size()-1; i++){
+//            tempa = redpixels.get(i).getY() - redpixels.get(i-1).getY();
+//            tempb = redpixels.get(i+1).getY() - redpixels.get(i).getY();
+//
+//            if( (tempa >0 && tempb < 0) ||
+//                    (tempa >0 && tempb ==0) ||
+//                    (tempa ==0 && tempb < 0)) {
+//                xPeaks.add(redpixels.get(i).getX()); // peak 부분의 x 값 넣기
+//            }
+//        }
 
-            if( (tempa >0 && tempb < 0) ||
-                    (tempa >0 && tempb ==0) ||
-                    (tempa ==0 && tempb < 0)) {
-                xPeaks.add(i); // peak 부분의 x 값 넣기
-            }
-        }
-
-        Log.v("태그", "배열  : "+xPeaks );
-        Log.v("태그", "배열 길이 : " + xPeaks.size());
         LineDataSet lineDataSet;
         lineDataSet = new LineDataSet(redpixels, "value");
         lineDataSet.setLineWidth(1);
@@ -160,12 +162,14 @@ public class Emotion1Fragment extends Fragment {
         // 여기까지 redvalues 그래프 그리기
 
         /* hrv그래프 그리기 */
-
+        xPeaks = bundle.getParcelableArrayList("xpeaks");
         for(int i=1; i<xPeaks.size(); i++){
-            int temp = (int) xPeaks.get(i) - (int) xPeaks.get(i-1);
-            Log.v("태그", "i : " + i +" /temp:  "+temp);
+            float temp = (float) xPeaks.get(i) - (float) xPeaks.get(i-1);
             hrvValue.add(new Entry(hrvCount++, temp));
+            temps.add(temp);
         }
+
+        Log.v("발표", "차이 주기 배열 : "+hrvValue);
 
         LineDataSet lineDataSet1;
         lineDataSet1 = new LineDataSet(hrvValue, "value");
@@ -179,6 +183,61 @@ public class Emotion1Fragment extends Fragment {
         hrvGraph.invalidate();
         // 여기까지 redvalues 그래프 그리기
 
+        //여기부터 수정
+        int N = 128; // int N = 8;
+        FFT fft = new FFT(N);
+
+        double[] window = fft.getWindow();
+        double[] re = new double[N];
+        double[] im = new double[N];
+
+        // 내가 추가
+        for(int i=0; i<N; i++){
+            if(i >= hrvValue.size()){
+                re[i] = 0;
+                im[i] = 0;
+            }else{
+                re[i] = hrvValue.get(i).getY();
+                im[i] = 0;
+            }
+        }
+
+        //Impulse
+//        re[0] = 1; im[0] = 0;
+//        for(int i=1; i<N; i++)
+//            re[i] = im[i] = 0;
+        beforeAfter(fft, re, im);
+
+
     }
+
+    protected static void beforeAfter(FFT fft, double[] re, double[] im){
+        System.out.println("Before: ");
+        printReIm(re, im);
+        fft.fft(re, im);
+        System.out.println("After: ");
+        printReIm(re, im);
+        System.out.println("크기 : ");
+
+        double[] temp = new double[128];
+        for(int i=0; i<128; i++){
+            temp[i] = Math.sqrt(re[i]*re[i] + im[i]*im[i]);
+            Log.v("배열 값", "배열" +temp[i]);
+        }
+
+    }
+
+    protected static void printReIm(double[] re, double[] im ){
+        System.out.print("Re: [");
+        for(int i=0; i<re.length; i++)
+            System.out.print(((int)(re[i]*1000)/1000.0) + " ");
+
+        System.out.print("]\nIm: [");
+        for(int i=0; i<im.length; i++)
+            System.out.print(((int)(im[i]*1000)/1000.0) + " ");
+
+        System.out.println("]");
+    }
+
 }
 

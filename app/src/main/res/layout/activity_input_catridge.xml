@@ -30,7 +30,7 @@
             android:layout_width="110dp"
             android:layout_height="110dp"
             android:id="@+id/input_catridge_button1"
-            android:background="@drawable/circlebutton"
+            android:background="@drawable/stressbutton"
             android:text="입력"
             android:textColor="@color/myblack"
             />
@@ -96,7 +96,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:padding="5dp"
-        android:text="등록하기"
+        android:text="등록"
         android:textSize="20dp"
         android:id="@+id/input_catridge_register_button"
         android:layout_below="@id/input_catridge_line2"

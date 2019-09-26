@@ -41,9 +41,6 @@ public class SplashActivity extends Activity {
             }else{
             gson = new GsonBuilder().create();
             UserInfo userInfo = gson.fromJson(tmpInfo, UserInfo.class);
-            //Log.v("확인", "저장된 이름 : " + userInfo.getName());
-            //Log.v("확인", "저장된 나이 : " + userInfo.getAge());
-            //Log.v("확인", "저장된 성별 : " + userInfo.getSex());
                 Intent intent = new Intent(this, MainActivity.class);
                 intent.putExtra("inputCatridge", "no");
                 startActivity(intent);

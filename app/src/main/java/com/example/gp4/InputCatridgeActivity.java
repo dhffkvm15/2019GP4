@@ -6,8 +6,12 @@ import android.renderscript.ScriptGroup;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.Gravity;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.firebase.database.DatabaseReference;
@@ -27,6 +31,7 @@ public class InputCatridgeActivity extends AppCompatActivity {
     private Button button5;
     private Button button6;
     private Button register;
+    private long lastTimeBackPressed; // 뒤로가기 버튼이 클릭된 시간
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -60,7 +65,18 @@ public class InputCatridgeActivity extends AppCompatActivity {
         if( button1.getText().toString().equals("입력") || button2.getText().toString().equals("입력") || button3.getText().toString().equals("입력")
         || button4.getText().toString().equals("입력") || button5.getText().toString().equals("입력") || button6.getText().toString().equals("입력")){
             // 선택 안 한 창이 있으면
-            Toast.makeText(getApplicationContext(), "빈 칸이 있습니다.", Toast.LENGTH_LONG).show();
+
+            LayoutInflater inflater = getLayoutInflater();
+            View toastDesign = inflater.inflate(R.layout.toast_design, (ViewGroup)findViewById(R.id.toast_design_root));
+            TextView textView = toastDesign.findViewById(R.id.toast_design_textview); // 토스트 꾸미기 위함
+
+            textView.setText("빈 칸이 있습니다.");
+            Toast toast = new Toast(getApplicationContext());
+            toast.setGravity(Gravity.BOTTOM, 0, 30);
+            toast.setDuration(Toast.LENGTH_LONG);
+            toast.setView(toastDesign);
+            toast.show();
+            //Toast.makeText(getApplicationContext(), "빈 칸이 있습니다.", Toast.LENGTH_LONG).show();
         }else{
             FirebaseDatabase firebaseDatabase = FirebaseDatabase.getInstance(); // 파이어베이스 불러오기
             DatabaseReference databaseReference = firebaseDatabase.getReference("catridge");
@@ -183,9 +199,29 @@ public class InputCatridgeActivity extends AppCompatActivity {
         }
     }
 
-    // 뒤로가기 막기
+    // 뒤로가기 2번 클릭 시 종료
     @Override
     public void onBackPressed() {
+
+        // 2초 이내에 뒤로가기 버튼 재 클릭시 어플 종료
+        if(System.currentTimeMillis() - lastTimeBackPressed < 2000) {
+            finish();
+            return;
+        }
+
+        // 뒤로 한번 클릭 시 메시지
+        LayoutInflater inflater = getLayoutInflater();
+        View toastDesign = inflater.inflate(R.layout.toast_design, (ViewGroup)findViewById(R.id.toast_design_root));
+        TextView textView = toastDesign.findViewById(R.id.toast_design_textview); // 토스트 꾸미기 위함
+
+        textView.setText("'뒤로'버튼 한번 더 누르시면 앱이 종료됩니다.");
+        Toast toast = new Toast(getApplicationContext());
+        toast.setGravity(Gravity.BOTTOM, 0, 30);
+        toast.setDuration(Toast.LENGTH_SHORT);
+        toast.setView(toastDesign);
+        toast.show();
+
+        lastTimeBackPressed = System.currentTimeMillis();
     }
 }
 
