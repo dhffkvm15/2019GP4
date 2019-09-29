@@ -2,6 +2,8 @@ package com.example.gp4;
 
 import android.graphics.Color;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Parcelable;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -45,6 +47,10 @@ public class Emotion1Fragment extends Fragment {
     private XAxis hrvX;
     private YAxis hrvY;
     //private static ArrayList temps = new ArrayList();
+    private Bundle toBundle = new Bundle(); // 전달해주기 위한 bundle
+    private boolean IsStress = false; // 스트레스 유무
+    private Fragment fragment = new Emotion2Fragment();
+
     public static Emotion1Fragment newInstance(){
         return new Emotion1Fragment();
     }
@@ -231,13 +237,25 @@ public class Emotion1Fragment extends Fragment {
                  hf += (double)hzMag.get(i);
         }
 
-        double stress = lf/hf;
+        final double stress = lf/hf;
         if( stress >= 1){
             stressTextview.setText(String.format("%.2f",stress) + " / 스트레스 있음");
         }else{
             stressTextview.setText(String.format("%.2f",stress)  + " / 스트레스 없음");
         }
         //Log.v("결과 확인", "lf/hf : " + (lf/hf));
+
+        Handler handler = new Handler();
+        handler.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                toBundle.putBoolean("stress", IsStress);
+                fragment.setArguments(toBundle);
+
+                ((MainActivity)getActivity()).replaceFragment(fragment); // 스트레스 전달
+            }
+        },3000); // 3초 후 실행
+
     }
 
     protected static void beforeAfter(FFT fft, double[] re, double[] im){

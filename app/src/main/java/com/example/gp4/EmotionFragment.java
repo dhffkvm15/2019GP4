@@ -74,8 +74,10 @@ public class EmotionFragment extends Fragment {
     private static MyProgressBar myProgressBar;
 
     private static ImageButton skipButton;
-    private Fragment fragment = new Emotion1Fragment(); // TODO skipbutton 고치면서 여기도 같이 고치기
+    private Fragment fragment = new Emotion1Fragment();
+    private Fragment fragment1 = new Emotion2Fragment();
     private Bundle bundle = new Bundle();
+    private Bundle bundle1 = new Bundle();
 
     private LineChart lineChart; // 그래프
     private XAxis xAxis;
@@ -135,11 +137,10 @@ public class EmotionFragment extends Fragment {
         skipButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                bundle.putBoolean("IsStress", false); // 스트레스 지수가 있는지 전달
-                fragment.setArguments(bundle);
+                bundle1.putBoolean("stress", false); // 스트레스 지수가 있는지 전달
+                fragment1.setArguments(bundle1);
 
-                ((MainActivity)getActivity()).replaceFragment(fragment); // 심박 전달
-                //TODO skip 버튼 관련 고치기
+                ((MainActivity)getActivity()).replaceFragment(fragment1); // 심박 전달
             }
         });
 
