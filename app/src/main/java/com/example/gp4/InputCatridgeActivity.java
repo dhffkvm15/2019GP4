@@ -99,6 +99,7 @@ public class InputCatridgeActivity extends AppCompatActivity {
             Intent intent = new Intent(this, MainActivity.class);
             intent.putExtra("inputCatridge", "yes");
             startActivity(intent);
+            finish();
         }
 
     }
@@ -204,9 +205,11 @@ public class InputCatridgeActivity extends AppCompatActivity {
     public void onBackPressed() {
 
         // 2초 이내에 뒤로가기 버튼 재 클릭시 어플 종료
-        if(System.currentTimeMillis() - lastTimeBackPressed < 2000) {
-            finish();
+        if(System.currentTimeMillis() - lastTimeBackPressed < 1000) {
+            finishAffinity();
+            //finish();
             return;
+
         }
 
         // 뒤로 한번 클릭 시 메시지

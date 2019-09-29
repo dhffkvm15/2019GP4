@@ -27,24 +27,24 @@ import java.util.List;
 // 스트레스 지수 파악 및 hrv 그래프 그리는 부분
 public class Emotion1Fragment extends Fragment {
 
-    //TODO 심박 그래프 그리는 것 지우기
     private int heartrate = 0; // 전달받은 심박수
+    private int turnNum = 0; // 전달받은 프로그레스바가 진행된 횟수
     private List<Entry> redpixels = new ArrayList<>(); // 전달받은 red pixels 저장
     private ArrayList xPeaks = new ArrayList(); // peak일 때의 x 값을 저장하기 위함
-    private List<Entry> hrvValue = new ArrayList<>(); // hrv 그래프화 하기 위한 리스트
+    private List<Entry> hrvValue = new ArrayList<>(); // 심박 주기 그래프화 하기 위한 리스트
     private int hrvCount = 0;
 
     private TextView heartbpm; // 심박수 표시 텍스트 뷰
     private LineChart pixelGraph; // red pixels 그래프
     private LineChart hrvGraph;
-    private ImageView stressImage; // 스트레스 지수에 따른 이미지
+    //private ImageView stressImage; // 스트레스 지수에 따른 이미지
     private TextView stressTextview; // 스트레스 지수 표시하는 텍스트 뷰
 
     private XAxis pixelX;
     private YAxis pixelY;
     private XAxis hrvX;
     private YAxis hrvY;
-private ArrayList temps = new ArrayList();
+    //private static ArrayList temps = new ArrayList();
     public static Emotion1Fragment newInstance(){
         return new Emotion1Fragment();
     }
@@ -57,7 +57,7 @@ private ArrayList temps = new ArrayList();
         heartbpm = (TextView)viewGroup.findViewById(R.id.fragment_emotion1_textview_heartrate);
         pixelGraph = (LineChart)viewGroup.findViewById(R.id.fragment_emotion1_redchart);
         hrvGraph = (LineChart)viewGroup.findViewById(R.id.fragment_emotion1_hrvchart);
-        stressImage = (ImageView)viewGroup.findViewById(R.id.fragment_emotion1_imageview_stress);
+        //stressImage = (ImageView)viewGroup.findViewById(R.id.fragment_emotion1_imageview_stress);
         stressTextview = (TextView)viewGroup.findViewById(R.id.fragment_emotion1_textview_howstress);
 
         setchart(); // 차트 기본 설정
@@ -133,10 +133,10 @@ private ArrayList temps = new ArrayList();
         heartrate = bundle.getInt("heartrate");
         heartbpm.setText(String.valueOf(heartrate) + " bpm"); // 심박 표시
 
+        turnNum = bundle.getInt("ToNum");
+
         /* red values 그래프 그리기 */
         redpixels = bundle.getParcelableArrayList("list");
-        Log.v("중요", "사이즈" + redpixels.size());
-
 //        float tempa = 0 ; float tempb = 0;
 //        for(int i=1; i < redpixels.size()-1; i++){
 //            tempa = redpixels.get(i).getY() - redpixels.get(i-1).getY();
@@ -148,7 +148,6 @@ private ArrayList temps = new ArrayList();
 //                xPeaks.add(redpixels.get(i).getX()); // peak 부분의 x 값 넣기
 //            }
 //        }
-
         LineDataSet lineDataSet;
         lineDataSet = new LineDataSet(redpixels, "value");
         lineDataSet.setLineWidth(1);
@@ -161,15 +160,16 @@ private ArrayList temps = new ArrayList();
         pixelGraph.invalidate();
         // 여기까지 redvalues 그래프 그리기
 
-        /* hrv그래프 그리기 */
+        /*  심박 주기 그래프 그리기 */
         xPeaks = bundle.getParcelableArrayList("xpeaks");
         for(int i=1; i<xPeaks.size(); i++){
             float temp = (float) xPeaks.get(i) - (float) xPeaks.get(i-1);
             hrvValue.add(new Entry(hrvCount++, temp));
-            temps.add(temp);
+            //temps.add(temp); // 주기 차이를 넣음
         }
 
-        Log.v("발표", "차이 주기 배열 : "+hrvValue);
+        //Log.v("꼭", "차이 주기 배열 길이 : "+ temps.size());
+        //Log.v("꼭", "차이 주기 배열 : "+ temps);
 
         LineDataSet lineDataSet1;
         lineDataSet1 = new LineDataSet(hrvValue, "value");
@@ -181,7 +181,7 @@ private ArrayList temps = new ArrayList();
         LineData lineData1 = new LineData(lineDataSet1);
         hrvGraph.setData(lineData1);
         hrvGraph.invalidate();
-        // 여기까지 redvalues 그래프 그리기
+        // 여기까지 심박 주기 그래프 그리기
 
         //여기부터 수정
         int N = 128; // int N = 8;
@@ -197,18 +197,47 @@ private ArrayList temps = new ArrayList();
                 re[i] = 0;
                 im[i] = 0;
             }else{
+                //re[i] = (float)temps.get(i);
                 re[i] = hrvValue.get(i).getY();
                 im[i] = 0;
             }
         }
 
-        //Impulse
-//        re[0] = 1; im[0] = 0;
-//        for(int i=1; i<N; i++)
-//            re[i] = im[i] = 0;
-        beforeAfter(fft, re, im);
+        fft.fft(re, im);
+        // beforeAfter(fft, re, im); - 출력 필요할 때
 
+        ArrayList whathz = new ArrayList();
+        ArrayList hzMag = new ArrayList();
+        int samplingFrequency = hrvValue.size() / ( 15 * turnNum ) ;
+        Log.v("꼭", "전달받은 turnNum : " +turnNum);
 
+        double a=0; double b = 0;
+        for(int i=0; i<= N/2; i++){
+            a= Math.sqrt( (re[i]*re[i]) + (im[i]*im[i]) ); // 주파수 magnitude
+            b= i * (double) samplingFrequency / (double) N; // 주파수
+
+            hzMag.add(i, a);
+            whathz.add(i, b );
+        }
+
+        //Log.v("꼭", "HZ : " +whathz);
+        //Log.v("꼭", "HZ 크기 : " + hzMag);
+
+        double lf = 0; double hf = 0;
+        for(int i=1; i<=N/2; i++){
+             if( 0.04 <= (double)whathz.get(i) && (double)whathz.get(i) < 0.15 )
+                 lf += (double)hzMag.get(i);
+             else if(0.15 <= (double)whathz.get(i) && (double)whathz.get(i) < 0.4)
+                 hf += (double)hzMag.get(i);
+        }
+
+        double stress = lf/hf;
+        if( stress >= 1){
+            stressTextview.setText(String.format("%.2f",stress) + " / 스트레스 있음");
+        }else{
+            stressTextview.setText(String.format("%.2f",stress)  + " / 스트레스 없음");
+        }
+        //Log.v("결과 확인", "lf/hf : " + (lf/hf));
     }
 
     protected static void beforeAfter(FFT fft, double[] re, double[] im){
@@ -217,13 +246,7 @@ private ArrayList temps = new ArrayList();
         fft.fft(re, im);
         System.out.println("After: ");
         printReIm(re, im);
-        System.out.println("크기 : ");
 
-        double[] temp = new double[128];
-        for(int i=0; i<128; i++){
-            temp[i] = Math.sqrt(re[i]*re[i] + im[i]*im[i]);
-            Log.v("배열 값", "배열" +temp[i]);
-        }
 
     }
 

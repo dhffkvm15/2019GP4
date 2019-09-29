@@ -36,8 +36,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicBoolean;
 
+/* 메인 화면에서 심박 측정하는 부분 */
 
-/* 심박 측정하는 부분 */
 public class EmotionFragment extends Fragment {
 
     private static final AtomicBoolean processing = new AtomicBoolean(false);
@@ -74,7 +74,7 @@ public class EmotionFragment extends Fragment {
     private static MyProgressBar myProgressBar;
 
     private static ImageButton skipButton;
-    private Fragment fragment = new Emotion1Fragment();
+    private Fragment fragment = new Emotion1Fragment(); // TODO skipbutton 고치면서 여기도 같이 고치기
     private Bundle bundle = new Bundle();
 
     private LineChart lineChart; // 그래프
@@ -83,6 +83,7 @@ public class EmotionFragment extends Fragment {
     private List<Entry> entries = new ArrayList<>(); // 그래프의 (x,y) 값 저장 배열
     private LineDataSet lineDataSet;
     private int turnNum = -1; // 15초씩 도는 것이 몇번째인지 확인
+    private int ToNum = 0; // 15초 몇 번 소요 되었는지 확인해서 전달할 값
     ArrayList xPeaks = new ArrayList(); // 그래프에서 peak 값 저장할 리스트
 
     public static EmotionFragment newInstance(){
@@ -117,6 +118,7 @@ public class EmotionFragment extends Fragment {
             public void onClick(View v) {
                 startButton.setVisibility(v.INVISIBLE); // 버튼 안보이게
                 skipButton.setVisibility(v.INVISIBLE);
+                lineChart.setVisibility(v.VISIBLE); // 그래프는 시작과 동시에 보이도록 설정
 
                 myProgressBar.setStart(true); // 프로그레스 바 작동하도록
                 myProgressBar.setStartTime(System.currentTimeMillis());
@@ -133,7 +135,7 @@ public class EmotionFragment extends Fragment {
         skipButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                bundle.putInt("heartrate", 0);
+                bundle.putBoolean("IsStress", false); // 스트레스 지수가 있는지 전달
                 fragment.setArguments(bundle);
 
                 ((MainActivity)getActivity()).replaceFragment(fragment); // 심박 전달
@@ -289,24 +291,26 @@ public class EmotionFragment extends Fragment {
                         }
                     }
 
+                    ToNum = turnNum;
                     turnNum = -2;
 
-                    Log.v("발표", "redpixels 개수 : " +entries.size());
-                    Log.v("발표", "xPeak 피크 : " +xPeaks);
-
+                    //Log.v("발표", "redpixels 개수 : " +entries.size());
+                    //Log.v("발표", "xPeak 피크 : " +xPeaks);
+                    //Log.v("발표", "측정 횟수 : "+ToNum);
 
                     Handler handler = new Handler();
                     handler.postDelayed(new Runnable() {
                         @Override
                         public void run() {
                             bundle.putInt("heartrate", beatsAvg);
+                            bundle.putInt("ToNum", ToNum);
                             bundle.putParcelableArrayList("list", (ArrayList<? extends Parcelable>) entries);
                             bundle.putParcelableArrayList("xpeaks", (ArrayList<? extends Parcelable>) xPeaks);
                             fragment.setArguments(bundle);
 
                             ((MainActivity)getActivity()).replaceFragment(fragment); // 심박 전달
                         }
-                    },1000); // 0.5초 후 실행
+                    },1000); // 1초 후 실행
 
                     beats = 0;
 

@@ -12,7 +12,13 @@ import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.Gravity;
+import android.view.LayoutInflater;
 import android.view.MenuItem;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.TextView;
+import android.widget.Toast;
 
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
@@ -26,6 +32,8 @@ public class MainActivity extends AppCompatActivity {
 
     private BottomNavigationView bottomNavigationView;
     private String after = ""; // inputCatridge에서 넘어왔는지 알아보기 위한 변수
+    private long lastTimeBackPressed; // 뒤로가기 버튼이 클릭된 시간
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -35,7 +43,6 @@ public class MainActivity extends AppCompatActivity {
         after = intent.getStringExtra("inputCatridge");
 
         bottomNavigationView = (BottomNavigationView)findViewById(R.id.main_activity_bottomnavigationview);
-
 
         // 첫 화면 지정
         //FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
@@ -85,10 +92,35 @@ public class MainActivity extends AppCompatActivity {
         mOnKeyBackPressedListener = listener;
     }
 
+    // 뒤로가기 설정
     @Override
     public void onBackPressed() {
-        if( after.equals("yes") ){ }
-        else{ super.onBackPressed(); }
+        // 카트리지 정보 등록 후 바로 메인 액티비티로 왔을 때
+        if( after.equals("yes") ){
+            // 2초 이내에 뒤로가기 버튼 재 클릭시 어플 종료
+            if(System.currentTimeMillis() - lastTimeBackPressed < 2000) {
+                finishAffinity();
+                return;
+            }
+
+            // 뒤로 한번 클릭 시 메시지
+            LayoutInflater inflater = getLayoutInflater();
+            View toastDesign = inflater.inflate(R.layout.toast_design, (ViewGroup)findViewById(R.id.toast_design_root));
+            TextView textView = toastDesign.findViewById(R.id.toast_design_textview); // 토스트 꾸미기 위함
+
+            textView.setText("'뒤로'버튼 한번 더 누르시면 앱이 종료됩니다.");
+            Toast toast = new Toast(getApplicationContext());
+            toast.setGravity(Gravity.BOTTOM, 0, 30);
+            toast.setDuration(Toast.LENGTH_SHORT);
+            toast.setView(toastDesign);
+            toast.show();
+
+            lastTimeBackPressed = System.currentTimeMillis();
+        }
+        // 스플래쉬 화면에서 바로 메인 화면으로 왔을 때
+        else{
+            super.onBackPressed(); //어플 종료
+             }
 
     }
 }

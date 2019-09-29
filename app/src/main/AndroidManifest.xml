@@ -14,7 +14,9 @@
     <uses-permission android:name="android.permission.WAKE_LOCK" />
 
     <application
-        android:allowBackup="true"
+        android:allowBackup="false"
+        android:fullBackupOnly="false"
+        android:fullBackupContent="false"
         android:icon="@drawable/logo"
         android:label="SmartDiffuser"
         android:roundIcon="@mipmap/ic_launcher_round"

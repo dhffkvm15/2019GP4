@@ -108,6 +108,7 @@ public class RegisterActivity extends AppCompatActivity {
                 editor.commit(); // 저장 완료
 
                 startActivity(new Intent(this, InputCatridgeActivity.class));
+                finish();
              }
 
         }
