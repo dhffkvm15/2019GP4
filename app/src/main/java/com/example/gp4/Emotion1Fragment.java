@@ -190,7 +190,7 @@ public class Emotion1Fragment extends Fragment {
         // 여기까지 심박 주기 그래프 그리기
 
         //여기부터 수정
-        int N = 128; // int N = 8;
+        int N = 1024; // int N = 8;
         FFT fft = new FFT(N);
 
         double[] window = fft.getWindow();
@@ -214,7 +214,8 @@ public class Emotion1Fragment extends Fragment {
 
         ArrayList whathz = new ArrayList();
         ArrayList hzMag = new ArrayList();
-        int samplingFrequency = hrvValue.size() / ( 15 * turnNum ) ;
+        int samplingFrequency = hrvValue.size()  ;
+        /// ( 15 * turnNum )
         Log.v("꼭", "전달받은 turnNum : " +turnNum);
 
         double a=0; double b = 0;

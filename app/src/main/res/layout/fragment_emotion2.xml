@@ -5,23 +5,50 @@
     android:layout_height="match_parent"
     android:orientation="vertical">
 
-    <Button
-        android:layout_width="match_parent"
+    <TextView
+        android:id="@+id/emotion2_fragment_textview_stt"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:id="@+id/emotion2_fragment_button_talk"
-        android:text="Talk"
-        android:background="@drawable/originbutton"
-        android:layout_above="@+id/emotion2_fragment_button_play"
-        android:layout_marginBottom="20dp"/>
+        android:layout_centerVertical="true"
+        android:layout_centerHorizontal="true"
+        android:textColor="@color/colorPrimaryDark"
+        android:textSize="25dp"
+        android:textAlignment="center"
+        android:hint="마이크 버튼 누른 후 말해주세요." />
 
-    <Button
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:id="@+id/emotion2_fragment_button_play"
-        android:text="Play"
-        android:background="@drawable/originbutton"
+    <ImageButton
+        android:layout_width="100dp"
+        android:layout_height="100dp"
+        android:id="@+id/emotion2_fragment_button_talk"
+        android:src="@drawable/voice_recorder"
+        android:background="@null"
+        android:padding="0dp"
+        android:adjustViewBounds="true"
+        android:scaleType="fitCenter"
         android:layout_alignParentBottom="true"
-        android:layout_marginBottom="50dp"
-        />
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="50dp"/>
+
 
 </RelativeLayout>
+
+    <!--
+        <Button
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/emotion2_fragment_button_talk"
+            android:text="Talk"
+            android:background="@drawable/originbutton"
+            android:layout_above="@+id/emotion2_fragment_button_play"
+            android:layout_marginBottom="20dp"/>
+
+        <Button
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/emotion2_fragment_button_play"
+            android:text="Play"
+            android:background="@drawable/originbutton"
+            android:layout_alignParentBottom="true"
+            android:layout_marginBottom="50dp"
+            />
+            -->
