@@ -44,12 +44,9 @@ public class SaveDialog {
                     string += "0% ";
                     break;
                 case 1:
-                    string += "30% ";
+                    string += "50% ";
                     break;
                 case 2:
-                    string += "60% ";
-                    break;
-                case 3:
                     string += "100% ";
                     break;
             }

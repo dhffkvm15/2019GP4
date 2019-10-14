@@ -1,10 +1,13 @@
 package com.example.gp4;
 
 import android.Manifest;
+import android.annotation.SuppressLint;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.support.annotation.NonNull;
 import android.support.design.widget.BottomNavigationView;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -26,14 +29,19 @@ import com.google.firebase.database.FirebaseDatabase;
 public class MainActivity extends AppCompatActivity {
 
     //private FragmentManager fragmentManager = getSupportFragmentManager();
-    private EmotionFragment emotionFragment = new EmotionFragment();
-    private MakeFragment makeFragment = new MakeFragment();
-    private MyFragment myFragment = new MyFragment();
+    //private EmotionFragment emotionFragment = new EmotionFragment(); - 원래 것
+    private EmotionFragment emotionFragment = new EmotionFragment(); // 스트레스 지수 및 감정 파악
+    private MakeFragment makeFragment = new MakeFragment(); // 커스터마이징
+    private MyFragment myFragment = new MyFragment(); // 저장된 향 정보
+    private record_playFragment recordFragment = new record_playFragment();
+    private TurnonFragment turnonFragment = new TurnonFragment(); // 디퓨저 작동 부분
 
+    private FloatingActionButton fab;
     private BottomNavigationView bottomNavigationView;
     private String after = ""; // inputCatridge에서 넘어왔는지 알아보기 위한 변수
     private long lastTimeBackPressed; // 뒤로가기 버튼이 클릭된 시간
 
+    @SuppressLint("RestrictedApi")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -42,12 +50,14 @@ public class MainActivity extends AppCompatActivity {
         Intent intent = getIntent();
         after = intent.getStringExtra("inputCatridge");
 
+        fab = (FloatingActionButton)findViewById(R.id.main_activity_fab);
         bottomNavigationView = (BottomNavigationView)findViewById(R.id.main_activity_bottomnavigationview);
 
         // 첫 화면 지정
         //FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
         //fragmentTransaction.replace(R.id.main_activity_framelayout, emotionFragment).commitAllowingStateLoss();
         replaceFragment(emotionFragment.newInstance());
+        //replaceFragment(recordFragment.newInstance());
 
         // 네비게이션 바 선택 시
         bottomNavigationView.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
@@ -58,6 +68,7 @@ public class MainActivity extends AppCompatActivity {
                     case R.id.emotionAnalysis :
                         //fragmentTransaction.replace(R.id.main_activity_framelayout, emotionFragment).commitAllowingStateLoss();
                         replaceFragment(emotionFragment.newInstance());
+                        //replaceFragment(recordFragment.newInstance());
                         break;
                     case R.id.make:
                         //fragmentTransaction.replace(R.id.main_activity_framelayout, makeFragment).commitAllowingStateLoss();
@@ -72,9 +83,28 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
+
+        // 플로팅 버튼 클릭 시
+        fab.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                replaceFragment(turnonFragment.newInstance());
+            }
+        });
+
     }
 
+
+    @SuppressLint("RestrictedApi")
     public void replaceFragment(Fragment fragment) {
+        // 플로팅 버튼 설정
+        SharedPreferences sharedPreferences = getSharedPreferences("UserInfo", MODE_PRIVATE);
+        Boolean turnOn = sharedPreferences.getBoolean("turnOn", false); // 디퓨저 작동하는지 가져오기
+        if(turnOn){
+            fab.setVisibility(View.VISIBLE); // 디퓨저가 작동하고 있을 때에만 보이도록
+        }else{
+            fab.setVisibility(View.INVISIBLE);
+        }
         FragmentManager fragmentManager = getSupportFragmentManager();
         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
         fragmentTransaction.replace(R.id.main_activity_framelayout, fragment).commit();
@@ -123,4 +153,5 @@ public class MainActivity extends AppCompatActivity {
              }
 
     }
+
 }

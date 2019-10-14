@@ -1,6 +1,7 @@
 package com.example.gp4;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -85,17 +86,30 @@ public class PlayDiffuserActivity extends AppCompatActivity {
 
     // TODO 디퓨저 멈추는 코드
     private void stopPlaying() {
+
         Log.v("디퓨저", "멈춤");
+
+        // 디퓨저가 꺼져 있음을 저장하기
+        SharedPreferences sharedPreferences = getSharedPreferences("UserInfo", MODE_PRIVATE);
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+        editor.putBoolean("turnOn", false);
+        editor.commit(); // 저장 완료);
     }
 
     // TODO 디퓨저 작동하는 코드, 잔량 계산 필요
     private void startPlaying() {
+
         Log.v("디퓨저", "작동");
+
+        // 디퓨저가 켜져 있음을 저장하기
+        SharedPreferences sharedPreferences = getSharedPreferences("UserInfo", MODE_PRIVATE);
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+        editor.putBoolean("turnOn", true);
+        editor.commit(); // 저장 완료);
     }
 
     @Override
     public void onBackPressed() {
-        stopPlaying(); // 뒤로 버튼 클릭 시 디퓨저 멈추도록
         super.onBackPressed();
     }
 }

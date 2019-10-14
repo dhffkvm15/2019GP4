@@ -214,8 +214,8 @@ public class Emotion1Fragment extends Fragment {
 
         ArrayList whathz = new ArrayList();
         ArrayList hzMag = new ArrayList();
-        int samplingFrequency = hrvValue.size()  ;
-        /// ( 15 * turnNum )
+        int samplingFrequency = hrvValue.size() / ( 15 * turnNum )  ;
+        ///
         Log.v("꼭", "전달받은 turnNum : " +turnNum);
 
         double a=0; double b = 0;

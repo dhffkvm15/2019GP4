@@ -16,6 +16,15 @@
         android:textAlignment="center"
         android:hint="마이크 버튼 누른 후 말해주세요." />
 
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/emotion2_fragment_textview_temp"
+        android:hint="여기 나와야 해"
+        android:layout_above="@+id/emotion2_fragment_textview_stt"
+        android:layout_marginBottom="20dp"
+        android:textSize="20dp"/>
+
     <ImageButton
         android:layout_width="100dp"
         android:layout_height="100dp"

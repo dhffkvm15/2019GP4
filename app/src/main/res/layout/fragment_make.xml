@@ -63,8 +63,8 @@
                 android:layout_below="@+id/make_fragment_textview1"
                 android:layout_marginTop="5dp"
                 android:id="@+id/make_fragment_seekbar1"
-                android:max="3"
-                android:progress="3"
+                android:max="2"
+                android:progress="2"
                 style="@style/Widget.AppCompat.SeekBar.Discrete" />
 
         </RelativeLayout>
@@ -99,8 +99,8 @@
                 android:layout_below="@+id/make_fragment_textview2"
                 android:layout_marginTop="5dp"
                 android:id="@+id/make_fragment_seekbar2"
-                android:max="3"
-                android:progress="3"
+                android:max="2"
+                android:progress="2"
                 style="@style/Widget.AppCompat.SeekBar.Discrete"/>
 
         </RelativeLayout>
@@ -134,8 +134,8 @@
                 android:layout_below="@+id/make_fragment_textview3"
                 android:layout_marginTop="5dp"
                 android:id="@+id/make_fragment_seekbar3"
-                android:max="3"
-                android:progress="3"
+                android:max="2"
+                android:progress="2"
                 style="@style/Widget.AppCompat.SeekBar.Discrete"/>
 
         </RelativeLayout>
@@ -179,8 +179,8 @@
                 android:layout_below="@+id/make_fragment_textview4"
                 android:layout_marginTop="5dp"
                 android:id="@+id/make_fragment_seekbar4"
-                android:max="3"
-                android:progress="3"
+                android:max="2"
+                android:progress="2"
                 style="@style/Widget.AppCompat.SeekBar.Discrete"/>
 
         </RelativeLayout>
@@ -214,8 +214,8 @@
                 android:layout_below="@+id/make_fragment_textview5"
                 android:layout_marginTop="5dp"
                 android:id="@+id/make_fragment_seekbar5"
-                android:max="3"
-                android:progress="3"
+                android:max="2"
+                android:progress="2"
                 style="@style/Widget.AppCompat.SeekBar.Discrete"/>
 
         </RelativeLayout>
@@ -250,8 +250,8 @@
                 android:layout_below="@+id/make_fragment_textview6"
                 android:layout_marginTop="5dp"
                 android:id="@+id/make_fragment_seekbar6"
-                android:max="3"
-                android:progress="3"
+                android:max="2"
+                android:progress="2"
                 style="@style/Widget.AppCompat.SeekBar.Discrete"/>
 
         </RelativeLayout>

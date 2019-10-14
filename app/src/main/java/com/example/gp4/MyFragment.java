@@ -32,6 +32,7 @@ public class MyFragment extends Fragment {
     public static MyFragment newInstance(){
         return new MyFragment();
     }
+    private Boolean isWork = false; // 디퓨저가 작동 중인지 저장할 변수
 
     @Nullable
     @Override
@@ -40,6 +41,9 @@ public class MyFragment extends Fragment {
         RecyclerView recyclerView = (RecyclerView)view.findViewById(R.id.fragment_my_recyclerview);
         recyclerView.setLayoutManager(new LinearLayoutManager(inflater.getContext()));
         recyclerView.setAdapter(new MyFragmentRecyclerViewAdapter());
+
+        SharedPreferences sharedPreferences = getActivity().getSharedPreferences("UserInfo", Context.MODE_PRIVATE);
+        isWork = sharedPreferences.getBoolean("turnOn", false); // 디퓨저 작동하는지 가져오기
 
         return view;
     }
@@ -98,17 +102,27 @@ public class MyFragment extends Fragment {
             ((CustomViewHolder)viewHolder).infoview.setText(string);
 
             // 클릭 시 작동하도록 하기
-            viewHolder.itemView.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
+            if(isWork){
+                viewHolder.itemView.setEnabled(false);
+            }else{
+                viewHolder.itemView.setEnabled(true);
+                viewHolder.itemView.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
 
-                    Intent intent = new Intent(getActivity(), PlayDiffuserActivity.class);
-                    intent.putExtra("val", (Serializable) totalInfos.get(i));
+                        Bundle bundle = new Bundle();
+                        Fragment turnon2fragment = new Turnon2Fragment();
+                        bundle.putSerializable("total", totalInfos.get(i));
+                       turnon2fragment.setArguments(bundle);
+                       ((MainActivity)getActivity()).replaceFragment(turnon2fragment);
+//                        Intent intent = new Intent(getActivity(), PlayDiffuserActivity.class);
+//                        intent.putExtra("val", (Serializable) totalInfos.get(i));
+//
+//                        startActivity(intent);
 
-                    startActivity(intent);
-
-                }
-            });
+                    }
+                });
+            }
 
         }
 
@@ -136,12 +150,9 @@ public class MyFragment extends Fragment {
                 tmp = "0% ";
                 break;
             case 1:
-                tmp = "30% ";
+                tmp = "50% ";
                 break;
             case 2:
-                tmp = "60% ";
-                break;
-            case 3:
                 tmp = "100% ";
                 break;
         }

@@ -11,6 +11,8 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -21,7 +23,14 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Locale;
+
+import kr.co.shineware.nlp.komoran.constant.DEFAULT_MODEL;
+import kr.co.shineware.nlp.komoran.core.Komoran;
+import kr.co.shineware.nlp.komoran.model.KomoranResult;
+import kr.co.shineware.nlp.komoran.model.Token;
+
 
 import static android.app.Activity.RESULT_OK;
 
@@ -33,6 +42,7 @@ public class Emotion2Fragment extends Fragment {
     private TextView STT;
     private ImageButton talk;
     private final int REQ_CODE_SPEECH_INPUT = 100;
+    private TextView tempText;
 
     public static Emotion2Fragment newInstance(){
         return new Emotion2Fragment();
@@ -45,6 +55,7 @@ public class Emotion2Fragment extends Fragment {
 
         STT = (TextView)viewGroup.findViewById(R.id.emotion2_fragment_textview_stt);
         talk = (ImageButton)viewGroup.findViewById(R.id.emotion2_fragment_button_talk);
+        tempText = (TextView)viewGroup.findViewById(R.id.emotion2_fragment_textview_temp);
 
         checkRecordPermission(); // 마이크 허가 받기
 
@@ -58,6 +69,38 @@ public class Emotion2Fragment extends Fragment {
             }
         });
 
+        STT.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                Komoran komoran = new Komoran(DEFAULT_MODEL.FULL);
+                String strToAnalyze = s.toString();
+                Log.v("태그", "형태소 분석 " + strToAnalyze);
+                KomoranResult komoranResult = komoran.analyze(strToAnalyze);
+
+                List<Token> tokenList = komoranResult.getTokenList();
+                String word = "";
+                for(Token token : tokenList){
+                    word = word + token.getMorph() +"/" + token.getPos();
+
+                    //string = token.getMorph() + "/" +token.getPos() +" ";
+                    System.out.format("%s/%s\n", token.getMorph(), token.getPos()); // pos 가 품사
+                }
+                Log.v("여기", "여기 word "+word);
+                tempText.setText(word);
+
+
+            }
+        });
         return viewGroup;
     }
 
@@ -78,8 +121,6 @@ public class Emotion2Fragment extends Fragment {
     }
 
     // Receiving speech input
-
-
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
@@ -90,6 +131,8 @@ public class Emotion2Fragment extends Fragment {
                     ArrayList<String> result = data
                             .getStringArrayListExtra(RecognizerIntent.EXTRA_RESULTS);
                     STT.setText(result.get(0));
+
+                   //STT.getText().toString()
                 }
                 break;
             }

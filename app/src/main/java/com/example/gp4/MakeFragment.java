@@ -61,12 +61,12 @@ public class MakeFragment extends Fragment {
     private TextView timeView;
 
     private CatridgeInfo[] catridgeInfos = {};
-    private CatridgeInfo catridgeInfo1 = new CatridgeInfo("", 3);
-    private CatridgeInfo catridgeInfo2 = new CatridgeInfo("", 3);
-    private CatridgeInfo catridgeInfo3 = new CatridgeInfo("", 3);
-    private CatridgeInfo catridgeInfo4 = new CatridgeInfo("", 3);
-    private CatridgeInfo catridgeInfo5 = new CatridgeInfo("", 3);
-    private CatridgeInfo catridgeInfo6 = new CatridgeInfo("", 3);
+    private CatridgeInfo catridgeInfo1 = new CatridgeInfo("", 2);
+    private CatridgeInfo catridgeInfo2 = new CatridgeInfo("", 2);
+    private CatridgeInfo catridgeInfo3 = new CatridgeInfo("", 2);
+    private CatridgeInfo catridgeInfo4 = new CatridgeInfo("", 2);
+    private CatridgeInfo catridgeInfo5 = new CatridgeInfo("", 2);
+    private CatridgeInfo catridgeInfo6 = new CatridgeInfo("", 2);
 
     private Button turnon;
 
@@ -133,6 +133,12 @@ public class MakeFragment extends Fragment {
         timeView = (TextView) viewGroup.findViewById(R.id.make_fragment_textview_time);
 
         turnon = (Button) viewGroup.findViewById(R.id.make_fragment_turnon_button);
+        Boolean isOn = sharedPreferences.getBoolean("turnOn", false); // 디퓨저 작동하는지 가져오기
+        if(isOn){
+            turnon.setEnabled(false);
+        }else{
+            turnon.setEnabled(true);
+        }
 
         settingButton(); // 각 향의 종류, 잔량 등을 표시해주는 함수
 
@@ -183,7 +189,7 @@ public class MakeFragment extends Fragment {
 
                     FirebaseDatabase firebaseDatabase = FirebaseDatabase.getInstance();
                     DatabaseReference databaseReference = firebaseDatabase.getReference();
-                    Log.v("로그 확인용 : ", "데이터레프런스 : "+ databaseReference);
+                    //Log.v("로그 확인용 : ", "데이터레프런스 : "+ databaseReference);
                     //데이터레프런스 : https://gpdb-2550a.firebaseio.com
                     //databaseReference = firebaseDatabase.getReference("1Status");
                     //Log.v("로그 확인용 : ", "데이터레프런스1 : "+ databaseReference);
@@ -256,7 +262,7 @@ public class MakeFragment extends Fragment {
 
                         textViews[i].setText(rest.get(i) + "%"); // 현재 남아 있는 잔량 표시하기
 
-                        seekBars[i].setProgress(3);
+                        seekBars[i].setProgress(2);
                         seekBars[i].setEnabled(true); // 초기화
 
                         if(rest.get(i) == 0){ // 잔량이 없을 경우

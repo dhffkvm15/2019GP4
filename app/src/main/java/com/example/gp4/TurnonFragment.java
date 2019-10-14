@@ -17,6 +17,11 @@ import android.widget.Toast;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
+import java.util.HashMap;
+import java.util.Map;
+
+import static android.content.Context.MODE_PRIVATE;
+
 // 디퓨저 동작할 때
 public class TurnonFragment extends Fragment {
 
@@ -47,16 +52,21 @@ public class TurnonFragment extends Fragment {
         stop = (Button) viewGroup.findViewById(R.id.turnon_fragment_button_stop);
         save = (Button) viewGroup.findViewById(R.id.turnon_fragment_button_save);
 
-        Bundle bundle = getArguments();
-        catridgeInfo1 = (CatridgeInfo) bundle.getSerializable("obj1");
-        catridgeInfo2 = (CatridgeInfo) bundle.getSerializable("obj2");
-        catridgeInfo3 = (CatridgeInfo) bundle.getSerializable("obj3");
-        catridgeInfo4 = (CatridgeInfo) bundle.getSerializable("obj4");
-        catridgeInfo5 = (CatridgeInfo) bundle.getSerializable("obj5");
-        catridgeInfo6 = (CatridgeInfo) bundle.getSerializable("obj6");
-        time = bundle.getInt("time");
-        catridgeInfos = new CatridgeInfo[]{catridgeInfo1, catridgeInfo2, catridgeInfo3, catridgeInfo4, catridgeInfo5, catridgeInfo6};
+        SharedPreferences sharedPreferences = getActivity().getSharedPreferences("UserInfo", MODE_PRIVATE);
+        Boolean turnOn = sharedPreferences.getBoolean("turnOn", false); // 디퓨저 작동하는지 가져오기
 
+        // 꺼져 있으면
+        if( !turnOn ){
+            Bundle bundle = getArguments();
+            catridgeInfo1 = (CatridgeInfo) bundle.getSerializable("obj1");
+            catridgeInfo2 = (CatridgeInfo) bundle.getSerializable("obj2");
+            catridgeInfo3 = (CatridgeInfo) bundle.getSerializable("obj3");
+            catridgeInfo4 = (CatridgeInfo) bundle.getSerializable("obj4");
+            catridgeInfo5 = (CatridgeInfo) bundle.getSerializable("obj5");
+            catridgeInfo6 = (CatridgeInfo) bundle.getSerializable("obj6");
+            time = bundle.getInt("time");
+            catridgeInfos = new CatridgeInfo[]{catridgeInfo1, catridgeInfo2, catridgeInfo3, catridgeInfo4, catridgeInfo5, catridgeInfo6};
+        }
 //        Log.v("태그", "전달된 것 1 : " + catridgeInfo1.getName() + " " + catridgeInfo1.getRest());
 //        Log.v("태그", "전달된 것 2 : " + catridgeInfo2.getName() + " " + catridgeInfo2.getRest());
 //        Log.v("태그", "전달된 것 3 : " + catridgeInfo3.getName() + " " + catridgeInfo3.getRest());
@@ -106,12 +116,36 @@ public class TurnonFragment extends Fragment {
     private void startPlaying() {
         Log.v("디퓨저", "작동");
 
+        FirebaseDatabase firebaseDatabase = FirebaseDatabase.getInstance();
+        DatabaseReference databaseReference = firebaseDatabase.getReference();
+        Map<String, Object> taskMap = new HashMap<String, Object>();
+        taskMap.put("Motor", 1);
+        databaseReference.updateChildren(taskMap);
+
+        // 디퓨저가 켜져 있음을 저장하기
+        SharedPreferences sharedPreferences = getActivity().getSharedPreferences("UserInfo", MODE_PRIVATE);
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+        editor.putBoolean("turnOn", true);
+        editor.commit(); // 저장 완료
+
         // 작동 멈춤 작동 했을 때, 작동한 시간만큼 원래 작동하고자 했던 시간에서 빼야하는지
     }
 
     // 디퓨저 작동 멈추는 코드
     private void stopPlaying() {
-        Log.v("디퓨저", "작동 안함");
+        Log.v("디퓨저", "작동 멈춤");
+
+        FirebaseDatabase firebaseDatabase = FirebaseDatabase.getInstance();
+        DatabaseReference databaseReference = firebaseDatabase.getReference();
+        Map<String, Object> taskMap = new HashMap<String, Object>();
+        taskMap.put("Motor", 0);
+        databaseReference.updateChildren(taskMap);
+
+        // 디퓨저가 꺼져 있음을 저장하기
+        SharedPreferences sharedPreferences = getActivity().getSharedPreferences("UserInfo", MODE_PRIVATE);
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+        editor.putBoolean("turnOn", false);
+        editor.commit(); // 저장 완료
     }
 
 

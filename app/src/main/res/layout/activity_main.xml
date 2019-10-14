@@ -12,6 +12,18 @@
         android:layout_above="@id/main_activity_line1"
         android:id="@+id/main_activity_framelayout"></FrameLayout>
 
+    <android.support.design.widget.FloatingActionButton
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/main_activity_fab"
+        android:layout_above="@+id/main_activity_line1"
+        android:layout_marginBottom="20dp"
+        android:layout_alignParentRight="true"
+        android:layout_marginRight="20dp"
+        android:src="@drawable/aromatic"
+        android:backgroundTint="@color/Yellow"
+        android:visibility="invisible"/>
+
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="1dp"
