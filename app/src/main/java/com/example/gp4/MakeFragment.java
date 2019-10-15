@@ -19,6 +19,7 @@ import android.widget.SeekBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -28,6 +29,8 @@ import com.google.firebase.database.ValueEventListener;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
+
+import static android.content.Context.MODE_PRIVATE;
 
 /* 커스터마이징 */
 public class MakeFragment extends Fragment {
@@ -71,6 +74,7 @@ public class MakeFragment extends Fragment {
     private Button turnon;
 
     private String pushId; // 사용자의 푸시 아이디 값
+    private SharedPreferences sharedPreferences;
     public static MakeFragment newInstance(){
         return new MakeFragment();
     }
@@ -85,7 +89,7 @@ public class MakeFragment extends Fragment {
 
         resources = getActivity().getResources();
 
-        SharedPreferences sharedPreferences = this.getActivity().getSharedPreferences("UserInfo", Context.MODE_PRIVATE);
+        sharedPreferences = this.getActivity().getSharedPreferences("UserInfo", MODE_PRIVATE);
         pushId = sharedPreferences.getString("pushID", ""); // 저장되어 있는 pushId 불러오기
 
         ButtonOnclick buttonOnclick = new ButtonOnclick();
@@ -202,7 +206,19 @@ public class MakeFragment extends Fragment {
                     taskMap.put("5Status", catridgeInfo5.getRest());
                     taskMap.put("6Status", catridgeInfo6.getRest());
 
-                    databaseReference.updateChildren(taskMap);
+                    databaseReference.updateChildren(taskMap); // 아두이노 구멍 열기
+
+                    // 이전에 켰었던 향 정보 저장
+                    SharedPreferences.Editor editor = sharedPreferences.edit();
+                    String temp = String.valueOf(catridgeInfo1.getRest()) + "/"
+                            + String.valueOf(catridgeInfo2.getRest()) + "/"
+                            + String.valueOf(catridgeInfo3.getRest()) + "/"
+                            + String.valueOf(catridgeInfo4.getRest()) + "/"
+                            + String.valueOf(catridgeInfo5.getRest()) + "/"
+                            + String.valueOf(catridgeInfo6.getRest());
+
+                    editor.putString("before", temp);
+                    editor.commit(); // 이전에 켰었던 정보 저장
 
                     Fragment turnonfragment = new TurnonFragment();
                     Bundle bundle = new Bundle();
@@ -212,7 +228,6 @@ public class MakeFragment extends Fragment {
                     bundle.putSerializable("obj4", catridgeInfo4);
                     bundle.putSerializable("obj5", catridgeInfo5);
                     bundle.putSerializable("obj6", catridgeInfo6);
-                    Log.v("태그 확인", "필수 확인 : "+catridgeInfo6.getRest());
                     bundle.putInt("time", time);
                     turnonfragment.setArguments(bundle);
 
@@ -234,6 +249,9 @@ public class MakeFragment extends Fragment {
 
         //SharedPreferences sharedPreferences = this.getActivity().getSharedPreferences("UserInfo", Context.MODE_PRIVATE);
         //final String tmp = sharedPreferences.getString("pushID", ""); // 저장되어 있는 향 정보 불러오기
+
+        final String temp = sharedPreferences.getString("before", "2/2/2/2/2/2");
+        final String[] arr = temp.split("/");
 
         if(pushId.equals("")){ // 저장된 정보가 없으면
             Log.v("태그", "태그 확인 : 저장 정보 없음");
@@ -262,7 +280,10 @@ public class MakeFragment extends Fragment {
 
                         textViews[i].setText(rest.get(i) + "%"); // 현재 남아 있는 잔량 표시하기
 
-                        seekBars[i].setProgress(2);
+
+
+                        seekBars[i].setProgress(Integer.valueOf(arr[i]));
+                        //seekBars[i].setProgress(2);
                         seekBars[i].setEnabled(true); // 초기화
 
                         if(rest.get(i) == 0){ // 잔량이 없을 경우
@@ -310,6 +331,7 @@ public class MakeFragment extends Fragment {
 
                 }
             });
+
 
         }
 

@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <ImageView
+        android:layout_width="match_parent"
+        android:layout_height="350dp"
+        android:src="@drawable/logo"
+        android:id="@+id/turnon2fragment_imageview"/>
+
+    <SeekBar
+        android:layout_width="match_parent"
+        android:layout_height="20dp"
+        android:layout_below="@id/turnon2fragment_imageview"
+        android:layout_margin="5dp"
+        android:id="@+id/turnon2fragment_seekbar_time"
+        android:max="120"
+        android:progress="120" />
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="120분"
+        android:textSize="18dp"
+        android:gravity="center"
+        android:layout_below="@id/turnon2fragment_seekbar_time"
+        android:id="@+id/turnon2fragment_textview_time"/>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="80dp"
+        android:orientation="horizontal"
+        android:layout_below="@+id/turnon2fragment_textview_time">
+
+        <Button
+            android:layout_width="150dp"
+            android:layout_height="50dp"
+            android:text="PLAY"
+            android:background="@drawable/originbutton"
+            android:id="@+id/turnon2fragment_button_play"
+            android:layout_weight="1" />
+
+
+    </LinearLayout>
+
+
+</RelativeLayout>

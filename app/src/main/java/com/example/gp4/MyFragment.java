@@ -110,6 +110,12 @@ public class MyFragment extends Fragment {
                     @Override
                     public void onClick(View v) {
 
+                        SharedPreferences.Editor editor = sharedPreferences.edit();
+                        String temp = "2/2/2/2/2/2";
+
+                        editor.putString("before", temp);
+                        editor.commit(); // 이전에 켰었던 정보 저장
+
                         Bundle bundle = new Bundle();
                         Fragment turnon2fragment = new Turnon2Fragment();
                         bundle.putSerializable("total", totalInfos.get(i));
