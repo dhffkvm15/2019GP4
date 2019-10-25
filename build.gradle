@@ -33,8 +33,3 @@ repositories{
         dirs 'libs'
     }
 }
-/*
-dependencies {
-    complie (name: 'OpenVokaturi-3-0-android', ext: 'aar')
-}
-*/

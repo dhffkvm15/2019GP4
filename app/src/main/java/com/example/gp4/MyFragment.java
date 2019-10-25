@@ -9,6 +9,7 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.helper.ItemTouchHelper;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -33,31 +34,56 @@ public class MyFragment extends Fragment {
         return new MyFragment();
     }
     private Boolean isWork = false; // 디퓨저가 작동 중인지 저장할 변수
+    private RecyclerView recyclerView;
+    private String key;
+    private SharedPreferences sharedPreferences;
+    private ArrayList keyList = new ArrayList<>(); // 키 값을 저장하기 위한 배열
 
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+        sharedPreferences = getActivity().getSharedPreferences("UserInfo", Context.MODE_PRIVATE);
+        key = sharedPreferences.getString("pushID", ""); // 저장되어 있는 키 값 불러오기
+
         View view = inflater.inflate(R.layout.fragment_my, container, false);
-        RecyclerView recyclerView = (RecyclerView)view.findViewById(R.id.fragment_my_recyclerview);
+        recyclerView = (RecyclerView)view.findViewById(R.id.fragment_my_recyclerview);
         recyclerView.setLayoutManager(new LinearLayoutManager(inflater.getContext()));
         recyclerView.setAdapter(new MyFragmentRecyclerViewAdapter());
 
-        SharedPreferences sharedPreferences = getActivity().getSharedPreferences("UserInfo", Context.MODE_PRIVATE);
+        // 스와이프 해서 삭제
+        ItemTouchHelper itemTouchHelper = new ItemTouchHelper(simpleItemTouchCallback);
+        itemTouchHelper.attachToRecyclerView(recyclerView);
+
         isWork = sharedPreferences.getBoolean("turnOn", false); // 디퓨저 작동하는지 가져오기
 
         return view;
     }
 
+    private ItemTouchHelper.SimpleCallback simpleItemTouchCallback = new ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.LEFT) {
+        @Override
+        public boolean onMove(@NonNull RecyclerView recyclerView, @NonNull RecyclerView.ViewHolder viewHolder, @NonNull RecyclerView.ViewHolder viewHolder1) {
+            return true;
+        }
+
+        @Override
+        public void onSwiped(@NonNull RecyclerView.ViewHolder viewHolder, int i) {
+
+            final int position = viewHolder.getAdapterPosition();
+            FirebaseDatabase.getInstance().getReference("storage")
+                    .child(key).child(keyList.get(position).toString()).removeValue(); // 파이어 베이스 데이터 삭제
+            keyList.remove(position);
+
+        }
+    };
+
+
     class MyFragmentRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>{
 
         List<TotalInfo> totalInfos;
-        SharedPreferences sharedPreferences = getContext().getSharedPreferences("UserInfo", Context.MODE_PRIVATE);
-        String key = sharedPreferences.getString("pushID", ""); // 저장되어 있는 키 값 불러오기
 
         public MyFragmentRecyclerViewAdapter(){
 
             totalInfos = new ArrayList<>();
-
 
             ValueEventListener valueEventListener = FirebaseDatabase.getInstance().getReference("storage").child(key).addValueEventListener(new ValueEventListener() {
                 @Override
@@ -65,6 +91,7 @@ public class MyFragment extends Fragment {
                     totalInfos.clear(); // 누적된 데이터 클리어
                     for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
                         //Log.v("태그", "태그 데이터 확인 : " + snapshot.getValue());
+                        keyList.add(snapshot.getKey()); // 키 값 넣기 - 나중에 삭제를 위해 필요
                         TotalInfo tmptotal = snapshot.getValue(TotalInfo.class);
                         totalInfos.add(tmptotal); // 리스트에 추가
                     }
@@ -104,6 +131,7 @@ public class MyFragment extends Fragment {
             // 클릭 시 작동하도록 하기
             if(isWork){
                 viewHolder.itemView.setEnabled(false);
+                // 디퓨저 작동 시에는 클릭 불가하도록
             }else{
                 viewHolder.itemView.setEnabled(true);
                 viewHolder.itemView.setOnClickListener(new View.OnClickListener() {
@@ -121,10 +149,6 @@ public class MyFragment extends Fragment {
                         bundle.putSerializable("total", totalInfos.get(i));
                        turnon2fragment.setArguments(bundle);
                        ((MainActivity)getActivity()).replaceFragment(turnon2fragment);
-//                        Intent intent = new Intent(getActivity(), PlayDiffuserActivity.class);
-//                        intent.putExtra("val", (Serializable) totalInfos.get(i));
-//
-//                        startActivity(intent);
 
                     }
                 });

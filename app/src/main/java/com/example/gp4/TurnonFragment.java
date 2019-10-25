@@ -1,8 +1,14 @@
 package com.example.gp4;
 
+import android.content.ComponentName;
 import android.content.Context;
+import android.content.Intent;
+import android.content.ServiceConnection;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.IBinder;
+import android.os.RemoteException;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.DialogFragment;
@@ -12,6 +18,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.firebase.database.DatabaseReference;
@@ -27,6 +34,8 @@ public class TurnonFragment extends Fragment {
 
     private Button stop; // 멈춤 버튼
     private Button save; // 저장 버튼
+
+    private TextView timeText; // 몇 분 남았는지 보여주는 텍스트 뷰
 
     private Boolean isOn = true; // 켜져 있는지 확인
     private int time = 0; // 디퓨저 동작하는 시간
@@ -51,6 +60,7 @@ public class TurnonFragment extends Fragment {
 
         stop = (Button) viewGroup.findViewById(R.id.turnon_fragment_button_stop);
         save = (Button) viewGroup.findViewById(R.id.turnon_fragment_button_save);
+        timeText = (TextView)viewGroup.findViewById(R.id.turnon_fragment_textview);
 
         SharedPreferences sharedPreferences = getActivity().getSharedPreferences("UserInfo", MODE_PRIVATE);
         Boolean turnOn = sharedPreferences.getBoolean("turnOn", false); // 디퓨저 작동하는지 가져오기
@@ -114,13 +124,14 @@ public class TurnonFragment extends Fragment {
 
     // 디퓨저 동작하는 코드
     private void startPlaying() {
-        Log.v("디퓨저", "작동");
+        //Log.v("디퓨저", "작동");
 
         FirebaseDatabase firebaseDatabase = FirebaseDatabase.getInstance();
         DatabaseReference databaseReference = firebaseDatabase.getReference();
         Map<String, Object> taskMap = new HashMap<String, Object>();
         taskMap.put("Motor", 1);
         databaseReference.updateChildren(taskMap);
+
 
         // 디퓨저가 켜져 있음을 저장하기
         SharedPreferences sharedPreferences = getActivity().getSharedPreferences("UserInfo", MODE_PRIVATE);
@@ -133,7 +144,7 @@ public class TurnonFragment extends Fragment {
 
     // 디퓨저 작동 멈추는 코드
     private void stopPlaying() {
-        Log.v("디퓨저", "작동 멈춤");
+        //Log.v("디퓨저", "작동 멈춤");
 
         FirebaseDatabase firebaseDatabase = FirebaseDatabase.getInstance();
         DatabaseReference databaseReference = firebaseDatabase.getReference();
@@ -141,12 +152,15 @@ public class TurnonFragment extends Fragment {
         taskMap.put("Motor", 0);
         databaseReference.updateChildren(taskMap);
 
+
         // 디퓨저가 꺼져 있음을 저장하기
         SharedPreferences sharedPreferences = getActivity().getSharedPreferences("UserInfo", MODE_PRIVATE);
         SharedPreferences.Editor editor = sharedPreferences.edit();
         editor.putBoolean("turnOn", false);
         editor.commit(); // 저장 완료
+
     }
+
 
 
 }

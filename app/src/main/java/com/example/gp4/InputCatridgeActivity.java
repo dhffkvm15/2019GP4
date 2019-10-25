@@ -31,6 +31,7 @@ public class InputCatridgeActivity extends AppCompatActivity {
     private Button button5;
     private Button button6;
     private Button register;
+    private Button[] buttons;
     private long lastTimeBackPressed; // 뒤로가기 버튼이 클릭된 시간
 
     @Override
@@ -58,14 +59,29 @@ public class InputCatridgeActivity extends AppCompatActivity {
         button6.setOnClickListener(onClickListener);
 
         register = (Button)findViewById(R.id.input_catridge_register_button);
+        buttons = new Button[]{button1, button2, button3, button4, button5, button6};
     }
 
     // 확인(register) 버튼 클릭 시
     public void OKregister(View view) {
-        if( button1.getText().toString().equals("입력") || button2.getText().toString().equals("입력") || button3.getText().toString().equals("입력")
-        || button4.getText().toString().equals("입력") || button5.getText().toString().equals("입력") || button6.getText().toString().equals("입력")){
-            // 선택 안 한 창이 있으면
+        int stressNum = 0; // 사용자가 입력한 스트레스 향의 개수 저장할 변수
+        int storeNum = 0; // 사용자가 입력한 스트레스 향의 위치 저장할 변수
+        int noPut = 0; // 사용자가 입력하지 않은 향의 개수 저장할 변수
 
+
+        for(int i=0; i<buttons.length; i++){
+            if(buttons[i].getText().toString().equals("라벤더")){
+                stressNum++;
+                storeNum = i;
+            }else if(buttons[i].getText().toString().equals("입력")){
+                noPut++;
+            }
+        }
+        Log.v("태그", "위치 : " + storeNum);
+        if( noPut != 0){
+            // 선택 안 한 창이 있으면
+//button1.getText().toString().equals("입력") || button2.getText().toString().equals("입력") || button3.getText().toString().equals("입력")
+//        || button4.getText().toString().equals("입력") || button5.getText().toString().equals("입력") || button6.getText().toString().equals("입력")
             LayoutInflater inflater = getLayoutInflater();
             View toastDesign = inflater.inflate(R.layout.toast_design, (ViewGroup)findViewById(R.id.toast_design_root));
             TextView textView = toastDesign.findViewById(R.id.toast_design_textview); // 토스트 꾸미기 위함
@@ -77,7 +93,20 @@ public class InputCatridgeActivity extends AppCompatActivity {
             toast.setView(toastDesign);
             toast.show();
             //Toast.makeText(getApplicationContext(), "빈 칸이 있습니다.", Toast.LENGTH_LONG).show();
-        }else{
+        }else if( stressNum > 1){
+            LayoutInflater inflater = getLayoutInflater();
+            View toastDesign = inflater.inflate(R.layout.toast_design, (ViewGroup)findViewById(R.id.toast_design_root));
+            TextView textView = toastDesign.findViewById(R.id.toast_design_textview); // 토스트 꾸미기 위함
+
+            textView.setText("스트레스 향은 하나만 넣어주세요.");
+            Toast toast = new Toast(getApplicationContext());
+            toast.setGravity(Gravity.BOTTOM, 0, 30);
+            toast.setDuration(Toast.LENGTH_LONG);
+            toast.setView(toastDesign);
+            toast.show();
+
+        } else {
+            // 빈 칸이 없으며, 스트레스 향도 하나 일 때 - 저장
             FirebaseDatabase firebaseDatabase = FirebaseDatabase.getInstance(); // 파이어베이스 불러오기
             DatabaseReference databaseReference = firebaseDatabase.getReference("catridge");
             DatabaseReference pushReference = databaseReference.push();
@@ -89,11 +118,12 @@ public class InputCatridgeActivity extends AppCompatActivity {
             pushReference.child("6").setValue(new CatridgeInfo(button6.getText().toString(), 100));
 
             String pushId = pushReference.getKey(); // key 값 가져오기
-            //Log.v("태그", "푸시아이디 확인 : " + pushId);
+
 
             SharedPreferences sharedPreferences = getSharedPreferences("UserInfo", MODE_PRIVATE);
             SharedPreferences.Editor editor = sharedPreferences.edit();
             editor.putString("pushID", pushId);
+            editor.putInt("stressPosition", storeNum);
             editor.commit(); // pushId 내부저장소에 저장 완료
 
             Intent intent = new Intent(this, MainActivity.class);

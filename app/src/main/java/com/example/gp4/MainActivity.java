@@ -33,7 +33,6 @@ public class MainActivity extends AppCompatActivity {
     private EmotionFragment emotionFragment = new EmotionFragment(); // 스트레스 지수 및 감정 파악
     private MakeFragment makeFragment = new MakeFragment(); // 커스터마이징
     private MyFragment myFragment = new MyFragment(); // 저장된 향 정보
-    private record_playFragment recordFragment = new record_playFragment();
     private TurnonFragment turnonFragment = new TurnonFragment(); // 디퓨저 작동 부분
 
     private FloatingActionButton fab;

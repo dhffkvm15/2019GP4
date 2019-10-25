@@ -74,22 +74,22 @@ class CustomDialog {
                 // 향 이름에 따라 버튼 색상 변경
                 String tmpColor = "#FF";
                 switch (tmpScent[num].toString()){
-                    case "A":
+                    case "라벤더":
                         tmpColor += scentColor[0];
                         break;
-                    case "B":
+                    case "레몬":
                         tmpColor += scentColor[1];
                         break;
-                    case "C":
+                    case "프랑킨센스":
                         tmpColor += scentColor[2];
                         break;
-                    case "D":
+                    case "페퍼민트":
                         tmpColor += scentColor[3];
                         break;
-                    case "E":
+                    case "자스민":
                         tmpColor += scentColor[4];
                         break;
-                    case "F":
+                    case "로즈마리":
                         tmpColor += scentColor[5];
                         break;
 

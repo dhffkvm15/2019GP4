@@ -295,22 +295,22 @@ public class MakeFragment extends Fragment {
                         buttons[i].setText(datas.get(i)); // 버튼에 향 종류 표시
 
                         switch (datas.get(i)){
-                            case "A":
+                            case "라벤더":
                                 tmpColor = "#" + clearness(rest.get(i)) + scentColor[0];
                                 break;
-                            case "B":
+                            case "레몬":
                                 tmpColor = "#" + clearness(rest.get(i)) + scentColor[1];
                                 break;
-                            case "C":
+                            case "프랑킨센스":
                                 tmpColor = "#" + clearness(rest.get(i)) + scentColor[2];
                                 break;
-                            case "D":
+                            case "페퍼민트":
                                 tmpColor = "#" + clearness(rest.get(i)) + scentColor[3];
                                 break;
-                            case "E":
+                            case "자스민":
                                 tmpColor = "#" + clearness(rest.get(i)) + scentColor[4];
                                 break;
-                            case "F":
+                            case "로즈마리":
                                 tmpColor = "#" + clearness(rest.get(i)) + scentColor[5];
                                 break;
 

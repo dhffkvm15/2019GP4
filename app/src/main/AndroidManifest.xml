@@ -15,13 +15,14 @@
 
     <application
         android:allowBackup="false"
-        android:fullBackupOnly="false"
         android:fullBackupContent="false"
+        android:fullBackupOnly="false"
         android:icon="@drawable/logo"
         android:label="SmartDiffuser"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
+
         <activity android:name=".PlayDiffuserActivity" />
         <activity android:name=".InputCatridgeActivity" />
         <activity android:name=".RegisterActivity" />
