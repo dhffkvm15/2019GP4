@@ -48,6 +48,22 @@ public class TurnonFragment extends Fragment {
     private CatridgeInfo catridgeInfo5;
     private CatridgeInfo catridgeInfo6;
 
+    private Intent intent; // 서비스 실행하기 위함
+
+    private IMyTimerService binder;
+    private ServiceConnection connection = new ServiceConnection() {
+        @Override
+        public void onServiceConnected(ComponentName name, IBinder service) {
+            // 서비스가 가진 binder 리턴 받기
+            binder = IMyTimerService.Stub.asInterface(service);
+        }
+
+        @Override
+        public void onServiceDisconnected(ComponentName name) {
+
+        }
+    };
+
 
     public static TurnonFragment newInstance(){
         return new TurnonFragment();
@@ -65,27 +81,25 @@ public class TurnonFragment extends Fragment {
         SharedPreferences sharedPreferences = getActivity().getSharedPreferences("UserInfo", MODE_PRIVATE);
         Boolean turnOn = sharedPreferences.getBoolean("turnOn", false); // 디퓨저 작동하는지 가져오기
 
+        intent = new Intent(getActivity(), MyService.class);
+
         // 꺼져 있으면
         if( !turnOn ){
             Bundle bundle = getArguments();
+            time = bundle.getInt("time");
+            timeText.setText(String.valueOf(time) +"분"); // 동작 시간 화면에 표시
+
+            // 향 저장을 위해 필요
             catridgeInfo1 = (CatridgeInfo) bundle.getSerializable("obj1");
             catridgeInfo2 = (CatridgeInfo) bundle.getSerializable("obj2");
             catridgeInfo3 = (CatridgeInfo) bundle.getSerializable("obj3");
             catridgeInfo4 = (CatridgeInfo) bundle.getSerializable("obj4");
             catridgeInfo5 = (CatridgeInfo) bundle.getSerializable("obj5");
             catridgeInfo6 = (CatridgeInfo) bundle.getSerializable("obj6");
-            time = bundle.getInt("time");
             catridgeInfos = new CatridgeInfo[]{catridgeInfo1, catridgeInfo2, catridgeInfo3, catridgeInfo4, catridgeInfo5, catridgeInfo6};
         }
-//        Log.v("태그", "전달된 것 1 : " + catridgeInfo1.getName() + " " + catridgeInfo1.getRest());
-//        Log.v("태그", "전달된 것 2 : " + catridgeInfo2.getName() + " " + catridgeInfo2.getRest());
-//        Log.v("태그", "전달된 것 3 : " + catridgeInfo3.getName() + " " + catridgeInfo3.getRest());
-//        Log.v("태그", "전달된 것 4 : " + catridgeInfo4.getName() + " " + catridgeInfo4.getRest());
-//        Log.v("태그", "전달된 것 5 : " + catridgeInfo5.getName() + " " + catridgeInfo5.getRest());
-//        Log.v("태그", "전달된 것 6 : " + catridgeInfo6.getName() + " " + catridgeInfo6.getRest());
-//        Log.v("태그", "전달된 시간 : "+ time);
 
-        // TODO 디퓨저 동작
+
         startPlaying();
 
         ((MainActivity)getActivity()).getBottomNavigationView().setEnabled(false);
@@ -97,13 +111,13 @@ public class TurnonFragment extends Fragment {
                 if(isOn == false){
                     stop.setText("STOP");
                     isOn = true;
-                    // TODO 다시 작동하는 코드 쓰기
+
                     startPlaying();
                 }else{
                     ((MainActivity)getActivity()).getBottomNavigationView().setEnabled(true);
                     stop.setText("REPLAY");
                     isOn = false;
-                    //Todo 작동 멈추는 코드
+
                     stopPlaying();
                 }
             }
@@ -132,6 +146,10 @@ public class TurnonFragment extends Fragment {
         taskMap.put("Motor", 1);
         databaseReference.updateChildren(taskMap);
 
+        //getActivity().startService(intent);
+        intent.putExtra("time", time);
+        getActivity().bindService(intent, connection, Context.BIND_AUTO_CREATE);
+        new Thread(new getTimeThread()).start();
 
         // 디퓨저가 켜져 있음을 저장하기
         SharedPreferences sharedPreferences = getActivity().getSharedPreferences("UserInfo", MODE_PRIVATE);
@@ -152,6 +170,8 @@ public class TurnonFragment extends Fragment {
         taskMap.put("Motor", 0);
         databaseReference.updateChildren(taskMap);
 
+        //getActivity().stopService(intent);
+        getActivity().unbindService(connection);
 
         // 디퓨저가 꺼져 있음을 저장하기
         SharedPreferences sharedPreferences = getActivity().getSharedPreferences("UserInfo", MODE_PRIVATE);
@@ -161,6 +181,34 @@ public class TurnonFragment extends Fragment {
 
     }
 
+    private class getTimeThread implements Runnable{
+        private Handler handler = new Handler();
+
+        @Override
+        public void run() {
+            while(isOn){
+                if(binder == null){
+                    continue;
+                }
+
+                handler.post(new Runnable() {
+                    @Override
+                    public void run() {
+                        try {
+                            timeText.setText(binder.getTime() + "분");
+                        }catch(RemoteException e){
+                            e.printStackTrace();
+                        }
+                    }
+                });
+                try{
+                    Thread.sleep(500);
+                }catch(InterruptedException e){
+                    e.printStackTrace();
+                }
+            }
+        }
+    }
 
 
 }

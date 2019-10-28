@@ -1,0 +1,302 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="40dp"
+        android:id="@+id/emotion3_fragment_line1"
+        android:background="@color/colorPrimary"
+        android:orientation="horizontal"
+        android:gravity="center_horizontal">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="40dp"
+            android:text="당신의 감정은?"
+            android:textStyle="bold"
+            android:textSize="25dp"
+            android:textColor="@android:color/white"/>
+
+    </LinearLayout>
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/emotion3_fragment_emotion_text"
+        android:text="엄청 기쁘네요."
+        android:layout_below="@+id/emotion3_fragment_line1"
+        android:layout_marginTop="20dp"
+        android:textSize="20dp"
+        android:textAlignment="center"/>
+
+
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/emotion3_fragment_line2"
+        android:layout_below="@+id/emotion3_fragment_emotion_text"
+        android:layout_marginTop="30dp"
+        android:orientation="horizontal"
+        android:gravity="center_horizontal">
+
+        <RelativeLayout
+            android:layout_width="120dp"
+            android:layout_height="160dp">
+
+            <Button
+                android:layout_width="100dp"
+                android:layout_height="100dp"
+                android:layout_alignParentTop="true"
+                android:layout_centerHorizontal="true"
+                android:id="@+id/emotion3_fragment_button1"
+                android:background="@drawable/circlebutton2"
+                android:text="z"
+                android:textColor="@color/myblack"
+                />
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="20dp"
+                android:text="%"
+                android:gravity="center"
+                android:id="@+id/emotion3_fragment_textview1"
+                android:layout_below="@id/emotion3_fragment_button1"
+                android:layout_marginTop="5dp"/>
+
+            <SeekBar
+                android:layout_width="match_parent"
+                android:layout_height="20dp"
+                android:layout_below="@+id/emotion3_fragment_textview1"
+                android:layout_marginTop="5dp"
+                android:id="@+id/emotion3_fragment_seekbar1"
+                android:max="2"
+                android:progress="2"
+                style="@style/Widget.AppCompat.SeekBar.Discrete" />
+
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:layout_width="120dp"
+            android:layout_height="160dp"
+            android:layout_marginLeft="10dp">
+
+            <Button
+                android:layout_width="100dp"
+                android:layout_height="100dp"
+                android:layout_alignParentTop="true"
+                android:layout_centerHorizontal="true"
+                android:id="@+id/emotion3_fragment_button2"
+                android:background="@drawable/circlebutton2"
+                android:text="z"
+                android:textColor="@color/myblack"/>
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="20dp"
+                android:text="%"
+                android:gravity="center"
+                android:id="@+id/emotion3_fragment_textview2"
+                android:layout_below="@id/emotion3_fragment_button2"
+                android:layout_marginTop="5dp"/>
+
+            <SeekBar
+                android:layout_width="match_parent"
+                android:layout_height="20dp"
+                android:layout_below="@+id/emotion3_fragment_textview2"
+                android:layout_marginTop="5dp"
+                android:id="@+id/emotion3_fragment_seekbar2"
+                android:max="2"
+                android:progress="2"
+                style="@style/Widget.AppCompat.SeekBar.Discrete"/>
+
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:layout_width="120dp"
+            android:layout_height="160dp"
+            android:layout_marginLeft="10dp">
+
+            <Button
+                android:layout_width="100dp"
+                android:layout_height="100dp"
+                android:layout_alignParentTop="true"
+                android:layout_centerHorizontal="true"
+                android:id="@+id/emotion3_fragment_button3"
+                android:background="@drawable/circlebutton2"
+                android:text="z"
+                android:textColor="@color/myblack"/>
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="20dp"
+                android:text="%"
+                android:gravity="center"
+                android:id="@+id/emotion3_fragment_textview3"
+                android:layout_below="@id/emotion3_fragment_button3"
+                android:layout_marginTop="5dp"/>
+            <SeekBar
+                android:layout_width="match_parent"
+                android:layout_height="20dp"
+                android:layout_below="@+id/emotion3_fragment_textview3"
+                android:layout_marginTop="5dp"
+                android:id="@+id/emotion3_fragment_seekbar3"
+                android:max="2"
+                android:progress="2"
+                style="@style/Widget.AppCompat.SeekBar.Discrete"/>
+
+        </RelativeLayout>
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/emotion3_fragment_line2"
+        android:id="@+id/emotion3_fragment_line3"
+        android:layout_marginTop="30dp"
+        android:orientation="horizontal"
+        android:textColor="#FFFFFF"
+        android:gravity="center_horizontal">
+
+        <RelativeLayout
+            android:layout_width="120dp"
+            android:layout_height="160dp">
+            <Button
+                android:layout_width="100dp"
+                android:layout_height="100dp"
+                android:layout_centerHorizontal="true"
+                android:layout_alignParentTop="true"
+                android:id="@+id/emotion3_fragment_button4"
+                android:background="@drawable/circlebutton2"
+                android:text="z"
+                android:textColor="@color/myblack"/>
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="20dp"
+                android:text="%"
+                android:gravity="center"
+                android:id="@+id/emotion3_fragment_textview4"
+                android:layout_below="@id/emotion3_fragment_button4"
+                android:layout_marginTop="5dp"/>
+            <SeekBar
+                android:layout_width="match_parent"
+                android:layout_height="20dp"
+                android:layout_below="@+id/emotion3_fragment_textview4"
+                android:layout_marginTop="5dp"
+                android:id="@+id/emotion3_fragment_seekbar4"
+                android:max="2"
+                android:progress="2"
+                style="@style/Widget.AppCompat.SeekBar.Discrete"/>
+
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:layout_width="120dp"
+            android:layout_height="160dp"
+            android:layout_marginLeft="10dp">
+
+            <Button
+                android:layout_width="100dp"
+                android:layout_height="100dp"
+                android:layout_centerHorizontal="true"
+                android:layout_alignParentTop="true"
+                android:id="@+id/emotion3_fragment_button5"
+                android:background="@drawable/circlebutton2"
+                android:text="z"
+                android:textColor="@color/myblack"/>
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="20dp"
+                android:text="%"
+                android:gravity="center"
+                android:id="@+id/emotion3_fragment_textview5"
+                android:layout_below="@id/emotion3_fragment_button5"
+                android:layout_marginTop="5dp"/>
+            <SeekBar
+                android:layout_width="match_parent"
+                android:layout_height="20dp"
+                android:layout_below="@+id/emotion3_fragment_textview5"
+                android:layout_marginTop="5dp"
+                android:id="@+id/emotion3_fragment_seekbar5"
+                android:max="2"
+                android:progress="2"
+                style="@style/Widget.AppCompat.SeekBar.Discrete"/>
+
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:layout_width="120dp"
+            android:layout_height="160dp"
+            android:layout_marginLeft="10dp">
+
+            <Button
+                android:layout_width="100dp"
+                android:layout_height="100dp"
+                android:layout_alignParentTop="true"
+                android:layout_centerHorizontal="true"
+                android:id="@+id/emotion3_fragment_button6"
+                android:background="@drawable/circlebutton2"
+                android:text="z"
+                android:textColor="@color/myblack"/>
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="20dp"
+                android:text="%"
+                android:gravity="center"
+                android:id="@+id/emotion3_fragment_textview6"
+                android:layout_below="@id/emotion3_fragment_button6"
+                android:layout_marginTop="5dp"/>
+
+            <SeekBar
+                android:layout_width="match_parent"
+                android:layout_height="20dp"
+                android:layout_below="@+id/emotion3_fragment_textview6"
+                android:layout_marginTop="5dp"
+                android:id="@+id/emotion3_fragment_seekbar6"
+                android:max="2"
+                android:progress="2"
+                style="@style/Widget.AppCompat.SeekBar.Discrete"/>
+
+        </RelativeLayout>
+
+    </LinearLayout>
+
+    <SeekBar
+        android:layout_width="match_parent"
+        android:layout_height="20dp"
+        android:layout_below="@id/emotion3_fragment_line3"
+        android:layout_margin="5dp"
+        android:id="@+id/emotion3_fragment_seekbar_time"
+        android:max="120"
+        android:progress="120" />
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="120분"
+        android:textColor="@color/myblack"
+        android:textSize="18dp"
+        android:gravity="center"
+        android:layout_below="@id/emotion3_fragment_seekbar_time"
+        android:id="@+id/emotion3_fragment_textview_time"/>
+
+    <Button
+        android:layout_width="100dp"
+        android:layout_height="50dp"
+        android:id="@+id/emotion3_fragment_turnon_button"
+        android:text="동작"
+        android:textSize="20dp"
+        android:background="@drawable/originbutton"
+        android:layout_below="@id/emotion3_fragment_textview_time"
+        android:layout_marginTop="5dp"
+        android:layout_centerHorizontal="true" />
+
+</RelativeLayout>

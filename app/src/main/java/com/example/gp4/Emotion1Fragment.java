@@ -241,8 +241,10 @@ public class Emotion1Fragment extends Fragment {
         final double stress = lf/hf;
         if( stress >= 1){
             stressTextview.setText(String.format("%.2f",stress) + " / 스트레스 있음");
+            IsStress = true;
         }else{
             stressTextview.setText(String.format("%.2f",stress)  + " / 스트레스 없음");
+            IsStress = false;
         }
         //Log.v("결과 확인", "lf/hf : " + (lf/hf));
 

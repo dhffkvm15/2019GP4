@@ -18,10 +18,14 @@
         android:fullBackupContent="false"
         android:fullBackupOnly="false"
         android:icon="@drawable/logo"
-        android:label="SmartDiffuser"
+        android:label="Genie"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
+        <service
+            android:name=".MyService"
+            android:enabled="true"
+            android:exported="true"></service>
 
         <activity android:name=".PlayDiffuserActivity" />
         <activity android:name=".InputCatridgeActivity" />

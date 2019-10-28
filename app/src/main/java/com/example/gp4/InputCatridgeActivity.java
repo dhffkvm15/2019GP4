@@ -93,7 +93,7 @@ public class InputCatridgeActivity extends AppCompatActivity {
             toast.setView(toastDesign);
             toast.show();
             //Toast.makeText(getApplicationContext(), "빈 칸이 있습니다.", Toast.LENGTH_LONG).show();
-        }else if( stressNum > 1){
+        }else if(stressNum==0 || stressNum > 1){
             LayoutInflater inflater = getLayoutInflater();
             View toastDesign = inflater.inflate(R.layout.toast_design, (ViewGroup)findViewById(R.id.toast_design_root));
             TextView textView = toastDesign.findViewById(R.id.toast_design_textview); // 토스트 꾸미기 위함

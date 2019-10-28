@@ -5,287 +5,287 @@
     android:layout_height="match_parent"
     android:orientation="vertical">
 
-    <LinearLayout
+<LinearLayout
+android:layout_width="match_parent"
+android:layout_height="40dp"
+android:id="@+id/make_fragment_line1"
+android:background="@color/colorPrimary"
+android:orientation="horizontal"
+android:gravity="center_horizontal">
+
+<TextView
+    android:layout_width="wrap_content"
+    android:layout_height="40dp"
+    android:text="커스터 마이징"
+    android:textStyle="bold"
+    android:textSize="25dp"
+    android:textColor="@android:color/white"/>
+
+</LinearLayout>
+
+
+
+<LinearLayout
+android:layout_width="match_parent"
+android:layout_height="wrap_content"
+android:id="@+id/make_fragment_line2"
+android:layout_below="@+id/make_fragment_line1"
+android:layout_marginTop="30dp"
+android:orientation="horizontal"
+android:gravity="center_horizontal">
+
+<RelativeLayout
+    android:layout_width="120dp"
+    android:layout_height="160dp">
+
+    <Button
+        android:layout_width="100dp"
+        android:layout_height="100dp"
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true"
+        android:id="@+id/fragment_make_button1"
+        android:background="@drawable/circlebutton2"
+        android:text="z"
+        android:textColor="@color/myblack"
+        />
+    <TextView
         android:layout_width="match_parent"
-        android:layout_height="40dp"
-        android:id="@+id/make_fragment_line1"
-        android:background="@color/colorPrimary"
-        android:orientation="horizontal"
-        android:gravity="center_horizontal">
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="40dp"
-            android:text="커스터 마이징"
-            android:textStyle="bold"
-            android:textSize="25dp"
-            android:textColor="@android:color/white"/>
-
-    </LinearLayout>
-
-
-
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:id="@+id/make_fragment_line2"
-        android:layout_below="@+id/make_fragment_line1"
-        android:layout_marginTop="30dp"
-        android:orientation="horizontal"
-        android:gravity="center_horizontal">
-
-        <RelativeLayout
-            android:layout_width="120dp"
-            android:layout_height="160dp">
-
-            <Button
-                android:layout_width="100dp"
-                android:layout_height="100dp"
-                android:layout_alignParentTop="true"
-                android:layout_centerHorizontal="true"
-                android:id="@+id/fragment_make_button1"
-                android:background="@drawable/circlebutton2"
-                android:text="z"
-                android:textColor="@color/myblack"
-                />
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="20dp"
-                android:text="%"
-                android:gravity="center"
-                android:id="@+id/make_fragment_textview1"
-                android:layout_below="@id/fragment_make_button1"
-                android:layout_marginTop="5dp"/>
-            
-            <SeekBar
-                android:layout_width="match_parent"
-                android:layout_height="20dp"
-                android:layout_below="@+id/make_fragment_textview1"
-                android:layout_marginTop="5dp"
-                android:id="@+id/make_fragment_seekbar1"
-                android:max="2"
-                android:progress="2"
-                style="@style/Widget.AppCompat.SeekBar.Discrete" />
-
-        </RelativeLayout>
-
-        <RelativeLayout
-            android:layout_width="120dp"
-            android:layout_height="160dp"
-            android:layout_marginLeft="10dp">
-
-        <Button
-            android:layout_width="100dp"
-            android:layout_height="100dp"
-            android:layout_alignParentTop="true"
-            android:layout_centerHorizontal="true"
-            android:id="@+id/fragment_make_button2"
-            android:background="@drawable/circlebutton2"
-            android:text="z"
-            android:textColor="@color/myblack"/>
-
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="20dp"
-                android:text="%"
-                android:gravity="center"
-                android:id="@+id/make_fragment_textview2"
-                android:layout_below="@id/fragment_make_button2"
-                android:layout_marginTop="5dp"/>
-
-            <SeekBar
-                android:layout_width="match_parent"
-                android:layout_height="20dp"
-                android:layout_below="@+id/make_fragment_textview2"
-                android:layout_marginTop="5dp"
-                android:id="@+id/make_fragment_seekbar2"
-                android:max="2"
-                android:progress="2"
-                style="@style/Widget.AppCompat.SeekBar.Discrete"/>
-
-        </RelativeLayout>
-
-        <RelativeLayout
-            android:layout_width="120dp"
-            android:layout_height="160dp"
-            android:layout_marginLeft="10dp">
-
-        <Button
-            android:layout_width="100dp"
-            android:layout_height="100dp"
-            android:layout_alignParentTop="true"
-            android:layout_centerHorizontal="true"
-            android:id="@+id/fragment_make_button3"
-            android:background="@drawable/circlebutton2"
-            android:text="z"
-            android:textColor="@color/myblack"/>
-
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="20dp"
-                android:text="%"
-                android:gravity="center"
-                android:id="@+id/make_fragment_textview3"
-                android:layout_below="@id/fragment_make_button3"
-                android:layout_marginTop="5dp"/>
-            <SeekBar
-                android:layout_width="match_parent"
-                android:layout_height="20dp"
-                android:layout_below="@+id/make_fragment_textview3"
-                android:layout_marginTop="5dp"
-                android:id="@+id/make_fragment_seekbar3"
-                android:max="2"
-                android:progress="2"
-                style="@style/Widget.AppCompat.SeekBar.Discrete"/>
-
-        </RelativeLayout>
-
-    </LinearLayout>
-
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/make_fragment_line2"
-        android:id="@+id/make_fragment_line3"
-        android:layout_marginTop="30dp"
-        android:orientation="horizontal"
-        android:textColor="#FFFFFF"
-        android:gravity="center_horizontal">
-
-        <RelativeLayout
-            android:layout_width="120dp"
-            android:layout_height="160dp">
-        <Button
-            android:layout_width="100dp"
-            android:layout_height="100dp"
-            android:layout_centerHorizontal="true"
-            android:layout_alignParentTop="true"
-            android:id="@+id/fragment_make_button4"
-            android:background="@drawable/circlebutton2"
-            android:text="z"
-            android:textColor="@color/myblack"/>
-
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="20dp"
-                android:text="%"
-                android:gravity="center"
-                android:id="@+id/make_fragment_textview4"
-                android:layout_below="@id/fragment_make_button4"
-                android:layout_marginTop="5dp"/>
-            <SeekBar
-                android:layout_width="match_parent"
-                android:layout_height="20dp"
-                android:layout_below="@+id/make_fragment_textview4"
-                android:layout_marginTop="5dp"
-                android:id="@+id/make_fragment_seekbar4"
-                android:max="2"
-                android:progress="2"
-                style="@style/Widget.AppCompat.SeekBar.Discrete"/>
-
-        </RelativeLayout>
-
-        <RelativeLayout
-            android:layout_width="120dp"
-            android:layout_height="160dp"
-            android:layout_marginLeft="10dp">
-
-        <Button
-            android:layout_width="100dp"
-            android:layout_height="100dp"
-            android:layout_centerHorizontal="true"
-            android:layout_alignParentTop="true"
-            android:id="@+id/fragment_make_button5"
-            android:background="@drawable/circlebutton2"
-            android:text="z"
-            android:textColor="@color/myblack"/>
-
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="20dp"
-                android:text="%"
-                android:gravity="center"
-                android:id="@+id/make_fragment_textview5"
-                android:layout_below="@id/fragment_make_button5"
-                android:layout_marginTop="5dp"/>
-            <SeekBar
-                android:layout_width="match_parent"
-                android:layout_height="20dp"
-                android:layout_below="@+id/make_fragment_textview5"
-                android:layout_marginTop="5dp"
-                android:id="@+id/make_fragment_seekbar5"
-                android:max="2"
-                android:progress="2"
-                style="@style/Widget.AppCompat.SeekBar.Discrete"/>
-
-        </RelativeLayout>
-
-        <RelativeLayout
-            android:layout_width="120dp"
-            android:layout_height="160dp"
-            android:layout_marginLeft="10dp">
-
-        <Button
-            android:layout_width="100dp"
-            android:layout_height="100dp"
-            android:layout_alignParentTop="true"
-            android:layout_centerHorizontal="true"
-            android:id="@+id/fragment_make_button6"
-            android:background="@drawable/circlebutton2"
-            android:text="z"
-            android:textColor="@color/myblack"/>
-
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="20dp"
-                android:text="%"
-                android:gravity="center"
-                android:id="@+id/make_fragment_textview6"
-                android:layout_below="@id/fragment_make_button6"
-                android:layout_marginTop="5dp"/>
-
-            <SeekBar
-                android:layout_width="match_parent"
-                android:layout_height="20dp"
-                android:layout_below="@+id/make_fragment_textview6"
-                android:layout_marginTop="5dp"
-                android:id="@+id/make_fragment_seekbar6"
-                android:max="2"
-                android:progress="2"
-                style="@style/Widget.AppCompat.SeekBar.Discrete"/>
-
-        </RelativeLayout>
-
-    </LinearLayout>
+        android:layout_height="20dp"
+        android:text="%"
+        android:gravity="center"
+        android:id="@+id/make_fragment_textview1"
+        android:layout_below="@id/fragment_make_button1"
+        android:layout_marginTop="5dp"/>
 
     <SeekBar
         android:layout_width="match_parent"
         android:layout_height="20dp"
-        android:layout_below="@id/make_fragment_line3"
-        android:layout_margin="5dp"
-        android:id="@+id/make_fragment_seekbar_time"
-        android:max="120"
-        android:progress="120" />
+        android:layout_below="@+id/make_fragment_textview1"
+        android:layout_marginTop="5dp"
+        android:id="@+id/make_fragment_seekbar1"
+        android:max="2"
+        android:progress="2"
+        style="@style/Widget.AppCompat.SeekBar.Discrete" />
 
-    <TextView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="120분"
-        android:textColor="@color/myblack"
-        android:textSize="18dp"
-        android:gravity="center"
-        android:layout_below="@id/make_fragment_seekbar_time"
-        android:id="@+id/make_fragment_textview_time"/>
+</RelativeLayout>
+
+<RelativeLayout
+    android:layout_width="120dp"
+    android:layout_height="160dp"
+    android:layout_marginLeft="10dp">
 
     <Button
         android:layout_width="100dp"
-        android:layout_height="50dp"
-        android:id="@+id/make_fragment_turnon_button"
-        android:text="동작"
-        android:textSize="20dp"
-        android:background="@drawable/originbutton"
-        android:layout_below="@id/make_fragment_textview_time"
+        android:layout_height="100dp"
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true"
+        android:id="@+id/fragment_make_button2"
+        android:background="@drawable/circlebutton2"
+        android:text="z"
+        android:textColor="@color/myblack"/>
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="20dp"
+        android:text="%"
+        android:gravity="center"
+        android:id="@+id/make_fragment_textview2"
+        android:layout_below="@id/fragment_make_button2"
+        android:layout_marginTop="5dp"/>
+
+    <SeekBar
+        android:layout_width="match_parent"
+        android:layout_height="20dp"
+        android:layout_below="@+id/make_fragment_textview2"
         android:layout_marginTop="5dp"
-        android:layout_centerHorizontal="true" />
+        android:id="@+id/make_fragment_seekbar2"
+        android:max="2"
+        android:progress="2"
+        style="@style/Widget.AppCompat.SeekBar.Discrete"/>
 
 </RelativeLayout>
+
+<RelativeLayout
+    android:layout_width="120dp"
+    android:layout_height="160dp"
+    android:layout_marginLeft="10dp">
+
+    <Button
+        android:layout_width="100dp"
+        android:layout_height="100dp"
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true"
+        android:id="@+id/fragment_make_button3"
+        android:background="@drawable/circlebutton2"
+        android:text="z"
+        android:textColor="@color/myblack"/>
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="20dp"
+        android:text="%"
+        android:gravity="center"
+        android:id="@+id/make_fragment_textview3"
+        android:layout_below="@id/fragment_make_button3"
+        android:layout_marginTop="5dp"/>
+    <SeekBar
+        android:layout_width="match_parent"
+        android:layout_height="20dp"
+        android:layout_below="@+id/make_fragment_textview3"
+        android:layout_marginTop="5dp"
+        android:id="@+id/make_fragment_seekbar3"
+        android:max="2"
+        android:progress="2"
+        style="@style/Widget.AppCompat.SeekBar.Discrete"/>
+
+</RelativeLayout>
+
+</LinearLayout>
+
+<LinearLayout
+android:layout_width="match_parent"
+android:layout_height="wrap_content"
+android:layout_below="@+id/make_fragment_line2"
+android:id="@+id/make_fragment_line3"
+android:layout_marginTop="30dp"
+android:orientation="horizontal"
+android:textColor="#FFFFFF"
+android:gravity="center_horizontal">
+
+<RelativeLayout
+    android:layout_width="120dp"
+    android:layout_height="160dp">
+    <Button
+        android:layout_width="100dp"
+        android:layout_height="100dp"
+        android:layout_centerHorizontal="true"
+        android:layout_alignParentTop="true"
+        android:id="@+id/fragment_make_button4"
+        android:background="@drawable/circlebutton2"
+        android:text="z"
+        android:textColor="@color/myblack"/>
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="20dp"
+        android:text="%"
+        android:gravity="center"
+        android:id="@+id/make_fragment_textview4"
+        android:layout_below="@id/fragment_make_button4"
+        android:layout_marginTop="5dp"/>
+    <SeekBar
+        android:layout_width="match_parent"
+        android:layout_height="20dp"
+        android:layout_below="@+id/make_fragment_textview4"
+        android:layout_marginTop="5dp"
+        android:id="@+id/make_fragment_seekbar4"
+        android:max="2"
+        android:progress="2"
+        style="@style/Widget.AppCompat.SeekBar.Discrete"/>
+
+</RelativeLayout>
+
+<RelativeLayout
+    android:layout_width="120dp"
+    android:layout_height="160dp"
+    android:layout_marginLeft="10dp">
+
+    <Button
+        android:layout_width="100dp"
+        android:layout_height="100dp"
+        android:layout_centerHorizontal="true"
+        android:layout_alignParentTop="true"
+        android:id="@+id/fragment_make_button5"
+        android:background="@drawable/circlebutton2"
+        android:text="z"
+        android:textColor="@color/myblack"/>
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="20dp"
+        android:text="%"
+        android:gravity="center"
+        android:id="@+id/make_fragment_textview5"
+        android:layout_below="@id/fragment_make_button5"
+        android:layout_marginTop="5dp"/>
+    <SeekBar
+        android:layout_width="match_parent"
+        android:layout_height="20dp"
+        android:layout_below="@+id/make_fragment_textview5"
+        android:layout_marginTop="5dp"
+        android:id="@+id/make_fragment_seekbar5"
+        android:max="2"
+        android:progress="2"
+        style="@style/Widget.AppCompat.SeekBar.Discrete"/>
+
+</RelativeLayout>
+
+<RelativeLayout
+    android:layout_width="120dp"
+    android:layout_height="160dp"
+    android:layout_marginLeft="10dp">
+
+    <Button
+        android:layout_width="100dp"
+        android:layout_height="100dp"
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true"
+        android:id="@+id/fragment_make_button6"
+        android:background="@drawable/circlebutton2"
+        android:text="z"
+        android:textColor="@color/myblack"/>
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="20dp"
+        android:text="%"
+        android:gravity="center"
+        android:id="@+id/make_fragment_textview6"
+        android:layout_below="@id/fragment_make_button6"
+        android:layout_marginTop="5dp"/>
+
+    <SeekBar
+        android:layout_width="match_parent"
+        android:layout_height="20dp"
+        android:layout_below="@+id/make_fragment_textview6"
+        android:layout_marginTop="5dp"
+        android:id="@+id/make_fragment_seekbar6"
+        android:max="2"
+        android:progress="2"
+        style="@style/Widget.AppCompat.SeekBar.Discrete"/>
+
+</RelativeLayout>
+
+</LinearLayout>
+
+<SeekBar
+android:layout_width="match_parent"
+android:layout_height="20dp"
+android:layout_below="@id/make_fragment_line3"
+android:layout_margin="5dp"
+android:id="@+id/make_fragment_seekbar_time"
+android:max="120"
+android:progress="120" />
+
+<TextView
+android:layout_width="match_parent"
+android:layout_height="wrap_content"
+android:text="120분"
+android:textColor="@color/myblack"
+android:textSize="18dp"
+android:gravity="center"
+android:layout_below="@id/make_fragment_seekbar_time"
+android:id="@+id/make_fragment_textview_time"/>
+
+<Button
+android:layout_width="100dp"
+android:layout_height="50dp"
+android:id="@+id/make_fragment_turnon_button"
+android:text="동작"
+android:textSize="20dp"
+android:background="@drawable/originbutton"
+android:layout_below="@id/make_fragment_textview_time"
+android:layout_marginTop="5dp"
+android:layout_centerHorizontal="true" />
+
+    </RelativeLayout>
