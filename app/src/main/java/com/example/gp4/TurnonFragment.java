@@ -99,10 +99,7 @@ public class TurnonFragment extends Fragment {
             catridgeInfos = new CatridgeInfo[]{catridgeInfo1, catridgeInfo2, catridgeInfo3, catridgeInfo4, catridgeInfo5, catridgeInfo6};
         }
 
-
         startPlaying();
-
-        ((MainActivity)getActivity()).getBottomNavigationView().setEnabled(false);
 
         // 동작 멈춤 버튼 클릭 시
         stop.setOnClickListener(new View.OnClickListener() {
@@ -114,7 +111,6 @@ public class TurnonFragment extends Fragment {
 
                     startPlaying();
                 }else{
-                    ((MainActivity)getActivity()).getBottomNavigationView().setEnabled(true);
                     stop.setText("REPLAY");
                     isOn = false;
 
@@ -132,13 +128,11 @@ public class TurnonFragment extends Fragment {
             }
         });
 
-
         return viewGroup;
     }
 
     // 디퓨저 동작하는 코드
     private void startPlaying() {
-        //Log.v("디퓨저", "작동");
 
         FirebaseDatabase firebaseDatabase = FirebaseDatabase.getInstance();
         DatabaseReference databaseReference = firebaseDatabase.getReference();
@@ -146,10 +140,9 @@ public class TurnonFragment extends Fragment {
         taskMap.put("Motor", 1);
         databaseReference.updateChildren(taskMap);
 
-        //getActivity().startService(intent);
-        intent.putExtra("time", time);
-        getActivity().bindService(intent, connection, Context.BIND_AUTO_CREATE);
-        new Thread(new getTimeThread()).start();
+//        intent.putExtra("time", time);
+//        getActivity().bindService(intent, connection, Context.BIND_AUTO_CREATE);
+//        new Thread(new getTimeThread()).start();
 
         // 디퓨저가 켜져 있음을 저장하기
         SharedPreferences sharedPreferences = getActivity().getSharedPreferences("UserInfo", MODE_PRIVATE);
@@ -157,21 +150,24 @@ public class TurnonFragment extends Fragment {
         editor.putBoolean("turnOn", true);
         editor.commit(); // 저장 완료
 
-        // 작동 멈춤 작동 했을 때, 작동한 시간만큼 원래 작동하고자 했던 시간에서 빼야하는지
     }
 
     // 디퓨저 작동 멈추는 코드
     private void stopPlaying() {
-        //Log.v("디퓨저", "작동 멈춤");
 
         FirebaseDatabase firebaseDatabase = FirebaseDatabase.getInstance();
         DatabaseReference databaseReference = firebaseDatabase.getReference();
         Map<String, Object> taskMap = new HashMap<String, Object>();
         taskMap.put("Motor", 0);
+        taskMap.put("1Status", 0);
+        taskMap.put("2Status", 0);
+        taskMap.put("3Status", 0);
+        taskMap.put("4Status", 0);
+        taskMap.put("5Status", 0);
+        taskMap.put("6Status", 0);
         databaseReference.updateChildren(taskMap);
 
-        //getActivity().stopService(intent);
-        getActivity().unbindService(connection);
+        //getActivity().unbindService(connection);
 
         // 디퓨저가 꺼져 있음을 저장하기
         SharedPreferences sharedPreferences = getActivity().getSharedPreferences("UserInfo", MODE_PRIVATE);
@@ -181,34 +177,34 @@ public class TurnonFragment extends Fragment {
 
     }
 
-    private class getTimeThread implements Runnable{
-        private Handler handler = new Handler();
-
-        @Override
-        public void run() {
-            while(isOn){
-                if(binder == null){
-                    continue;
-                }
-
-                handler.post(new Runnable() {
-                    @Override
-                    public void run() {
-                        try {
-                            timeText.setText(binder.getTime() + "분");
-                        }catch(RemoteException e){
-                            e.printStackTrace();
-                        }
-                    }
-                });
-                try{
-                    Thread.sleep(500);
-                }catch(InterruptedException e){
-                    e.printStackTrace();
-                }
-            }
-        }
-    }
+//    private class getTimeThread implements Runnable{
+//        private Handler handler = new Handler();
+//
+//        @Override
+//        public void run() {
+//            while(isOn){
+//                if(binder == null){
+//                    continue;
+//                }
+//
+//                handler.post(new Runnable() {
+//                    @Override
+//                    public void run() {
+//                        try {
+//                            timeText.setText(binder.getTime() + "분");
+//                        }catch(RemoteException e){
+//                            e.printStackTrace();
+//                        }
+//                    }
+//                });
+//                try{
+//                    Thread.sleep(500);
+//                }catch(InterruptedException e){
+//                    e.printStackTrace();
+//                }
+//            }
+//        }
+//    }
 
 
 }

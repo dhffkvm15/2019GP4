@@ -4,9 +4,9 @@
 
     <stroke
         android:width="2dp"
-        android:color="@color/colorPrimary" />
+        android:color="@color/colorAccent" />
     <solid
-        android:color="@color/Yellow" />
+        android:color="@color/colorPrimaryYellow" />
     <padding
         android:left="5dp"
         android:bottom="5dp"

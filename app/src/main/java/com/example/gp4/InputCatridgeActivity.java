@@ -1,5 +1,6 @@
 package com.example.gp4;
 
+import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.renderscript.ScriptGroup;
@@ -39,7 +40,7 @@ public class InputCatridgeActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_input_catridge);
 
-        init(); //버튼 클릭 시 다이얼로그 띄우기
+        init(); // 기본 설정 및 버튼 클릭 시 다이얼로그 띄우기
     }
 
     private void init(){
@@ -63,50 +64,34 @@ public class InputCatridgeActivity extends AppCompatActivity {
     }
 
     // 확인(register) 버튼 클릭 시
+    @SuppressLint("ResourceAsColor")
     public void OKregister(View view) {
         int stressNum = 0; // 사용자가 입력한 스트레스 향의 개수 저장할 변수
         int storeNum = 0; // 사용자가 입력한 스트레스 향의 위치 저장할 변수
         int noPut = 0; // 사용자가 입력하지 않은 향의 개수 저장할 변수
 
-
+        // 입력하지 않은 버튼 개수 구하기
         for(int i=0; i<buttons.length; i++){
-            if(buttons[i].getText().toString().equals("라벤더")){
-                stressNum++;
-                storeNum = i;
-            }else if(buttons[i].getText().toString().equals("입력")){
+            if(buttons[i].getText().toString().equals("입력")){
                 noPut++;
             }
         }
-        Log.v("태그", "위치 : " + storeNum);
+
         if( noPut != 0){
-            // 선택 안 한 창이 있으면
-//button1.getText().toString().equals("입력") || button2.getText().toString().equals("입력") || button3.getText().toString().equals("입력")
-//        || button4.getText().toString().equals("입력") || button5.getText().toString().equals("입력") || button6.getText().toString().equals("입력")
+            // 빈 칸이 있을 경우
             LayoutInflater inflater = getLayoutInflater();
             View toastDesign = inflater.inflate(R.layout.toast_design, (ViewGroup)findViewById(R.id.toast_design_root));
             TextView textView = toastDesign.findViewById(R.id.toast_design_textview); // 토스트 꾸미기 위함
+            textView.setTextColor(R.color.colorPrimaryDark);
 
-            textView.setText("빈 칸이 있습니다.");
+            textView.setText( String.valueOf(noPut) +"개의 빈 칸이 있습니다.");
             Toast toast = new Toast(getApplicationContext());
             toast.setGravity(Gravity.BOTTOM, 0, 30);
             toast.setDuration(Toast.LENGTH_LONG);
             toast.setView(toastDesign);
             toast.show();
-            //Toast.makeText(getApplicationContext(), "빈 칸이 있습니다.", Toast.LENGTH_LONG).show();
-        }else if(stressNum==0 || stressNum > 1){
-            LayoutInflater inflater = getLayoutInflater();
-            View toastDesign = inflater.inflate(R.layout.toast_design, (ViewGroup)findViewById(R.id.toast_design_root));
-            TextView textView = toastDesign.findViewById(R.id.toast_design_textview); // 토스트 꾸미기 위함
-
-            textView.setText("스트레스 향은 하나만 넣어주세요.");
-            Toast toast = new Toast(getApplicationContext());
-            toast.setGravity(Gravity.BOTTOM, 0, 30);
-            toast.setDuration(Toast.LENGTH_LONG);
-            toast.setView(toastDesign);
-            toast.show();
-
-        } else {
-            // 빈 칸이 없으며, 스트레스 향도 하나 일 때 - 저장
+        }else {
+            // 빈 칸이 없는 경우 저장
             FirebaseDatabase firebaseDatabase = FirebaseDatabase.getInstance(); // 파이어베이스 불러오기
             DatabaseReference databaseReference = firebaseDatabase.getReference("catridge");
             DatabaseReference pushReference = databaseReference.push();
@@ -119,11 +104,9 @@ public class InputCatridgeActivity extends AppCompatActivity {
 
             String pushId = pushReference.getKey(); // key 값 가져오기
 
-
             SharedPreferences sharedPreferences = getSharedPreferences("UserInfo", MODE_PRIVATE);
             SharedPreferences.Editor editor = sharedPreferences.edit();
             editor.putString("pushID", pushId);
-            editor.putInt("stressPosition", storeNum);
             editor.commit(); // pushId 내부저장소에 저장 완료
 
             Intent intent = new Intent(this, MainActivity.class);
@@ -142,7 +125,7 @@ public class InputCatridgeActivity extends AppCompatActivity {
             final String[] tmpName = new String[1];
             switch (v.getId()){
                 case R.id.input_catridge_button1:
-                    customDialog.callFunction(button1);
+                    customDialog.callFunction(button1, 1);
                     customDialog.setDialogListener(new CustomDialog.CustomDialogListener() {
                         @Override
                         public void onPositiveClicked(String name) {
@@ -156,7 +139,7 @@ public class InputCatridgeActivity extends AppCompatActivity {
                     });
                     break;
                 case R.id.input_catridge_button2 :
-                    customDialog.callFunction(button2);
+                    customDialog.callFunction(button2, 2);
                     customDialog.setDialogListener(new CustomDialog.CustomDialogListener() {
                         @Override
                         public void onPositiveClicked(String name) {
@@ -170,7 +153,7 @@ public class InputCatridgeActivity extends AppCompatActivity {
                     });
                     break;
                 case R.id.input_catridge_button3 :
-                    customDialog.callFunction(button3);
+                    customDialog.callFunction(button3, 3);
                     customDialog.setDialogListener(new CustomDialog.CustomDialogListener() {
                         @Override
                         public void onPositiveClicked(String name) {
@@ -184,7 +167,7 @@ public class InputCatridgeActivity extends AppCompatActivity {
                     });
                     break;
                 case R.id.input_catridge_button4 :
-                    customDialog.callFunction(button4);
+                    customDialog.callFunction(button4, 4);
                     customDialog.setDialogListener(new CustomDialog.CustomDialogListener() {
                         @Override
                         public void onPositiveClicked(String name) {
@@ -198,7 +181,7 @@ public class InputCatridgeActivity extends AppCompatActivity {
                     });
                     break;
                 case R.id.input_catridge_button5 :
-                   customDialog.callFunction(button5);
+                   customDialog.callFunction(button5, 5);
                     customDialog.setDialogListener(new CustomDialog.CustomDialogListener() {
                         @Override
                         public void onPositiveClicked(String name) {
@@ -212,7 +195,7 @@ public class InputCatridgeActivity extends AppCompatActivity {
                     });
                     break;
                 case R.id.input_catridge_button6 :
-                    customDialog.callFunction(button6);
+                    customDialog.callFunction(button6, 6);
                     customDialog.setDialogListener(new CustomDialog.CustomDialogListener() {
                         @Override
                         public void onPositiveClicked(String name) {
@@ -231,21 +214,21 @@ public class InputCatridgeActivity extends AppCompatActivity {
     }
 
     // 뒤로가기 2번 클릭 시 종료
+    @SuppressLint("ResourceAsColor")
     @Override
     public void onBackPressed() {
 
         // 2초 이내에 뒤로가기 버튼 재 클릭시 어플 종료
         if(System.currentTimeMillis() - lastTimeBackPressed < 1000) {
             finishAffinity();
-            //finish();
             return;
-
         }
 
         // 뒤로 한번 클릭 시 메시지
         LayoutInflater inflater = getLayoutInflater();
         View toastDesign = inflater.inflate(R.layout.toast_design, (ViewGroup)findViewById(R.id.toast_design_root));
         TextView textView = toastDesign.findViewById(R.id.toast_design_textview); // 토스트 꾸미기 위함
+        textView.setTextColor(R.color.colorPrimaryDark);
 
         textView.setText("'뒤로'버튼 한번 더 누르시면 앱이 종료됩니다.");
         Toast toast = new Toast(getApplicationContext());
@@ -257,30 +240,3 @@ public class InputCatridgeActivity extends AppCompatActivity {
         lastTimeBackPressed = System.currentTimeMillis();
     }
 }
-
-
-// 내부저장소에 카트리지 정보 저장하기
-//        ArrayList<String> arrayList = new ArrayList<String>();
-//            arrayList.add(button1.getText().toString());
-//            arrayList.add(button2.getText().toString());
-//            arrayList.add(button3.getText().toString());
-//            arrayList.add(button4.getText().toString());
-//            arrayList.add(button5.getText().toString());
-//            arrayList.add(button6.getText().toString()); // arrayList 배열에 각각 설정한 향 이름 넣기
-//
-//            if(arrayList.get(0).equals("z") || arrayList.get(1).equals("z") || arrayList.get(2).equals("z")
-//                    || arrayList.get(3).equals("z") || arrayList.get(4).equals("z") || arrayList.get(5).equals("z")){ // 선택 안 한 창이 있으면
-//                Toast.makeText(getApplicationContext(), "빈 칸이 있습니다.", Toast.LENGTH_LONG).show();
-//            }else{
-//            JSONArray jsonArray = new JSONArray();
-//            for(int i=0; i<arrayList.size(); i++){
-//                jsonArray.put(arrayList.get(i));
-//            }
-//            SharedPreferences sharedPreferences = getSharedPreferences("UserInfo", MODE_PRIVATE);
-//            SharedPreferences.Editor editor = sharedPreferences.edit();
-//            editor.putString("scent", jsonArray.toString());
-//            editor.commit(); // 저장 완료
-//
-//            startActivity(new Intent(this, MainActivity.class));
-//
-//        }

@@ -1,13 +1,36 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <string-array name="scentname">
+    <string-array name="stress">
         <item>라벤더</item>
+    </string-array>
+
+    <string-array name="joy">
         <item>레몬</item>
+    </string-array>
+
+    <string-array name="sad">
         <item>프랑킨센스</item>
+        <item>마조람</item>
+        <item>네롤리</item>
+    </string-array>
+
+    <string-array name="soso">
         <item>페퍼민트</item>
+        <item>진저</item>
+        <item>쥬니퍼</item>
+    </string-array>
+
+    <string-array name="angry">
         <item>자스민</item>
+        <item>로만 카모마일</item>
+        <item>버가못</item>
+    </string-array>
+
+    <string-array name="fear">
         <item>로즈마리</item>
+        <item>바질</item>
+        <item>제라늄</item>
     </string-array>
 
     <string-array name="scentcolor">
@@ -18,6 +41,5 @@
         <item>9232CC</item>
         <item>696969</item>
     </string-array>
-
 
 </resources>

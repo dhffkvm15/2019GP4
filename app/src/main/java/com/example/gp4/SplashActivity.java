@@ -32,7 +32,7 @@ public class SplashActivity extends Activity {
         String tmpInfo = sharedPreferences.getString("Info", ""); // UserInfo 파일에서 Info에 저장되어 있는 값 불러오기
         String tmpId = sharedPreferences.getString("pushID", ""); // UserInfo 파일에서 pushID 값 불러오기
 
-        if(tmpInfo.equals("")){ // 저장된 정보가 없으면
+        if(tmpInfo.equals("")){ // 회원 등록 하지 않았을 경우
             startActivity(new Intent(this, RegisterActivity.class));
         }else {
             if(tmpId.equals("")){
@@ -42,7 +42,7 @@ public class SplashActivity extends Activity {
             gson = new GsonBuilder().create();
             UserInfo userInfo = gson.fromJson(tmpInfo, UserInfo.class);
                 Intent intent = new Intent(this, MainActivity.class);
-                intent.putExtra("inputCatridge", "no");
+                intent.putExtra("inputCatridge", "no"); // 메인 액티비티에서 뒤로 가기 설정에 필요한 정보
                 startActivity(intent);
             }
         }

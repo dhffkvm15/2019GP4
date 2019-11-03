@@ -39,7 +39,7 @@ public class Emotion1Fragment extends Fragment {
     private TextView heartbpm; // 심박수 표시 텍스트 뷰
     private LineChart pixelGraph; // red pixels 그래프
     private LineChart hrvGraph;
-    //private ImageView stressImage; // 스트레스 지수에 따른 이미지
+    private ImageView stressImage; // 스트레스 지수에 따른 이미지
     private TextView stressTextview; // 스트레스 지수 표시하는 텍스트 뷰
 
     private XAxis pixelX;
@@ -63,7 +63,7 @@ public class Emotion1Fragment extends Fragment {
         heartbpm = (TextView)viewGroup.findViewById(R.id.fragment_emotion1_textview_heartrate);
         pixelGraph = (LineChart)viewGroup.findViewById(R.id.fragment_emotion1_redchart);
         hrvGraph = (LineChart)viewGroup.findViewById(R.id.fragment_emotion1_hrvchart);
-        //stressImage = (ImageView)viewGroup.findViewById(R.id.fragment_emotion1_imageview_stress);
+        stressImage = (ImageView)viewGroup.findViewById(R.id.fragment_emotion1_imageview_stress);
         stressTextview = (TextView)viewGroup.findViewById(R.id.fragment_emotion1_textview_howstress);
 
         setchart(); // 차트 기본 설정
@@ -143,22 +143,12 @@ public class Emotion1Fragment extends Fragment {
 
         /* red values 그래프 그리기 */
         redpixels = bundle.getParcelableArrayList("list");
-//        float tempa = 0 ; float tempb = 0;
-//        for(int i=1; i < redpixels.size()-1; i++){
-//            tempa = redpixels.get(i).getY() - redpixels.get(i-1).getY();
-//            tempb = redpixels.get(i+1).getY() - redpixels.get(i).getY();
-//
-//            if( (tempa >0 && tempb < 0) ||
-//                    (tempa >0 && tempb ==0) ||
-//                    (tempa ==0 && tempb < 0)) {
-//                xPeaks.add(redpixels.get(i).getX()); // peak 부분의 x 값 넣기
-//            }
-//        }
+
         LineDataSet lineDataSet;
         lineDataSet = new LineDataSet(redpixels, "value");
         lineDataSet.setLineWidth(1);
         lineDataSet.setDrawCircles(false);
-        lineDataSet.setColor(Color.parseColor("#FFC0B2D1"));
+        lineDataSet.setColor(Color.parseColor("#FF5c99cc"));
         lineDataSet.setDrawValues(false);
 
         LineData lineData = new LineData(lineDataSet);
@@ -181,7 +171,7 @@ public class Emotion1Fragment extends Fragment {
         lineDataSet1 = new LineDataSet(hrvValue, "value");
         lineDataSet1.setLineWidth(1);
         lineDataSet1.setDrawCircles(false);
-        lineDataSet1.setColor(Color.parseColor("#FFC0B2D1"));
+        lineDataSet1.setColor(Color.parseColor("#FF5c99cc"));
         lineDataSet1.setDrawValues(false);
 
         LineData lineData1 = new LineData(lineDataSet1);
@@ -215,8 +205,6 @@ public class Emotion1Fragment extends Fragment {
         ArrayList whathz = new ArrayList();
         ArrayList hzMag = new ArrayList();
         int samplingFrequency = hrvValue.size() / ( 15 * turnNum )  ;
-        ///
-        Log.v("꼭", "전달받은 turnNum : " +turnNum);
 
         double a=0; double b = 0;
         for(int i=0; i<= N/2; i++){
@@ -242,9 +230,11 @@ public class Emotion1Fragment extends Fragment {
         if( stress >= 1){
             stressTextview.setText(String.format("%.2f",stress) + " / 스트레스 있음");
             IsStress = true;
+            stressImage.setImageResource(R.drawable.stress);
         }else{
             stressTextview.setText(String.format("%.2f",stress)  + " / 스트레스 없음");
             IsStress = false;
+            stressImage.setImageResource(R.drawable.nostress);
         }
         //Log.v("결과 확인", "lf/hf : " + (lf/hf));
 

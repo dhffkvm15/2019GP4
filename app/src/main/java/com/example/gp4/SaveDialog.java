@@ -3,6 +3,8 @@ package com.example.gp4;
 import android.app.Dialog;
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.text.Layout;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.view.Window;
 import android.widget.Button;
@@ -50,6 +52,8 @@ public class SaveDialog {
                     string += "100% ";
                     break;
             }
+
+            if(i==2) string += "\n";
         }
         info.setText(string);
 
@@ -58,7 +62,7 @@ public class SaveDialog {
             @Override
             public void onClick(View v) {
                 if(name.getText().toString().length() == 0 ){ // 이름 입력 안했을 때
-                    Toast.makeText(context, "이름 입력 필요", Toast.LENGTH_LONG).show();
+                   Toast.makeText(context, "이름 입력 필요", Toast.LENGTH_SHORT).show();
                 }else {
                     SharedPreferences sharedPreferences = context.getSharedPreferences("UserInfo", Context.MODE_PRIVATE);
                     String key = sharedPreferences.getString("pushID", ""); // 저장되어 있는 키 값 불러오기
@@ -68,14 +72,7 @@ public class SaveDialog {
                                     FirebaseDatabase firebaseDatabase = FirebaseDatabase.getInstance(); // 파이어베이스 불러오기
                                     DatabaseReference databaseReference = firebaseDatabase.getReference("storage");
                                     databaseReference.child(key).push().setValue(totalInfo);
-//                                    databaseReference.child(key).child(name.getText().toString()).child("1").setValue(catridgeInfos[0]);
-//                                    databaseReference.child(key).child(name.getText().toString()).child("2").setValue(catridgeInfos[1]);
-//                                    databaseReference.child(key).child(name.getText().toString()).child("3").setValue(catridgeInfos[2]);
-//                                    databaseReference.child(key).child(name.getText().toString()).child("4").setValue(catridgeInfos[3]);
-//                                    databaseReference.child(key).child(name.getText().toString()).child("5").setValue(catridgeInfos[4]);
-//                                    databaseReference.child(key).child(name.getText().toString()).child("6").setValue(catridgeInfos[5]);
-
-                                    Toast.makeText(context, "저장완료", Toast.LENGTH_LONG).show();
+                                    Toast.makeText(context, "저장완료", Toast.LENGTH_SHORT).show();
                     dialog.dismiss();
                 }
 

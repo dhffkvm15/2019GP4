@@ -2,11 +2,11 @@
 <layer-list xmlns:android="http://schemas.android.com/apk/res/android">
 
     <item
-        android:drawable="@color/B"/>
+        android:drawable="@color/colorPrimary"/>
 
     <item
-        android:width="500dp"
-        android:height="400dp"
+        android:width="350dp"
+        android:height="280dp"
         android:gravity="center">
         <bitmap
             android:src="@drawable/splogo"

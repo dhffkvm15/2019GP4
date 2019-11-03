@@ -12,21 +12,30 @@
         android:layout_height="match_parent"
         android:orientation="vertical">
 
-        <TextView
+        <LinearLayout
+            android:id="@+id/emotion_fragment_line1"
             android:layout_width="match_parent"
-            android:layout_height="30dp"
-            android:text="심박수 측정하기"
-            android:textStyle="bold"
-            android:textSize="20dp"
-            android:textAlignment="center"
-            android:textColor="@android:color/white"
-            android:background="@color/colorPrimary"/>
+            android:layout_height="40dp"
+            android:background="@color/colorPrimary"
+            android:gravity="center_horizontal"
+            android:orientation="horizontal">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="40dp"
+                android:text="심박수 측정하기"
+                android:textColor="@color/colorPrimaryDark"
+                android:textSize="25dp"
+                android:textStyle="bold" />
+
+        </LinearLayout>
 
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_marginTop="20dp"
             android:text="카메라렌즈에 손가락을 대주세요."
-            android:textSize="15dp"
+            android:textSize="18dp"
             android:textAlignment="center"
             android:textColor="@color/myblack"/>
 
@@ -43,7 +52,7 @@
                 android:layout_centerHorizontal="true"
                 android:layout_marginTop="0dp"
                 custom:curValue="0"
-                custom:lineColor="@color/colorPrimaryDark"
+                custom:lineColor="@color/colorAccent"
                 custom:maxValue="15" />
 
 
@@ -52,8 +61,9 @@
                 android:layout_width="200dp"
                 android:layout_height="wrap_content"
                 android:text="HEART RATE"
-                android:textSize="25dp"
+                android:textSize="30dp"
                 android:textStyle="bold"
+                android:textColor="@color/colorPrimaryDark"
                 android:gravity="center"
                 android:layout_centerHorizontal="true"
                 android:layout_centerVertical="true"
@@ -63,7 +73,7 @@
                 android:layout_width="150dp"
                 android:layout_height="80dp"
                 android:id="@+id/fragment_emotion_button_start"
-                android:background="@drawable/circlebutton"
+                android:background="@drawable/circlebutton3"
                 android:text="Start"
                 android:textSize="20dp"
                 android:textStyle="bold"
@@ -78,21 +88,21 @@
             android:layout_width="200dp"
             android:layout_height="80dp"
             android:layout_gravity="center_horizontal"
-            android:layout_marginTop="10dp"></SurfaceView>
+            android:layout_marginTop="20dp"></SurfaceView>
 
         <ImageButton
             android:layout_width="100dp"
-            android:layout_height="40dp"
+            android:layout_height="100dp"
             android:layout_gravity="right"
             android:layout_marginRight="20dp"
             android:layout_marginTop="20dp"
             android:id="@+id/fragment_emotion_skip_button"
-            android:background="@drawable/skip" />
+            android:background="@drawable/rightskip" />
 
         <com.github.mikephil.charting.charts.LineChart
             android:id="@+id/fragment_emotion_linechart"
             android:layout_width="match_parent"
-            android:layout_height="25dp"
+            android:layout_height="30dp"
             android:layout_weight="1"
             android:visibility="invisible"/>
 

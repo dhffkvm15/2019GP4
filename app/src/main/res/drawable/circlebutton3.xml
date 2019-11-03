@@ -1,11 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <selector xmlns:android="http://schemas.android.com/apk/res/android">
-
-    <!-- makeFragment 안에서의 버튼 디자인 -->
     <item>
         <shape
             android:shape="oval">
-            <solid android:color="@android:color/white"></solid>
+            <solid android:color="@color/colorPrimaryYellow"></solid>
         </shape>
     </item>
 

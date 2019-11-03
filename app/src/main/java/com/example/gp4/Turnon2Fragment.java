@@ -1,11 +1,13 @@
 package com.example.gp4;
 
+import android.annotation.SuppressLint;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -38,7 +40,7 @@ public class Turnon2Fragment extends Fragment {
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        ViewGroup viewGroup = (ViewGroup) inflater.inflate(R.layout.fragment_turnon2, container, false);
+        final ViewGroup viewGroup = (ViewGroup) inflater.inflate(R.layout.fragment_turnon2, container, false);
 
         seekBar = (SeekBar)viewGroup.findViewById(R.id.turnon2fragment_seekbar_time);
         time = (TextView)viewGroup.findViewById(R.id.turnon2fragment_textview_time);
@@ -68,11 +70,22 @@ public class Turnon2Fragment extends Fragment {
 
         // Play 버튼 누를 때
         play.setOnClickListener(new View.OnClickListener() {
+            @SuppressLint("ResourceAsColor")
             @Override
             public void onClick(View v) {
 
                 if(howlong == 0){
-                    Toast.makeText(getActivity().getApplicationContext(), "시간을 잘못입력하셨습니다.", Toast.LENGTH_LONG).show();
+                    LayoutInflater inflater = getLayoutInflater();
+                    View toastDesign = inflater.inflate(R.layout.toast_design, (ViewGroup)viewGroup.findViewById(R.id.toast_design_root));
+                    TextView textView = toastDesign.findViewById(R.id.toast_design_textview); // 토스트 꾸미기 위함
+                    textView.setTextColor(R.color.colorPrimaryDark);
+
+                    textView.setText("시간을 잘못입력하셨습니다.");
+                    Toast toast = new Toast(getContext());
+                    toast.setGravity(Gravity.BOTTOM, 0, 30);
+                    toast.setDuration(Toast.LENGTH_SHORT);
+                    toast.setView(toastDesign);
+                    toast.show();
                 }else{
 
                     if(isplay == false){
@@ -93,15 +106,18 @@ public class Turnon2Fragment extends Fragment {
         return viewGroup;
     }
 
-    // TODO 디퓨저 멈추는 코드
     private void stopPlaying() {
-
-        Log.v("디퓨저", "멈춤");
 
         FirebaseDatabase firebaseDatabase = FirebaseDatabase.getInstance();
         DatabaseReference databaseReference = firebaseDatabase.getReference();
         Map<String, Object> taskMap = new HashMap<String, Object>();
         taskMap.put("Motor", 0);
+        taskMap.put("1Status", 0);
+        taskMap.put("2Status", 0);
+        taskMap.put("3Status", 0);
+        taskMap.put("4Status", 0);
+        taskMap.put("5Status", 0);
+        taskMap.put("6Status", 0);
         databaseReference.updateChildren(taskMap);
 
         // 디퓨저가 꺼져 있음을 저장하기
@@ -111,10 +127,7 @@ public class Turnon2Fragment extends Fragment {
         editor.commit(); // 저장 완료);
     }
 
-    // TODO 디퓨저 작동하는 코드, 잔량 계산 필요
     private void startPlaying() {
-
-        Log.v("디퓨저", "작동");
 
         FirebaseDatabase firebaseDatabase = FirebaseDatabase.getInstance();
         DatabaseReference databaseReference = firebaseDatabase.getReference();
@@ -126,6 +139,7 @@ public class Turnon2Fragment extends Fragment {
         taskMap.put("5Status", totalInfo.getCatridgeInfo5().getRest());
         taskMap.put("6Status", totalInfo.getCatridgeInfo6().getRest());
         taskMap.put("Motor", 1);
+        taskMap.put("Time", howlong); // 동작 시간 설정
 
         databaseReference.updateChildren(taskMap);
 

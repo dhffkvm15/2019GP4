@@ -295,10 +295,6 @@ public class EmotionFragment extends Fragment {
                     ToNum = turnNum;
                     turnNum = -2;
 
-                    //Log.v("발표", "redpixels 개수 : " +entries.size());
-                    //Log.v("발표", "xPeak 피크 : " +xPeaks);
-                    //Log.v("발표", "측정 횟수 : "+ToNum);
-
                     Handler handler = new Handler();
                     handler.postDelayed(new Runnable() {
                         @Override
@@ -311,7 +307,7 @@ public class EmotionFragment extends Fragment {
 
                             ((MainActivity)getActivity()).replaceFragment(fragment); // 심박 전달
                         }
-                    },1000); // 1초 후 실행
+                    },2000); // 2초 후 실행
 
                     beats = 0;
 
@@ -346,7 +342,7 @@ public class EmotionFragment extends Fragment {
                 //lineDataSet.setCircleRadius(2);
                 //lineDataSet.setCircleColor(Color.parseColor("#FFA1B4DC"));
                 //lineDataSet.setCircleHoleColor(Color.BLUE);
-                lineDataSet.setColor(Color.parseColor("#FFC0B2D1"));
+                lineDataSet.setColor(Color.parseColor("#FF5c99cc"));
                 //lineDataSet.setDrawCircleHole(true);
                 //lineDataSet.setDrawCircles(true);
                 //lineDataSet.setDrawHorizontalHighlightIndicator(false);
@@ -356,35 +352,6 @@ public class EmotionFragment extends Fragment {
                 LineData lineData = new LineData(lineDataSet);
                 lineChart.setData(lineData);
                 lineChart.invalidate();
-
-                // 원래 그래프
-                // 그래프 관련 시작
-//                Random random = new Random();
-//                entries.add(new Entry((float)totalTimeInSecs,ranNum));
-//                ranNum += random.nextInt(5);
-//
-//                if(ranNum > 120 && ranNum <=130){
-//                    ranNum = 100 + random.nextInt(10); // 100에서 109사이의 정수
-//                }
-//
-//                lineDataSet = new LineDataSet(entries, "value");
-//                //LineDataSet lineDataSet = new LineDataSet(entries, "value");
-//                lineDataSet.setLineWidth(2);
-//                lineDataSet.setDrawCircles(false);
-//                //lineDataSet.setCircleRadius(2);
-//                //lineDataSet.setCircleColor(Color.parseColor("#FFA1B4DC"));
-//                //lineDataSet.setCircleHoleColor(Color.BLUE);
-//                lineDataSet.setColor(Color.parseColor("#FFC0B2D1"));
-//                //lineDataSet.setDrawCircleHole(true);
-//                //lineDataSet.setDrawCircles(true);
-//                //lineDataSet.setDrawHorizontalHighlightIndicator(false);
-//                //lineDataSet.setDrawHighlightIndicators(false);
-//                lineDataSet.setDrawValues(false);
-//
-//                LineData lineData = new LineData(lineDataSet);
-//                lineChart.setData(lineData);
-//                lineChart.invalidate();
-                // 여기 까지 그래프
 
                 int averageArrayAvg = 0;
                 int averageArrayCnt = 0;

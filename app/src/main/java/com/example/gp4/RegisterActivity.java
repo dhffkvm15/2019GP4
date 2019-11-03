@@ -1,6 +1,7 @@
 package com.example.gp4;
 
 import android.Manifest;
+import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
@@ -44,6 +45,7 @@ public class RegisterActivity extends AppCompatActivity {
         init();
         checkCAMERAPermission(); // 카메라 권한 획득
 
+        // 성별 선택
         radioGroup.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(RadioGroup group, int checkedId) {
@@ -56,6 +58,7 @@ public class RegisterActivity extends AppCompatActivity {
 
     }
 
+    // 기본 설정
     private void init() {
         editTextName = (EditText)findViewById(R.id.register_edittext_name);
         editTextAge = (EditText)findViewById(R.id.register_edittext_age);
@@ -64,11 +67,13 @@ public class RegisterActivity extends AppCompatActivity {
     }
 
     // 등록 버튼 클릭 시 - 사용자 정보 확인 및 값 저장
+    @SuppressLint("ResourceAsColor")
     public void register(View view) {
 
         LayoutInflater inflater = getLayoutInflater();
         View toastDesign = inflater.inflate(R.layout.toast_design, (ViewGroup)findViewById(R.id.toast_design_root));
         TextView textView = toastDesign.findViewById(R.id.toast_design_textview); // 토스트 꾸미기 위함
+        textView.setTextColor(R.color.colorPrimaryDark);
 
         // 이름, 나이 중 입력한 것이 없을 때,
         if( editTextName.getText().toString().length() == 0
@@ -77,7 +82,7 @@ public class RegisterActivity extends AppCompatActivity {
             textView.setText("빈 칸이 있습니다.");
             Toast toast = new Toast(getApplicationContext());
             toast.setGravity(Gravity.BOTTOM, 0, 30);
-            toast.setDuration(Toast.LENGTH_LONG);
+            toast.setDuration(Toast.LENGTH_SHORT);
             toast.setView(toastDesign);
             toast.show();
                 //Toast.makeText(getApplicationContext(), "빈 칸이 있습니다.", Toast.LENGTH_LONG).show(); - 일반 토스트 상자
@@ -90,7 +95,7 @@ public class RegisterActivity extends AppCompatActivity {
                 textView.setText("나이를 잘못입력했습니다.");
                 Toast toast = new Toast(getApplicationContext());
                 toast.setGravity(Gravity.BOTTOM, 0, 30);
-                toast.setDuration(Toast.LENGTH_LONG);
+                toast.setDuration(Toast.LENGTH_SHORT);
                 toast.setView(toastDesign);
                 toast.show();
                 //Toast.makeText(getApplicationContext(), "나이를 잘못입력했습니다.", Toast.LENGTH_LONG).show(); - 일반 토스트 상자
@@ -122,7 +127,7 @@ public class RegisterActivity extends AppCompatActivity {
             ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.CAMERA},
                     1001);
         } else {
-            Log.v("태그", "카메라 허가 받음");
+            //Log.v("태그", "카메라 허가 받음");
         }
     }
 }

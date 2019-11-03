@@ -8,14 +8,15 @@
     <ImageView
         android:layout_width="match_parent"
         android:layout_height="350dp"
-        android:src="@drawable/logo"
+        android:layout_marginTop="100dp"
+        android:src="@drawable/fireworks"
         android:id="@+id/turnon2fragment_imageview"/>
 
     <SeekBar
         android:layout_width="match_parent"
         android:layout_height="20dp"
         android:layout_below="@id/turnon2fragment_imageview"
-        android:layout_margin="5dp"
+        android:layout_margin="20dp"
         android:id="@+id/turnon2fragment_seekbar_time"
         android:max="120"
         android:progress="120" />
@@ -25,6 +26,7 @@
         android:layout_height="wrap_content"
         android:text="120분"
         android:textSize="18dp"
+        android:textColor="@color/colorPrimaryDark"
         android:gravity="center"
         android:layout_below="@id/turnon2fragment_seekbar_time"
         android:id="@+id/turnon2fragment_textview_time"/>
@@ -32,6 +34,7 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="80dp"
+        android:layout_marginTop="20dp"
         android:orientation="horizontal"
         android:layout_below="@+id/turnon2fragment_textview_time">
 
@@ -39,6 +42,7 @@
             android:layout_width="150dp"
             android:layout_height="50dp"
             android:text="PLAY"
+            android:textSize="25dp"
             android:background="@drawable/originbutton"
             android:id="@+id/turnon2fragment_button_play"
             android:layout_weight="1" />

@@ -11,6 +11,7 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -75,6 +76,7 @@ public class MakeFragment extends Fragment {
 
     private String pushId; // 사용자의 푸시 아이디 값
     private SharedPreferences sharedPreferences;
+
     public static MakeFragment newInstance(){
         return new MakeFragment();
     }
@@ -85,7 +87,7 @@ public class MakeFragment extends Fragment {
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
 
-        ViewGroup viewGroup = (ViewGroup) inflater.inflate(R.layout.fragment_make, container, false);
+        final ViewGroup viewGroup = (ViewGroup) inflater.inflate(R.layout.fragment_make, container, false);
 
         resources = getActivity().getResources();
 
@@ -115,7 +117,7 @@ public class MakeFragment extends Fragment {
         textView6 = (TextView) viewGroup.findViewById(R.id.make_fragment_textview6);
         textViews = new TextView[]{textView1, textView2, textView3, textView4, textView5, textView6};
 
-        // 여기서 카트리지 인포의 rest 값은 약 중 강을 의미
+        // 여기서 카트리지 인포의 rest 값은 약, 강을 의미
         catridgeInfos = new CatridgeInfo[]{catridgeInfo1, catridgeInfo2, catridgeInfo3, catridgeInfo4, catridgeInfo5, catridgeInfo6};
 
         SBCListener sbcListener = new SBCListener();
@@ -138,6 +140,7 @@ public class MakeFragment extends Fragment {
 
         turnon = (Button) viewGroup.findViewById(R.id.make_fragment_turnon_button);
         Boolean isOn = sharedPreferences.getBoolean("turnOn", false); // 디퓨저 작동하는지 가져오기
+        // 디퓨저 동작 중이면 동작 버튼 클릭 불가능하도록
         if(isOn){
             turnon.setEnabled(false);
         }else{
@@ -167,6 +170,7 @@ public class MakeFragment extends Fragment {
 
         // 동작 버튼 눌렀을 때
         turnon.setOnClickListener(new View.OnClickListener() {
+            @SuppressLint("ResourceAsColor")
             @Override
             public void onClick(View v) {
 
@@ -174,13 +178,35 @@ public class MakeFragment extends Fragment {
 
                 if(time == 0){
                     bool = false;
-                    Toast.makeText(getContext(), "시간 설정이 잘못되었습니다.", Toast.LENGTH_LONG).show();
+                    LayoutInflater inflater = getLayoutInflater();
+                    View toastDesign = inflater.inflate(R.layout.toast_design, (ViewGroup)viewGroup.findViewById(R.id.toast_design_root));
+                    TextView textView = toastDesign.findViewById(R.id.toast_design_textview); // 토스트 꾸미기 위함
+                    textView.setTextColor(R.color.colorPrimaryDark);
+
+                    textView.setText("시간 설정이 잘못되었습니다.");
+                    Toast toast = new Toast(getContext());
+                    toast.setGravity(Gravity.BOTTOM, 0, 30);
+                    toast.setDuration(Toast.LENGTH_SHORT);
+                    toast.setView(toastDesign);
+                    toast.show();
+                   // Toast.makeText(getContext(), "시간 설정이 잘못되었습니다.", Toast.LENGTH_LONG).show();
                 }
 
                 if( bool == true && catridgeInfo1.getRest() == 0 && catridgeInfo2.getRest() == 0 && catridgeInfo3.getRest() ==0
                         && catridgeInfo4.getRest() == 0 && catridgeInfo5.getRest() == 0 && catridgeInfo6.getRest() == 0 ){
                     bool = false;
-                    Toast.makeText(getContext(), "카트리지가 모두 닫혀있습니다.", Toast.LENGTH_LONG).show();
+                    LayoutInflater inflater = getLayoutInflater();
+                    View toastDesign = inflater.inflate(R.layout.toast_design, (ViewGroup)viewGroup.findViewById(R.id.toast_design_root));
+                    TextView textView = toastDesign.findViewById(R.id.toast_design_textview); // 토스트 꾸미기 위함
+                    textView.setTextColor(R.color.colorPrimaryDark);
+
+                    textView.setText("카트리지가 모두 닫혀있습니다.");
+                    Toast toast = new Toast(getContext());
+                    toast.setGravity(Gravity.BOTTOM, 0, 30);
+                    toast.setDuration(Toast.LENGTH_SHORT);
+                    toast.setView(toastDesign);
+                    toast.show();
+                    //Toast.makeText(getContext(), "카트리지가 모두 닫혀있습니다.", Toast.LENGTH_LONG).show();
                 }
 
                 // 동작시켜야 할 때
@@ -239,16 +265,12 @@ public class MakeFragment extends Fragment {
 
         final String[] scentColor = getContext().getResources().getStringArray(R.array.scentcolor); // 컬러 색상 가져오기
 
-        //SharedPreferences sharedPreferences = this.getActivity().getSharedPreferences("UserInfo", Context.MODE_PRIVATE);
-        //final String tmp = sharedPreferences.getString("pushID", ""); // 저장되어 있는 향 정보 불러오기
-
         final String temp = sharedPreferences.getString("before", "2/2/2/2/2/2");
-        final String[] arr = temp.split("/");
+        final String[] arr = temp.split("/"); // 이전에 켰던 향 정보 가져오기
 
         if(pushId.equals("")){ // 저장된 정보가 없으면
             Log.v("태그", "태그 확인 : 저장 정보 없음");
         }else{
-
             // 향 정보 받아오기
             FirebaseDatabase.getInstance().getReference("catridge").child(pushId).addValueEventListener(new ValueEventListener() {
                 @SuppressLint("Range")
@@ -274,8 +296,7 @@ public class MakeFragment extends Fragment {
 
 
 
-                        seekBars[i].setProgress(Integer.valueOf(arr[i]));
-                        //seekBars[i].setProgress(2);
+                        seekBars[i].setProgress(Integer.valueOf(arr[i])); // 이전에 켰던 향 정보로 불러오기, 이전에 저장된 정보가 없을 시 2단계로 지정
                         seekBars[i].setEnabled(true); // 초기화
 
                         if(rest.get(i) == 0){ // 잔량이 없을 경우
@@ -286,29 +307,28 @@ public class MakeFragment extends Fragment {
 
                         buttons[i].setText(datas.get(i)); // 버튼에 향 종류 표시
 
-                        switch (datas.get(i)){
-                            case "라벤더":
+                        switch (i){
+                            case 0:
                                 tmpColor = "#" + clearness(rest.get(i)) + scentColor[0];
                                 break;
-                            case "레몬":
+                            case 1:
                                 tmpColor = "#" + clearness(rest.get(i)) + scentColor[1];
                                 break;
-                            case "프랑킨센스":
+                            case 2:
                                 tmpColor = "#" + clearness(rest.get(i)) + scentColor[2];
                                 break;
-                            case "페퍼민트":
+                            case 3:
                                 tmpColor = "#" + clearness(rest.get(i)) + scentColor[3];
                                 break;
-                            case "자스민":
+                            case 4:
                                 tmpColor = "#" + clearness(rest.get(i)) + scentColor[4];
                                 break;
-                            case "로즈마리":
+                            case 5:
                                 tmpColor = "#" + clearness(rest.get(i)) + scentColor[5];
                                 break;
-
                         }
+
                         drawable = resources.getDrawable(R.drawable.circlebutton2);
-                       // drawable = getActivity().getResources().getDrawable(R.drawable.circlebutton2);
                         drawable.setColorFilter(Color.parseColor(tmpColor), PorterDuff.Mode.SRC_ATOP);
                         if(android.os.Build.VERSION.SDK_INT < android.os.Build.VERSION_CODES.JELLY_BEAN) {
                             buttons[i].setBackgroundDrawable(drawable);
@@ -405,7 +425,7 @@ public class MakeFragment extends Fragment {
             CustomDialog customDialog = new CustomDialog(getActivity());
             switch (v.getId()){
                 case R.id.fragment_make_button1:
-                    customDialog.callFunction(button1);
+                    customDialog.callFunction(button1,1);
                     customDialog.setDialogListener(new CustomDialog.CustomDialogListener() {
                         @Override
                         public void onPositiveClicked(String name) {
@@ -422,7 +442,7 @@ public class MakeFragment extends Fragment {
 
                     break;
                 case R.id.fragment_make_button2 :
-                    customDialog.callFunction(button2);
+                    customDialog.callFunction(button2,2);
                     customDialog.setDialogListener(new CustomDialog.CustomDialogListener() {
                         @Override
                         public void onPositiveClicked(String name) {
@@ -438,7 +458,7 @@ public class MakeFragment extends Fragment {
                     });
                     break;
                 case R.id.fragment_make_button3 :
-                    customDialog.callFunction(button3);
+                    customDialog.callFunction(button3,3);
                     customDialog.setDialogListener(new CustomDialog.CustomDialogListener() {
                         @Override
                         public void onPositiveClicked(String name) {
@@ -455,7 +475,7 @@ public class MakeFragment extends Fragment {
 
                     break;
                 case R.id.fragment_make_button4 :
-                       customDialog.callFunction(button4);
+                       customDialog.callFunction(button4,4);
                     customDialog.setDialogListener(new CustomDialog.CustomDialogListener() {
                         @Override
                         public void onPositiveClicked(String name) {
@@ -471,7 +491,7 @@ public class MakeFragment extends Fragment {
                     });
                     break;
                 case R.id.fragment_make_button5 :
-                    customDialog.callFunction(button5) ;
+                    customDialog.callFunction(button5,5) ;
                     customDialog.setDialogListener(new CustomDialog.CustomDialogListener() {
                         @Override
                         public void onPositiveClicked(String name) {
@@ -488,7 +508,7 @@ public class MakeFragment extends Fragment {
 
                     break;
                 case R.id.fragment_make_button6 :
-                    customDialog.callFunction(button6);
+                    customDialog.callFunction(button6,6);
                     customDialog.setDialogListener(new CustomDialog.CustomDialogListener() {
                         @Override
                         public void onPositiveClicked(String name) {
@@ -512,84 +532,3 @@ public class MakeFragment extends Fragment {
 
 }
 
-// 내부 저장소 사용시 settingButton 함수 else 문 안
-//gson = new GsonBuilder().create();
-//        ArrayList<String> datas = new ArrayList<String>();
-//
-//        try {
-//        JSONArray jsonArray = new JSONArray(tmp);
-//        for(int i=0; i < jsonArray.length(); i++){
-//        String scent = jsonArray.optString(i);
-//        datas.add(scent);
-//        }
-//        } catch (JSONException e) {
-//        e.printStackTrace();
-//        } // 향 정보 받아오기
-//
-//        // 향에 따른 버튼 색 변경
-//        Drawable drawable;
-//        for(int i=0; i<datas.size(); i++){
-//        switch (datas.get(i)){
-//        case "A":
-//        drawable = getContext().getResources().getDrawable(R.drawable.circlebutton);
-//        drawable.setColorFilter(0xFF9232CC, PorterDuff.Mode.SRC_ATOP);
-//        buttons[i].setText("A");
-//        if(android.os.Build.VERSION.SDK_INT < android.os.Build.VERSION_CODES.JELLY_BEAN) {
-//        buttons[i].setBackgroundDrawable(drawable);
-//        } else {
-//        buttons[i].setBackground(drawable);
-//        }
-//        break;
-//        case "B":
-//        drawable = getContext().getResources().getDrawable(R.drawable.circlebutton);
-//        drawable.setColorFilter(0xFFADC8E6, PorterDuff.Mode.SRC_ATOP);
-//        buttons[i].setText("B");
-//        if(android.os.Build.VERSION.SDK_INT < android.os.Build.VERSION_CODES.JELLY_BEAN) {
-//        buttons[i].setBackgroundDrawable(drawable);
-//        } else {
-//        buttons[i].setBackground(drawable);
-//        }
-//        break;
-//        case "C":
-//        drawable = getContext().getResources().getDrawable(R.drawable.circlebutton);
-//        drawable.setColorFilter(0xFFF08080, PorterDuff.Mode.SRC_ATOP);
-//        buttons[i].setText("C");
-//        if(android.os.Build.VERSION.SDK_INT < android.os.Build.VERSION_CODES.JELLY_BEAN) {
-//        buttons[i].setBackgroundDrawable(drawable);
-//        } else {
-//        buttons[i].setBackground(drawable);
-//        }
-//        break;
-//        case "D":
-//        drawable = getContext().getResources().getDrawable(R.drawable.circlebutton);
-//        drawable.setColorFilter(0xFFFFB6C1, PorterDuff.Mode.SRC_ATOP);
-//        buttons[i].setText("D");
-//        if(android.os.Build.VERSION.SDK_INT < android.os.Build.VERSION_CODES.JELLY_BEAN) {
-//        buttons[i].setBackgroundDrawable(drawable);
-//        } else {
-//        buttons[i].setBackground(drawable);
-//        }
-//        break;
-//        case "E":
-//        drawable = getContext().getResources().getDrawable(R.drawable.circlebutton);
-//        drawable.setColorFilter(0xFFFFFF00, PorterDuff.Mode.SRC_ATOP);
-//        buttons[i].setText("E");
-//        if(android.os.Build.VERSION.SDK_INT < android.os.Build.VERSION_CODES.JELLY_BEAN) {
-//        buttons[i].setBackgroundDrawable(drawable);
-//        } else {
-//        buttons[i].setBackground(drawable);
-//        }
-//        break;
-//        case "F":
-//        drawable = getContext().getResources().getDrawable(R.drawable.circlebutton);
-//        drawable.setColorFilter(0xFFFF0000, PorterDuff.Mode.SRC_ATOP);
-//        buttons[i].setText("F");
-//        if(android.os.Build.VERSION.SDK_INT < android.os.Build.VERSION_CODES.JELLY_BEAN) {
-//        buttons[i].setBackgroundDrawable(drawable);
-//        } else {
-//        buttons[i].setBackground(drawable);
-//        }
-//        break;
-//
-//        }
-//        }

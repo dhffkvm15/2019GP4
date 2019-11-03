@@ -5,8 +5,27 @@
     android:layout_height="match_parent"
     android:orientation="vertical">
 
+   <LinearLayout
+       android:id="@+id/my_fragment_line1"
+       android:layout_width="match_parent"
+       android:layout_height="40dp"
+       android:background="@color/colorPrimary"
+       android:gravity="center_horizontal"
+       android:orientation="horizontal">
+
+      <TextView
+          android:layout_width="wrap_content"
+          android:layout_height="40dp"
+          android:text="나의 향 정보"
+          android:textColor="@color/colorPrimaryDark"
+          android:textSize="25dp"
+          android:textStyle="bold" />
+
+   </LinearLayout>
+
    <android.support.v7.widget.RecyclerView
        android:id="@+id/fragment_my_recyclerview"
+       android:layout_below="@+id/my_fragment_line1"
        android:layout_width="match_parent"
        android:layout_height="match_parent"></android.support.v7.widget.RecyclerView>
 

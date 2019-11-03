@@ -67,6 +67,8 @@
             android:layout_height="wrap_content"
             android:id="@+id/save_dialog_save_button"
             android:text="저장"
+            android:textSize="20dp"
+            android:textStyle="italic"
             android:background="@drawable/originbutton"/>
 
         <Button
@@ -74,6 +76,8 @@
             android:layout_height="wrap_content"
             android:id="@+id/save_dialog_cancel_button"
             android:text="취소"
+            android:textSize="20dp"
+            android:textStyle="italic"
             android:background="@drawable/originbutton"/>
 
     </LinearLayout>

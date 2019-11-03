@@ -10,6 +10,7 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -72,7 +73,7 @@ public class Emotion3Fragment extends Fragment {
 
     private TextView emotionText;
 
-    private ArrayList emotion;
+    private String strEmotion = "";
     private Boolean stress;
     private int[] restEmotion = {0, 0, 0, 0, 0, 0};
     private int intensity = 1;
@@ -90,13 +91,13 @@ public class Emotion3Fragment extends Fragment {
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
 
-        ViewGroup viewGroup = (ViewGroup) inflater.inflate(R.layout.fragment_emotion3, container, false);
+        final ViewGroup viewGroup = (ViewGroup) inflater.inflate(R.layout.fragment_emotion3, container, false);
 
         resources = getActivity().getResources();
 
-        emotion = new ArrayList();
-        emotion = getArguments().getParcelableArrayList("emotion");
+        strEmotion = getArguments().getString("strEmotion");
         stress = getArguments().getBoolean("stress");
+
         emotionText = (TextView)viewGroup.findViewById(R.id.emotion3_fragment_emotion_text);
 
         settingEmotion();
@@ -123,12 +124,19 @@ public class Emotion3Fragment extends Fragment {
         // 여기서 카트리지 인포의 rest 값은 약 중 강을 의미
         catridgeInfos = new CatridgeInfo[]{catridgeInfo1, catridgeInfo2, catridgeInfo3, catridgeInfo4, catridgeInfo5, catridgeInfo6};
 
+        SBListener sbListener = new SBListener();
         seekBar1 = (SeekBar) viewGroup.findViewById(R.id.emotion3_fragment_seekbar1);
+        seekBar1.setOnSeekBarChangeListener(sbListener);
         seekBar2 = (SeekBar) viewGroup.findViewById(R.id.emotion3_fragment_seekbar2);
+        seekBar2.setOnSeekBarChangeListener(sbListener);
         seekBar3 = (SeekBar) viewGroup.findViewById(R.id.emotion3_fragment_seekbar3);
+        seekBar3.setOnSeekBarChangeListener(sbListener);
         seekBar4 = (SeekBar) viewGroup.findViewById(R.id.emotion3_fragment_seekbar4);
+        seekBar4.setOnSeekBarChangeListener(sbListener);
         seekBar5 = (SeekBar) viewGroup.findViewById(R.id.emotion3_fragment_seekbar5);
+        seekBar5.setOnSeekBarChangeListener(sbListener);
         seekBar6 = (SeekBar) viewGroup.findViewById(R.id.emotion3_fragment_seekbar6);
+        seekBar6.setOnSeekBarChangeListener(sbListener);
 
         seekBars = new SeekBar[]{seekBar1, seekBar2, seekBar3, seekBar4, seekBar5, seekBar6};
 
@@ -167,6 +175,7 @@ public class Emotion3Fragment extends Fragment {
 
         // 동작 버튼 눌렀을 때
         turnon.setOnClickListener(new View.OnClickListener() {
+            @SuppressLint("ResourceAsColor")
             @Override
             public void onClick(View v) {
 
@@ -174,13 +183,35 @@ public class Emotion3Fragment extends Fragment {
 
                 if(time == 0){
                     bool = false;
-                    Toast.makeText(getContext(), "시간 설정이 잘못되었습니다.", Toast.LENGTH_LONG).show();
+                    LayoutInflater inflater = getLayoutInflater();
+                    View toastDesign = inflater.inflate(R.layout.toast_design, (ViewGroup)viewGroup.findViewById(R.id.toast_design_root));
+                    TextView textView = toastDesign.findViewById(R.id.toast_design_textview); // 토스트 꾸미기 위함
+                    textView.setTextColor(R.color.colorPrimaryDark);
+
+                    textView.setText("시간 설정이 잘못되었습니다.");
+                    Toast toast = new Toast(getContext());
+                    toast.setGravity(Gravity.BOTTOM, 0, 30);
+                    toast.setDuration(Toast.LENGTH_SHORT);
+                    toast.setView(toastDesign);
+                    toast.show();
+                    //Toast.makeText(getContext(), "시간 설정이 잘못되었습니다.", Toast.LENGTH_LONG).show();
                 }
 
                 if( bool == true && catridgeInfo1.getRest() == 0 && catridgeInfo2.getRest() == 0 && catridgeInfo3.getRest() ==0
                         && catridgeInfo4.getRest() == 0 && catridgeInfo5.getRest() == 0 && catridgeInfo6.getRest() == 0 ){
                     bool = false;
-                    Toast.makeText(getContext(), "카트리지가 모두 닫혀있습니다.", Toast.LENGTH_LONG).show();
+                    LayoutInflater inflater = getLayoutInflater();
+                    View toastDesign = inflater.inflate(R.layout.toast_design, (ViewGroup)viewGroup.findViewById(R.id.toast_design_root));
+                    TextView textView = toastDesign.findViewById(R.id.toast_design_textview); // 토스트 꾸미기 위함
+                    textView.setTextColor(R.color.colorPrimaryDark);
+
+                    textView.setText("카트리지가 모두 닫혀있습니다.");
+                    Toast toast = new Toast(getContext());
+                    toast.setGravity(Gravity.BOTTOM, 0, 30);
+                    toast.setDuration(Toast.LENGTH_SHORT);
+                    toast.setView(toastDesign);
+                    toast.show();
+                    //Toast.makeText(getContext(), "카트리지가 모두 닫혀있습니다.", Toast.LENGTH_LONG).show();
                 }
 
                 // 동작시켜야 할 때
@@ -235,60 +266,30 @@ public class Emotion3Fragment extends Fragment {
     // 감정 정리해서 텍스트 뷰에 띄우기
     public void settingEmotion(){
 
-        String str = "";
-        boolean noex = false;
-        int count = 0;
+        emotionText.setText(strEmotion + " 당신에게");
 
-        if(stress) restEmotion[0] = 1; // 스트레스 향 켜기
-
-        for(int i=0; i<emotion.size(); i++) {
-            if (emotion.get(i).equals("+")) {
-                str = str + "많이 ";
-                intensity = 2;
-            } else if (emotion.get(i).equals("-")) {
-                str = str + "조금";
-                intensity = 1;
-            } else if (emotion.get(i).equals("!")) {
-                noex = true;
-            } else if (emotion.get(i).equals("10")) {
-                if(count == 0){
-                    str = str + "기쁨";
-                    restEmotion[1] = 1;
-                    count++;
-                }
-            } else if (emotion.get(i).equals("20")) {
-                if(count == 0) {
-                    str = str + "슬픔";
-                    restEmotion[2] = 1;
-                    count++;
-                }
-            } else if (emotion.get(i).equals("30")) {
-                if(count == 0) {
-                    str = str + "무기력";
-                    restEmotion[3] = 1;
-                    count++;
-                }
-            } else if (emotion.get(i).equals("40")) {
-                if(count ==0) {
-                    str = str + "분노";
-                    restEmotion[4] = 1;
-                    count++;
-                }
-            } else if (emotion.get(i).equals("50")) {
-                if(count == 0) {
-                    str = str + "두려움";
-                    restEmotion[5] = 1;
-                    count++;
-                }
-            }
-
+        // 감정 향 담기
+        if(strEmotion.contains("많이")){
+            intensity = 2;
         }
-        if(noex) {
-            str = "";
-            str = "무기력";
+        if(strEmotion.contains("조금")){
+            intensity = 1;
+        }
+        if(strEmotion.contains("기쁨")){
+            restEmotion[1] = 1;
+        }else if(strEmotion.contains("슬픔")){
+            restEmotion[2] = 1;
+        }else if(strEmotion.contains("무기력")){
+            restEmotion[3] = 1;
+        }else if(strEmotion.contains("분노")){
+            restEmotion[4] = 1;
+        }else if(strEmotion.contains("두려움")){
+            restEmotion[5] = 1;
         }
 
-        emotionText.setText(str);
+        // 스트레스 향 켜기
+        if(stress) restEmotion[0] = 1;
+        else restEmotion[0] = 0;
     }
 
 
@@ -300,9 +301,8 @@ public class Emotion3Fragment extends Fragment {
         final String[] scentColor = getContext().getResources().getStringArray(R.array.scentcolor); // 컬러 색상 가져오기
 
         if(pushId.equals("")){ // 저장된 정보가 없으면
-            Log.v("태그", "태그 확인 : 저장 정보 없음");
+           // Log.v("태그", "태그 확인 : 저장 정보 없음");
         }else{
-
             // 향 정보 받아오기
             FirebaseDatabase.getInstance().getReference("catridge").child(pushId).addValueEventListener(new ValueEventListener() {
                 @SuppressLint("Range")
@@ -321,12 +321,12 @@ public class Emotion3Fragment extends Fragment {
                     Drawable drawable;
                     String tmpColor = "";
                     for(int i=0; i<datas.size(); i++){
-
                         catridgeInfos[i].setName(datas.get(i)); // 카트리지 인포에 향 종류 적기
-
+                        catridgeInfos[i].setRest(0);
                         textViews[i].setText(rest.get(i) + "%"); // 현재 남아 있는 잔량 표시하기
 
                         if(restEmotion[i] == 1){
+                            catridgeInfos[i].setRest(intensity);
                             seekBars[i].setProgress(intensity);
                         }else
                             seekBars[i].setProgress(0);
@@ -341,29 +341,28 @@ public class Emotion3Fragment extends Fragment {
 
                         buttons[i].setText(datas.get(i)); // 버튼에 향 종류 표시
 
-                        switch (datas.get(i)){
-                            case "라벤더":
-                                tmpColor = "#" + clearness(rest.get(i)) + scentColor[0];
+                        switch (i){
+                            case 0:
+                                tmpColor = "#" + clearness(seekBar1.getProgress()) + scentColor[0];
                                 break;
-                            case "레몬":
-                                tmpColor = "#" + clearness(rest.get(i)) + scentColor[1];
+                            case 1:
+                                tmpColor = "#" + clearness(seekBar2.getProgress()) + scentColor[1];
                                 break;
-                            case "프랑킨센스":
-                                tmpColor = "#" + clearness(rest.get(i)) + scentColor[2];
+                            case 2:
+                                tmpColor = "#" + clearness(seekBar3.getProgress()) + scentColor[2];
                                 break;
-                            case "페퍼민트":
-                                tmpColor = "#" + clearness(rest.get(i)) + scentColor[3];
+                            case 3:
+                                tmpColor = "#" + clearness(seekBar4.getProgress()) + scentColor[3];
                                 break;
-                            case "자스민":
-                                tmpColor = "#" + clearness(rest.get(i)) + scentColor[4];
+                            case 4:
+                                tmpColor = "#" + clearness(seekBar5.getProgress()) + scentColor[4];
                                 break;
-                            case "로즈마리":
-                                tmpColor = "#" + clearness(rest.get(i)) + scentColor[5];
+                            case 5:
+                                tmpColor = "#" + clearness(seekBar6.getProgress()) + scentColor[5];
                                 break;
 
                         }
                         drawable = resources.getDrawable(R.drawable.circlebutton2);
-                        // drawable = getActivity().getResources().getDrawable(R.drawable.circlebutton2);
                         drawable.setColorFilter(Color.parseColor(tmpColor), PorterDuff.Mode.SRC_ATOP);
                         if(android.os.Build.VERSION.SDK_INT < android.os.Build.VERSION_CODES.JELLY_BEAN) {
                             buttons[i].setBackgroundDrawable(drawable);
@@ -385,33 +384,132 @@ public class Emotion3Fragment extends Fragment {
     }
 
     // 잔량에 따른 투명도를 반환하는 함수
-    public String clearness(int rest){
+//    public String clearness(int rest){
+//
+//        String string = "";
+//
+//        if(rest >95 && rest <=100 ){ string = "FF";}
+//        else if (rest >90 && rest <=95) {string = "F2"; }
+//        else if (rest >85 && rest <=90) {string = "E6"; }
+//        else if (rest >80 && rest <=85) {string = "D9"; }
+//        else if (rest >75 && rest <=80) {string = "CC"; }
+//        else if (rest >70 && rest <=75) {string = "BF"; }
+//        else if (rest >65 && rest <=70) {string = "B3"; }
+//        else if (rest >60 && rest <=65) {string = "A6"; }
+//        else if (rest >55 && rest <=60) {string = "99"; }
+//        else if (rest >50 && rest <=55) {string = "8C"; }
+//        else if (rest >45 && rest <=50) {string = "80"; }
+//        else if (rest >40 && rest <=45) {string = "73"; }
+//        else if (rest >35 && rest <=40) {string = "66"; }
+//        else if (rest >30 && rest <=35) {string = "59"; }
+//        else if (rest >25 && rest <=30) {string = "4D"; }
+//        else if (rest >20 && rest <=25) {string = "40"; }
+//        else if (rest >15 && rest <=20) {string = "33"; }
+//        else if (rest >10 && rest <=15) {string = "26"; }
+//        else if (rest >5 && rest <=10) { string = "1A"; }
+//        else { string = "0D"; }
+//
+//        return string;
+//    }
+
+    // 향 세기에 따른 색 조정
+    public String clearness(int intensity){
 
         String string = "";
 
-        if(rest >95 && rest <=100 ){ string = "FF";}
-        else if (rest >90 && rest <=95) {string = "F2"; }
-        else if (rest >85 && rest <=90) {string = "E6"; }
-        else if (rest >80 && rest <=85) {string = "D9"; }
-        else if (rest >75 && rest <=80) {string = "CC"; }
-        else if (rest >70 && rest <=75) {string = "BF"; }
-        else if (rest >65 && rest <=70) {string = "B3"; }
-        else if (rest >60 && rest <=65) {string = "A6"; }
-        else if (rest >55 && rest <=60) {string = "99"; }
-        else if (rest >50 && rest <=55) {string = "8C"; }
-        else if (rest >45 && rest <=50) {string = "80"; }
-        else if (rest >40 && rest <=45) {string = "73"; }
-        else if (rest >35 && rest <=40) {string = "66"; }
-        else if (rest >30 && rest <=35) {string = "59"; }
-        else if (rest >25 && rest <=30) {string = "4D"; }
-        else if (rest >20 && rest <=25) {string = "40"; }
-        else if (rest >15 && rest <=20) {string = "33"; }
-        else if (rest >10 && rest <=15) {string = "26"; }
-        else if (rest >5 && rest <=10) { string = "1A"; }
-        else { string = "0D"; }
+        if(intensity == 2) { string ="FF";}
+        else if(intensity == 1) { string = "A6"; }
+        else { string = "59"; }
 
         return string;
     }
 
+    // 향 비율 조정하는 시크바 동작할 때
+    public class SBListener implements SeekBar.OnSeekBarChangeListener{
+        String bColor = "";
+        String[] sColor = getContext().getResources().getStringArray(R.array.scentcolor); // 컬러 색상 가져오기
+        Drawable drawable;
+        @Override
+        public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
+            switch (seekBar.getId()){
+                case R.id.emotion3_fragment_seekbar1 :
+                    catridgeInfo1.setRest(progress);
+                    bColor = "#" + clearness(seekBar1.getProgress()) + sColor[0];
+                    drawable = resources.getDrawable(R.drawable.circlebutton2);
+                    drawable.setColorFilter(Color.parseColor(bColor), PorterDuff.Mode.SRC_ATOP);
+                    if(android.os.Build.VERSION.SDK_INT < android.os.Build.VERSION_CODES.JELLY_BEAN) {
+                        buttons[0].setBackgroundDrawable(drawable);
+                    } else {
+                        buttons[0].setBackground(drawable);
+                    } // 버튼 색상 변경
+                    break;
+                case R.id.emotion3_fragment_seekbar2 :
+                    catridgeInfo2.setRest(progress);
+                    bColor = "#" + clearness(seekBar2.getProgress()) + sColor[1];
+                    drawable = resources.getDrawable(R.drawable.circlebutton2);
+                    drawable.setColorFilter(Color.parseColor(bColor), PorterDuff.Mode.SRC_ATOP);
+                    if(android.os.Build.VERSION.SDK_INT < android.os.Build.VERSION_CODES.JELLY_BEAN) {
+                        buttons[1].setBackgroundDrawable(drawable);
+                    } else {
+                        buttons[1].setBackground(drawable);
+                    }
+                    break;
+                case R.id.emotion3_fragment_seekbar3 :
+                    catridgeInfo3.setRest(progress);
+                    bColor = "#" + clearness(seekBar3.getProgress()) + sColor[2];
+                    drawable = resources.getDrawable(R.drawable.circlebutton2);
+                    drawable.setColorFilter(Color.parseColor(bColor), PorterDuff.Mode.SRC_ATOP);
+                    if(android.os.Build.VERSION.SDK_INT < android.os.Build.VERSION_CODES.JELLY_BEAN) {
+                        buttons[2].setBackgroundDrawable(drawable);
+                    } else {
+                        buttons[2].setBackground(drawable);
+                    }
+                    break;
+                case R.id.emotion3_fragment_seekbar4 :
+                    catridgeInfo4.setRest(progress);
+                    bColor = "#" + clearness(seekBar4.getProgress()) + sColor[3];
+                    drawable = resources.getDrawable(R.drawable.circlebutton2);
+                    drawable.setColorFilter(Color.parseColor(bColor), PorterDuff.Mode.SRC_ATOP);
+                    if(android.os.Build.VERSION.SDK_INT < android.os.Build.VERSION_CODES.JELLY_BEAN) {
+                        buttons[3].setBackgroundDrawable(drawable);
+                    } else {
+                        buttons[3].setBackground(drawable);
+                    }
+                    break;
+                case R.id.emotion3_fragment_seekbar5 :
+                    catridgeInfo5.setRest(progress);
+                    bColor = "#" + clearness(seekBar5.getProgress()) + sColor[4];
+                    drawable = resources.getDrawable(R.drawable.circlebutton2);
+                    drawable.setColorFilter(Color.parseColor(bColor), PorterDuff.Mode.SRC_ATOP);
+                    if(android.os.Build.VERSION.SDK_INT < android.os.Build.VERSION_CODES.JELLY_BEAN) {
+                        buttons[4].setBackgroundDrawable(drawable);
+                    } else {
+                        buttons[4].setBackground(drawable);
+                    }
+                    break;
+                case R.id.emotion3_fragment_seekbar6 :
+                    catridgeInfo6.setRest(progress);
+                    bColor = "#" + clearness(seekBar6.getProgress()) + sColor[5];
+                    drawable = resources.getDrawable(R.drawable.circlebutton2);
+                    drawable.setColorFilter(Color.parseColor(bColor), PorterDuff.Mode.SRC_ATOP);
+                    if(android.os.Build.VERSION.SDK_INT < android.os.Build.VERSION_CODES.JELLY_BEAN) {
+                        buttons[5].setBackgroundDrawable(drawable);
+                    } else {
+                        buttons[5].setBackground(drawable);
+                    }
+                    break;
+            }
+        }
+
+        @Override
+        public void onStartTrackingTouch(SeekBar seekBar) {
+
+        }
+
+        @Override
+        public void onStopTrackingTouch(SeekBar seekBar) {
+
+        }
+    }
 
 }

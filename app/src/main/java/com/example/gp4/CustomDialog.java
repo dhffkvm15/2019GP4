@@ -5,9 +5,11 @@ import android.content.Context;
 import android.graphics.Color;
 import android.graphics.PorterDuff;
 import android.graphics.drawable.Drawable;
+import android.util.Log;
 import android.view.View;
 import android.view.Window;
 import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.Spinner;
 
@@ -15,6 +17,7 @@ import android.widget.Spinner;
 class CustomDialog {
     private Context context;
     private int num;
+    String[] scentName = null;
 
     private CustomDialogListener customDialogListener;
 
@@ -33,7 +36,7 @@ class CustomDialog {
         this.customDialogListener = customDialogListener;
     }
 
-    public void callFunction(final Button button){
+    public void callFunction(final Button button, final int index){
         final Dialog dialog = new Dialog(context);
         dialog.requestWindowFeature(Window.FEATURE_NO_TITLE); // 타이틀 바 없애기
         dialog.setCancelable(false); // 백버튼 막기
@@ -43,6 +46,46 @@ class CustomDialog {
         final Spinner spinner = (Spinner)dialog.findViewById(R.id.custom_dialog_spinner);
         final Button okbutton = (Button)dialog.findViewById(R.id.custom_dialog_button_ok);
         final Button xbutton = (Button)dialog.findViewById(R.id.custom_dialog_button_cancel);
+        final ArrayAdapter<CharSequence> adapter;
+
+        switch (index){
+            case 1:
+                adapter = ArrayAdapter.createFromResource(context, R.array.stress, android.R.layout.simple_spinner_item);
+                adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+                spinner.setAdapter(adapter);
+                scentName = context.getResources().getStringArray(R.array.stress);
+                break;
+            case 2:
+                adapter = ArrayAdapter.createFromResource(context, R.array.joy, android.R.layout.simple_spinner_item);
+                adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+                spinner.setAdapter(adapter);
+                scentName = context.getResources().getStringArray(R.array.joy);
+                break;
+            case 3:
+                adapter = ArrayAdapter.createFromResource(context, R.array.sad, android.R.layout.simple_spinner_item);
+                adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+                spinner.setAdapter(adapter);
+                scentName = context.getResources().getStringArray(R.array.sad);
+                break;
+            case 4:
+                adapter = ArrayAdapter.createFromResource(context, R.array.soso, android.R.layout.simple_spinner_item);
+                adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+                spinner.setAdapter(adapter);
+                scentName = context.getResources().getStringArray(R.array.soso);
+                break;
+            case 5:
+                adapter = ArrayAdapter.createFromResource(context, R.array.angry, android.R.layout.simple_spinner_item);
+                adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+                spinner.setAdapter(adapter);
+                scentName = context.getResources().getStringArray(R.array.angry);
+                break;
+            case 6:
+                adapter = ArrayAdapter.createFromResource(context, R.array.fear, android.R.layout.simple_spinner_item);
+                adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+                spinner.setAdapter(adapter);
+                scentName = context.getResources().getStringArray(R.array.fear);
+                break;
+        }
 
 
         // 스피너 클릭 시
@@ -63,37 +106,58 @@ class CustomDialog {
 
             @Override
             public void onClick(View v) {
-                String[] tmpScent = context.getResources().getStringArray(R.array.scentname);
+//                String[] tmpScent = context.getResources().getStringArray(R.array.scentname);
                 String[] scentColor = context.getResources().getStringArray(R.array.scentcolor); // 컬러 색상 가져오기
 
-                button.setText(tmpScent[num].toString()); // 버튼 텍스트 변경
+                button.setText(scentName[num].toString()); // 버튼의 텍스트 변경
 
                 Drawable drawable = context.getResources().getDrawable(R.drawable.circlebutton);
 
-                 //todo 향 이름 변경하기 및 색상 변경하기
                 // 향 이름에 따라 버튼 색상 변경
                 String tmpColor = "#FF";
-                switch (tmpScent[num].toString()){
-                    case "라벤더":
+                switch (index){
+                    case 1:
                         tmpColor += scentColor[0];
                         break;
-                    case "레몬":
+                    case 2:
                         tmpColor += scentColor[1];
                         break;
-                    case "프랑킨센스":
+                    case 3:
                         tmpColor += scentColor[2];
                         break;
-                    case "페퍼민트":
+                    case 4:
                         tmpColor += scentColor[3];
                         break;
-                    case "자스민":
+                    case 5:
                         tmpColor += scentColor[4];
                         break;
-                    case "로즈마리":
+                    case 6:
                         tmpColor += scentColor[5];
                         break;
 
                 }
+//                String tmpColor = "#FF";
+//                switch (tmpScent[num].toString()){
+//                    case "라벤더":
+//                        tmpColor += scentColor[0];
+//                        break;
+//                    case "레몬":
+//                        tmpColor += scentColor[1];
+//                        break;
+//                    case "프랑킨센스":
+//                        tmpColor += scentColor[2];
+//                        break;
+//                    case "페퍼민트":
+//                        tmpColor += scentColor[3];
+//                        break;
+//                    case "자스민":
+//                        tmpColor += scentColor[4];
+//                        break;
+//                    case "로즈마리":
+//                        tmpColor += scentColor[5];
+//                        break;
+//
+//                }
                 drawable.setColorFilter(Color.parseColor(tmpColor), PorterDuff.Mode.SRC_ATOP);
                 if(android.os.Build.VERSION.SDK_INT < android.os.Build.VERSION_CODES.JELLY_BEAN) {
                     button.setBackgroundDrawable(drawable);
@@ -101,7 +165,7 @@ class CustomDialog {
                     button.setBackground(drawable);
                 }
 
-                customDialogListener.onPositiveClicked(tmpScent[num].toString()); // 값 전달
+                customDialogListener.onPositiveClicked(scentName[num].toString()); // 값 전달
                 dialog.dismiss(); // 다이얼로그 종료
             }
         });
