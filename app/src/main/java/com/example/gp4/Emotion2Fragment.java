@@ -316,11 +316,12 @@ public class Emotion2Fragment extends Fragment {
                                 int temp = Integer.valueOf( highIndex.get(i).toString() );
                                 Log.v("태그", "temp : "+temp);
 
-                                if( pos.get(temp).toString().contains("N") ) {
+                                if( pos.get(temp).toString().contains("NN") ) {
                                     Log.v("태그", "명사");
 
                                     if(highPos < 4){
                                         highPosition.clear();
+                                        highPosition.add(temp);
                                         highPos = 4;
                                         position = temp;
                                         Log.v("태그", "position1 : "+position);
@@ -331,6 +332,7 @@ public class Emotion2Fragment extends Fragment {
                                     Log.v("태그", "동사");
                                     if(highPos < 3){
                                         highPosition.clear();
+                                        highPosition.add(temp);
                                         highPos = 3;
                                         position = temp;
                                         Log.v("태그", "position2 : "+position);
@@ -341,6 +343,7 @@ public class Emotion2Fragment extends Fragment {
                                     Log.v("태그", "형용사");
                                     if(highPos < 2){
                                         highPosition.clear();
+                                        highPosition.add(temp);
                                         highPos = 2;
                                         position = temp;
                                         Log.v("태그", "position3 : "+position);
@@ -351,6 +354,7 @@ public class Emotion2Fragment extends Fragment {
                                     Log.v("태그", "부사");
                                     if(highPos < 1){
                                         highPosition.clear();
+                                        highPosition.add(temp);
                                         highPos = 1;
                                         position = temp;
                                         Log.v("태그", "position4 : "+position);
@@ -361,7 +365,7 @@ public class Emotion2Fragment extends Fragment {
                             }
                             // 품사 비교 끝
 
-                            if(highPosition.size() == 0){
+                            if(highPosition.size() == 1 ){
                                 str = "";
                                 switch (emolist.get(position).toString()){
                                     case "joy":
@@ -380,9 +384,30 @@ public class Emotion2Fragment extends Fragment {
                                         str = "분노 ";
                                         break;
                                 }
+                            }else if(highPosition.size() == 0){
+                                Log.v("태그", "특정 품사가 없는 경우");
+                                str = "";
+                                switch (emolist.get(Integer.valueOf( highIndex.get(0).toString() )).toString()) {
+                                    case "joy":
+                                        str = "기쁨 ";
+                                        break;
+                                    case "fear":
+                                        str = "두려움 ";
+                                        break;
+                                    case "sadness":
+                                        str = "슬픔 ";
+                                        break;
+                                    case "disgust":
+                                        str = "무기력 ";
+                                        break;
+                                    case "anger":
+                                        str = "분노 ";
+                                        break;
+                                }
                             }else{
                                 str = "";
                                 // 첫 번째 위치 감정으로 설정
+                                Log.v("태그", "여기 감정 : " + highPosition.get(0).toString() ) ;
                                 switch (emolist.get(Integer.valueOf( highPosition.get(0).toString() )).toString()) {
                                     case "joy":
                                         str = "기쁨 ";

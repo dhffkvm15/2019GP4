@@ -309,22 +309,22 @@ public class MakeFragment extends Fragment {
 
                         switch (i){
                             case 0:
-                                tmpColor = "#" + clearness(rest.get(i)) + scentColor[0];
+                                tmpColor = "#" + clearness(seekBar1.getProgress())+ scentColor[0];
                                 break;
                             case 1:
-                                tmpColor = "#" + clearness(rest.get(i)) + scentColor[1];
+                                tmpColor = "#" + clearness(seekBar2.getProgress()) + scentColor[1];
                                 break;
                             case 2:
-                                tmpColor = "#" + clearness(rest.get(i)) + scentColor[2];
+                                tmpColor = "#" + clearness(seekBar3.getProgress()) + scentColor[2];
                                 break;
                             case 3:
-                                tmpColor = "#" + clearness(rest.get(i)) + scentColor[3];
+                                tmpColor = "#" + clearness(seekBar4.getProgress()) + scentColor[3];
                                 break;
                             case 4:
-                                tmpColor = "#" + clearness(rest.get(i)) + scentColor[4];
+                                tmpColor = "#" + clearness(seekBar5.getProgress()) + scentColor[4];
                                 break;
                             case 5:
-                                tmpColor = "#" + clearness(rest.get(i)) + scentColor[5];
+                                tmpColor = "#" + clearness(seekBar6.getProgress()) + scentColor[5];
                                 break;
                         }
 
@@ -349,57 +349,121 @@ public class MakeFragment extends Fragment {
 
     }
 
-    // 잔량에 따른 투명도를 반환하는 함수
-    public String clearness(int rest){
+    // 향 세기에 따른 색 조정
+    public String clearness(int intensity){
 
         String string = "";
 
-        if(rest >95 && rest <=100 ){ string = "FF";}
-        else if (rest >90 && rest <=95) {string = "F2"; }
-        else if (rest >85 && rest <=90) {string = "E6"; }
-        else if (rest >80 && rest <=85) {string = "D9"; }
-        else if (rest >75 && rest <=80) {string = "CC"; }
-        else if (rest >70 && rest <=75) {string = "BF"; }
-        else if (rest >65 && rest <=70) {string = "B3"; }
-        else if (rest >60 && rest <=65) {string = "A6"; }
-        else if (rest >55 && rest <=60) {string = "99"; }
-        else if (rest >50 && rest <=55) {string = "8C"; }
-        else if (rest >45 && rest <=50) {string = "80"; }
-        else if (rest >40 && rest <=45) {string = "73"; }
-        else if (rest >35 && rest <=40) {string = "66"; }
-        else if (rest >30 && rest <=35) {string = "59"; }
-        else if (rest >25 && rest <=30) {string = "4D"; }
-        else if (rest >20 && rest <=25) {string = "40"; }
-        else if (rest >15 && rest <=20) {string = "33"; }
-        else if (rest >10 && rest <=15) {string = "26"; }
-        else if (rest >5 && rest <=10) { string = "1A"; }
-        else { string = "0D"; }
+        if(intensity == 2) { string ="FF";}
+        else if(intensity == 1) { string = "A6"; }
+        else { string = "59"; }
 
         return string;
     }
 
+//    // 잔량에 따른 투명도를 반환하는 함수
+//    public String clearness(int rest){
+//
+//        String string = "";
+//
+//        if(rest >95 && rest <=100 ){ string = "FF";}
+//        else if (rest >90 && rest <=95) {string = "F2"; }
+//        else if (rest >85 && rest <=90) {string = "E6"; }
+//        else if (rest >80 && rest <=85) {string = "D9"; }
+//        else if (rest >75 && rest <=80) {string = "CC"; }
+//        else if (rest >70 && rest <=75) {string = "BF"; }
+//        else if (rest >65 && rest <=70) {string = "B3"; }
+//        else if (rest >60 && rest <=65) {string = "A6"; }
+//        else if (rest >55 && rest <=60) {string = "99"; }
+//        else if (rest >50 && rest <=55) {string = "8C"; }
+//        else if (rest >45 && rest <=50) {string = "80"; }
+//        else if (rest >40 && rest <=45) {string = "73"; }
+//        else if (rest >35 && rest <=40) {string = "66"; }
+//        else if (rest >30 && rest <=35) {string = "59"; }
+//        else if (rest >25 && rest <=30) {string = "4D"; }
+//        else if (rest >20 && rest <=25) {string = "40"; }
+//        else if (rest >15 && rest <=20) {string = "33"; }
+//        else if (rest >10 && rest <=15) {string = "26"; }
+//        else if (rest >5 && rest <=10) { string = "1A"; }
+//        else { string = "0D"; }
+//
+//        return string;
+//    }
+
     // 향 비율 조정하는 시크바 동작할 때
     public class SBCListener implements SeekBar.OnSeekBarChangeListener{
+        String bColor = "";
+        String[] sColor = getContext().getResources().getStringArray(R.array.scentcolor); // 컬러 색상 가져오기
+        Drawable drawable;
+
         @Override
         public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
             switch (seekBar.getId()){
                 case R.id.make_fragment_seekbar1 :
                     catridgeInfo1.setRest(progress);
+                    bColor = "#" + clearness(seekBar1.getProgress()) + sColor[0];
+                    drawable = resources.getDrawable(R.drawable.circlebutton2);
+                    drawable.setColorFilter(Color.parseColor(bColor), PorterDuff.Mode.SRC_ATOP);
+                    if(android.os.Build.VERSION.SDK_INT < android.os.Build.VERSION_CODES.JELLY_BEAN) {
+                        buttons[0].setBackgroundDrawable(drawable);
+                    } else {
+                        buttons[0].setBackground(drawable);
+                    } // 버튼 색상 변경
                     break;
                 case R.id.make_fragment_seekbar2 :
                     catridgeInfo2.setRest(progress);
+                    bColor = "#" + clearness(seekBar2.getProgress()) + sColor[1];
+                    drawable = resources.getDrawable(R.drawable.circlebutton2);
+                    drawable.setColorFilter(Color.parseColor(bColor), PorterDuff.Mode.SRC_ATOP);
+                    if(android.os.Build.VERSION.SDK_INT < android.os.Build.VERSION_CODES.JELLY_BEAN) {
+                        buttons[1].setBackgroundDrawable(drawable);
+                    } else {
+                        buttons[1].setBackground(drawable);
+                    }
                     break;
                 case R.id.make_fragment_seekbar3 :
                     catridgeInfo3.setRest(progress);
+                    bColor = "#" + clearness(seekBar3.getProgress()) + sColor[2];
+                    drawable = resources.getDrawable(R.drawable.circlebutton2);
+                    drawable.setColorFilter(Color.parseColor(bColor), PorterDuff.Mode.SRC_ATOP);
+                    if(android.os.Build.VERSION.SDK_INT < android.os.Build.VERSION_CODES.JELLY_BEAN) {
+                        buttons[2].setBackgroundDrawable(drawable);
+                    } else {
+                        buttons[2].setBackground(drawable);
+                    }
                     break;
                 case R.id.make_fragment_seekbar4 :
                     catridgeInfo4.setRest(progress);
+                    bColor = "#" + clearness(seekBar4.getProgress()) + sColor[3];
+                    drawable = resources.getDrawable(R.drawable.circlebutton2);
+                    drawable.setColorFilter(Color.parseColor(bColor), PorterDuff.Mode.SRC_ATOP);
+                    if(android.os.Build.VERSION.SDK_INT < android.os.Build.VERSION_CODES.JELLY_BEAN) {
+                        buttons[3].setBackgroundDrawable(drawable);
+                    } else {
+                        buttons[3].setBackground(drawable);
+                    }
                     break;
                 case R.id.make_fragment_seekbar5 :
                     catridgeInfo5.setRest(progress);
+                    bColor = "#" + clearness(seekBar5.getProgress()) + sColor[4];
+                    drawable = resources.getDrawable(R.drawable.circlebutton2);
+                    drawable.setColorFilter(Color.parseColor(bColor), PorterDuff.Mode.SRC_ATOP);
+                    if(android.os.Build.VERSION.SDK_INT < android.os.Build.VERSION_CODES.JELLY_BEAN) {
+                        buttons[4].setBackgroundDrawable(drawable);
+                    } else {
+                        buttons[4].setBackground(drawable);
+                    }
                     break;
                 case R.id.make_fragment_seekbar6 :
                     catridgeInfo6.setRest(progress);
+                    bColor = "#" + clearness(seekBar6.getProgress()) + sColor[5];
+                    drawable = resources.getDrawable(R.drawable.circlebutton2);
+                    drawable.setColorFilter(Color.parseColor(bColor), PorterDuff.Mode.SRC_ATOP);
+                    if(android.os.Build.VERSION.SDK_INT < android.os.Build.VERSION_CODES.JELLY_BEAN) {
+                        buttons[5].setBackgroundDrawable(drawable);
+                    } else {
+                        buttons[5].setBackground(drawable);
+                    }
                     break;
             }
         }
