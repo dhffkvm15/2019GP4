@@ -44,13 +44,13 @@ public class MakeFragment extends Fragment {
     private Button button5;
     private Button button6;
 
-    private TextView[] textViews = {};
-    private TextView textView1;
-    private TextView textView2;
-    private TextView textView3;
-    private TextView textView4;
-    private TextView textView5;
-    private TextView textView6;
+//    private TextView[] textViews = {};
+//    private TextView textView1;
+//    private TextView textView2;
+//    private TextView textView3;
+//    private TextView textView4;
+//    private TextView textView5;
+//    private TextView textView6;
 
     private SeekBar[] seekBars = {};
     private SeekBar seekBar1;
@@ -109,13 +109,13 @@ public class MakeFragment extends Fragment {
         button6.setOnClickListener(buttonOnclick);
         buttons = new Button[]{button1, button2, button3, button4, button5, button6};
 
-        textView1 = (TextView) viewGroup.findViewById(R.id.make_fragment_textview1);
-        textView2 = (TextView) viewGroup.findViewById(R.id.make_fragment_textview2);
-        textView3 = (TextView) viewGroup.findViewById(R.id.make_fragment_textview3);
-        textView4 = (TextView) viewGroup.findViewById(R.id.make_fragment_textview4);
-        textView5 = (TextView) viewGroup.findViewById(R.id.make_fragment_textview5);
-        textView6 = (TextView) viewGroup.findViewById(R.id.make_fragment_textview6);
-        textViews = new TextView[]{textView1, textView2, textView3, textView4, textView5, textView6};
+//        textView1 = (TextView) viewGroup.findViewById(R.id.make_fragment_textview1);
+//        textView2 = (TextView) viewGroup.findViewById(R.id.make_fragment_textview2);
+//        textView3 = (TextView) viewGroup.findViewById(R.id.make_fragment_textview3);
+//        textView4 = (TextView) viewGroup.findViewById(R.id.make_fragment_textview4);
+//        textView5 = (TextView) viewGroup.findViewById(R.id.make_fragment_textview5);
+//        textView6 = (TextView) viewGroup.findViewById(R.id.make_fragment_textview6);
+//        textViews = new TextView[]{textView1, textView2, textView3, textView4, textView5, textView6};
 
         // 여기서 카트리지 인포의 rest 값은 약, 강을 의미
         catridgeInfos = new CatridgeInfo[]{catridgeInfo1, catridgeInfo2, catridgeInfo3, catridgeInfo4, catridgeInfo5, catridgeInfo6};
@@ -292,7 +292,7 @@ public class MakeFragment extends Fragment {
 
                         catridgeInfos[i].setName(datas.get(i)); // 카트리지 인포에 향 종류 적기
 
-                        textViews[i].setText(rest.get(i) + "%"); // 현재 남아 있는 잔량 표시하기
+                        //textViews[i].setText(rest.get(i) + "%"); // 현재 남아 있는 잔량 표시하기
 
 
 
@@ -355,8 +355,8 @@ public class MakeFragment extends Fragment {
         String string = "";
 
         if(intensity == 2) { string ="FF";}
-        else if(intensity == 1) { string = "A6"; }
-        else { string = "59"; }
+        else if(intensity == 1) { string = "59"; }
+        else { string = "0D"; }
 
         return string;
     }

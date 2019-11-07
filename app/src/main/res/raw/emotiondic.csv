@@ -159,6 +159,7 @@
 노곤,disgust,disgust
 막막,disgust,disgust
 몽롱,disgust,disgust
+무,disgust,disgust
 비참,disgust,disgust
 뻐근,disgust,disgust
 실망,disgust,disgust
@@ -170,12 +171,14 @@
 자살,disgust,disgust
 잠,disgust,disgust
 절망,disgust,disgust
+졸,disgust,disgust
 졸리,disgust,disgust
 좌절,disgust,disgust
 지긋,disgust,disgust
 지긋지긋,disgust,disgust
 지루,disgust,disgust
 지치,disgust,disgust
+지침,disgust,disgust
 찌뿌둥하,disgust,disgust
 착잡,disgust,disgust
 참담,disgust,disgust
@@ -206,6 +209,7 @@
 배신감,anger,anger
 부당,anger,anger
 부시,anger,anger
+부수,anger,anger
 분노,anger,anger
 불만,anger,anger
 불쾌,anger,anger
@@ -233,6 +237,8 @@
 피해,anger,anger
 혐오,anger,anger
 화,anger,anger
+화가,anger,anger
+화나,anger,anger
 환멸,anger,anger
 공포,fear,fear
 걱정,fear,fear

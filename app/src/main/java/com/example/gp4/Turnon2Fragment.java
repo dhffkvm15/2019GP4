@@ -32,6 +32,7 @@ public class Turnon2Fragment extends Fragment {
     private int howlong = 120; // 디퓨저 작동 시간
     private boolean isplay = false; // 현재 작동하고 있는지 여부
     private TotalInfo totalInfo;
+    private TextView name;
 
     public static Turnon2Fragment newInstance(){
         return new Turnon2Fragment();
@@ -45,9 +46,12 @@ public class Turnon2Fragment extends Fragment {
         seekBar = (SeekBar)viewGroup.findViewById(R.id.turnon2fragment_seekbar_time);
         time = (TextView)viewGroup.findViewById(R.id.turnon2fragment_textview_time);
         play = (Button)viewGroup.findViewById(R.id.turnon2fragment_button_play);
+        name = (TextView)viewGroup.findViewById(R.id.turnon2fragment_textview_name);
 
         Bundle bundle = getArguments();
         totalInfo = (TotalInfo) bundle.getSerializable("total");
+
+        name.setText(totalInfo.getName());
 
         // 시크바 동작할 때
         seekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {

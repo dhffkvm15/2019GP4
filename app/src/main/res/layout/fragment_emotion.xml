@@ -33,7 +33,7 @@
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="20dp"
+            android:layout_marginTop="50dp"
             android:text="카메라렌즈에 손가락을 대주세요."
             android:textSize="18dp"
             android:textAlignment="center"

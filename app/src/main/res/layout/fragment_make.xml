@@ -30,7 +30,7 @@ android:layout_width="match_parent"
 android:layout_height="wrap_content"
 android:id="@+id/make_fragment_line2"
 android:layout_below="@+id/make_fragment_line1"
-android:layout_marginTop="30dp"
+android:layout_marginTop="40dp"
 android:orientation="horizontal"
 android:gravity="center_horizontal">
 
@@ -39,8 +39,8 @@ android:gravity="center_horizontal">
     android:layout_height="160dp">
 
     <Button
-        android:layout_width="100dp"
-        android:layout_height="100dp"
+        android:layout_width="120dp"
+        android:layout_height="120dp"
         android:layout_alignParentTop="true"
         android:layout_centerHorizontal="true"
         android:id="@+id/fragment_make_button1"
@@ -48,20 +48,20 @@ android:gravity="center_horizontal">
         android:text="z"
         android:textColor="@color/myblack"
         />
-    <TextView
-        android:layout_width="match_parent"
-        android:layout_height="20dp"
-        android:text="%"
-        android:gravity="center"
-        android:id="@+id/make_fragment_textview1"
-        android:layout_below="@id/fragment_make_button1"
-        android:layout_marginTop="5dp"/>
+    <!--<TextView-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="20dp"-->
+        <!--android:text="%"-->
+        <!--android:gravity="center"-->
+        <!--android:id="@+id/make_fragment_textview1"-->
+        <!--android:layout_below="@id/fragment_make_button1"-->
+        <!--android:layout_marginTop="5dp"/>-->
 
     <SeekBar
         android:layout_width="match_parent"
         android:layout_height="20dp"
-        android:layout_below="@+id/make_fragment_textview1"
-        android:layout_marginTop="5dp"
+        android:layout_below="@+id/fragment_make_button1"
+        android:layout_marginTop="20dp"
         android:id="@+id/make_fragment_seekbar1"
         android:max="2"
         android:progress="2"
@@ -75,8 +75,8 @@ android:gravity="center_horizontal">
     android:layout_marginLeft="10dp">
 
     <Button
-        android:layout_width="100dp"
-        android:layout_height="100dp"
+        android:layout_width="120dp"
+        android:layout_height="120dp"
         android:layout_alignParentTop="true"
         android:layout_centerHorizontal="true"
         android:id="@+id/fragment_make_button2"
@@ -84,20 +84,20 @@ android:gravity="center_horizontal">
         android:text="z"
         android:textColor="@color/myblack"/>
 
-    <TextView
-        android:layout_width="match_parent"
-        android:layout_height="20dp"
-        android:text="%"
-        android:gravity="center"
-        android:id="@+id/make_fragment_textview2"
-        android:layout_below="@id/fragment_make_button2"
-        android:layout_marginTop="5dp"/>
+    <!--<TextView-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="20dp"-->
+        <!--android:text="%"-->
+        <!--android:gravity="center"-->
+        <!--android:id="@+id/make_fragment_textview2"-->
+        <!--android:layout_below="@id/fragment_make_button2"-->
+        <!--android:layout_marginTop="5dp"/>-->
 
     <SeekBar
         android:layout_width="match_parent"
         android:layout_height="20dp"
-        android:layout_below="@+id/make_fragment_textview2"
-        android:layout_marginTop="5dp"
+        android:layout_below="@+id/fragment_make_button2"
+        android:layout_marginTop="20dp"
         android:id="@+id/make_fragment_seekbar2"
         android:max="2"
         android:progress="2"
@@ -111,8 +111,8 @@ android:gravity="center_horizontal">
     android:layout_marginLeft="10dp">
 
     <Button
-        android:layout_width="100dp"
-        android:layout_height="100dp"
+        android:layout_width="120dp"
+        android:layout_height="120dp"
         android:layout_alignParentTop="true"
         android:layout_centerHorizontal="true"
         android:id="@+id/fragment_make_button3"
@@ -120,19 +120,19 @@ android:gravity="center_horizontal">
         android:text="z"
         android:textColor="@color/myblack"/>
 
-    <TextView
-        android:layout_width="match_parent"
-        android:layout_height="20dp"
-        android:text="%"
-        android:gravity="center"
-        android:id="@+id/make_fragment_textview3"
-        android:layout_below="@id/fragment_make_button3"
-        android:layout_marginTop="5dp"/>
+    <!--<TextView-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="20dp"-->
+        <!--android:text="%"-->
+        <!--android:gravity="center"-->
+        <!--android:id="@+id/make_fragment_textview3"-->
+        <!--android:layout_below="@id/fragment_make_button3"-->
+        <!--android:layout_marginTop="5dp"/>-->
     <SeekBar
         android:layout_width="match_parent"
         android:layout_height="20dp"
-        android:layout_below="@+id/make_fragment_textview3"
-        android:layout_marginTop="5dp"
+        android:layout_below="@+id/fragment_make_button3"
+        android:layout_marginTop="20dp"
         android:id="@+id/make_fragment_seekbar3"
         android:max="2"
         android:progress="2"
@@ -147,7 +147,7 @@ android:layout_width="match_parent"
 android:layout_height="wrap_content"
 android:layout_below="@+id/make_fragment_line2"
 android:id="@+id/make_fragment_line3"
-android:layout_marginTop="30dp"
+android:layout_marginTop="40dp"
 android:orientation="horizontal"
 android:textColor="#FFFFFF"
 android:gravity="center_horizontal">
@@ -156,8 +156,8 @@ android:gravity="center_horizontal">
     android:layout_width="120dp"
     android:layout_height="160dp">
     <Button
-        android:layout_width="100dp"
-        android:layout_height="100dp"
+        android:layout_width="120dp"
+        android:layout_height="120dp"
         android:layout_centerHorizontal="true"
         android:layout_alignParentTop="true"
         android:id="@+id/fragment_make_button4"
@@ -165,19 +165,19 @@ android:gravity="center_horizontal">
         android:text="z"
         android:textColor="@color/myblack"/>
 
-    <TextView
-        android:layout_width="match_parent"
-        android:layout_height="20dp"
-        android:text="%"
-        android:gravity="center"
-        android:id="@+id/make_fragment_textview4"
-        android:layout_below="@id/fragment_make_button4"
-        android:layout_marginTop="5dp"/>
+    <!--<TextView-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="20dp"-->
+        <!--android:text="%"-->
+        <!--android:gravity="center"-->
+        <!--android:id="@+id/make_fragment_textview4"-->
+        <!--android:layout_below="@id/fragment_make_button4"-->
+        <!--android:layout_marginTop="5dp"/>-->
     <SeekBar
         android:layout_width="match_parent"
         android:layout_height="20dp"
-        android:layout_below="@+id/make_fragment_textview4"
-        android:layout_marginTop="5dp"
+        android:layout_below="@+id/fragment_make_button4"
+        android:layout_marginTop="20dp"
         android:id="@+id/make_fragment_seekbar4"
         android:max="2"
         android:progress="2"
@@ -191,8 +191,8 @@ android:gravity="center_horizontal">
     android:layout_marginLeft="10dp">
 
     <Button
-        android:layout_width="100dp"
-        android:layout_height="100dp"
+        android:layout_width="120dp"
+        android:layout_height="120dp"
         android:layout_centerHorizontal="true"
         android:layout_alignParentTop="true"
         android:id="@+id/fragment_make_button5"
@@ -200,19 +200,19 @@ android:gravity="center_horizontal">
         android:text="z"
         android:textColor="@color/myblack"/>
 
-    <TextView
-        android:layout_width="match_parent"
-        android:layout_height="20dp"
-        android:text="%"
-        android:gravity="center"
-        android:id="@+id/make_fragment_textview5"
-        android:layout_below="@id/fragment_make_button5"
-        android:layout_marginTop="5dp"/>
+    <!--<TextView-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="20dp"-->
+        <!--android:text="%"-->
+        <!--android:gravity="center"-->
+        <!--android:id="@+id/make_fragment_textview5"-->
+        <!--android:layout_below="@id/fragment_make_button5"-->
+        <!--android:layout_marginTop="5dp"/>-->
     <SeekBar
         android:layout_width="match_parent"
         android:layout_height="20dp"
-        android:layout_below="@+id/make_fragment_textview5"
-        android:layout_marginTop="5dp"
+        android:layout_below="@+id/fragment_make_button5"
+        android:layout_marginTop="20dp"
         android:id="@+id/make_fragment_seekbar5"
         android:max="2"
         android:progress="2"
@@ -226,8 +226,8 @@ android:gravity="center_horizontal">
     android:layout_marginLeft="10dp">
 
     <Button
-        android:layout_width="100dp"
-        android:layout_height="100dp"
+        android:layout_width="120dp"
+        android:layout_height="120dp"
         android:layout_alignParentTop="true"
         android:layout_centerHorizontal="true"
         android:id="@+id/fragment_make_button6"
@@ -235,20 +235,20 @@ android:gravity="center_horizontal">
         android:text="z"
         android:textColor="@color/myblack"/>
 
-    <TextView
-        android:layout_width="match_parent"
-        android:layout_height="20dp"
-        android:text="%"
-        android:gravity="center"
-        android:id="@+id/make_fragment_textview6"
-        android:layout_below="@id/fragment_make_button6"
-        android:layout_marginTop="5dp"/>
+    <!--<TextView-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="20dp"-->
+        <!--android:text="%"-->
+        <!--android:gravity="center"-->
+        <!--android:id="@+id/make_fragment_textview6"-->
+        <!--android:layout_below="@id/fragment_make_button6"-->
+        <!--android:layout_marginTop="5dp"/>-->
 
     <SeekBar
         android:layout_width="match_parent"
         android:layout_height="20dp"
-        android:layout_below="@+id/make_fragment_textview6"
-        android:layout_marginTop="5dp"
+        android:layout_below="@+id/fragment_make_button6"
+        android:layout_marginTop="20dp"
         android:id="@+id/make_fragment_seekbar6"
         android:max="2"
         android:progress="2"
@@ -262,7 +262,7 @@ android:gravity="center_horizontal">
 android:layout_width="match_parent"
 android:layout_height="20dp"
 android:layout_below="@id/make_fragment_line3"
-android:layout_margin="5dp"
+android:layout_marginTop="50dp"
 android:id="@+id/make_fragment_seekbar_time"
 android:max="120"
 android:progress="120" />
@@ -285,7 +285,7 @@ android:text="동작"
 android:textSize="20dp"
 android:background="@drawable/originbutton"
 android:layout_below="@id/make_fragment_textview_time"
-android:layout_marginTop="5dp"
+android:layout_marginTop="20dp"
 android:layout_centerHorizontal="true" />
 
     </RelativeLayout>

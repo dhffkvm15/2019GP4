@@ -174,16 +174,21 @@ public class Emotion2Fragment extends Fragment {
                         }
                         if(noexpression) {
 
-                            str="";
-                            str = "무기력";
-
                             if(str.contains("많이")) {
                                 str = "";
                                 str = "많이 무기력";
                             } else if(str.contains("조금")) {
                                 str = "";
                                 str = "조금 무기력";
+                            } else{
+                                str="";
+                                str = "무기력";
                             }
+
+//                            str="";
+//                            str = "무기력";
+
+
                         }
 
                     }else{

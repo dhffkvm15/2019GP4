@@ -16,7 +16,6 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:id="@+id/turnon_fragment_textview"
-        android:hint="분"
         android:textSize="30dp"
         android:textColor="@color/colorPrimaryDark"
         android:textAlignment="center"

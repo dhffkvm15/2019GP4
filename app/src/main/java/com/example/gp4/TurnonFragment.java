@@ -1,19 +1,17 @@
 package com.example.gp4;
 
+import android.annotation.SuppressLint;
 import android.content.ComponentName;
-import android.content.Context;
 import android.content.Intent;
 import android.content.ServiceConnection;
 import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.os.Handler;
 import android.os.IBinder;
-import android.os.RemoteException;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.support.v4.app.DialogFragment;
 import android.support.v4.app.Fragment;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -21,10 +19,16 @@ import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.firebase.database.ChildEventListener;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import static android.content.Context.MODE_PRIVATE;
@@ -47,6 +51,9 @@ public class TurnonFragment extends Fragment {
     private CatridgeInfo catridgeInfo4;
     private CatridgeInfo catridgeInfo5;
     private CatridgeInfo catridgeInfo6;
+
+    private String pushId; // 사용자 키 값
+    private List<TotalInfo> totalInfoList;
 
     private Intent intent; // 서비스 실행하기 위함
 
@@ -72,7 +79,7 @@ public class TurnonFragment extends Fragment {
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        ViewGroup viewGroup = (ViewGroup) inflater.inflate(R.layout.fragment_turnon, container, false);
+        final ViewGroup viewGroup = (ViewGroup) inflater.inflate(R.layout.fragment_turnon, container, false);
 
         stop = (Button) viewGroup.findViewById(R.id.turnon_fragment_button_stop);
         save = (Button) viewGroup.findViewById(R.id.turnon_fragment_button_save);
@@ -81,7 +88,11 @@ public class TurnonFragment extends Fragment {
         SharedPreferences sharedPreferences = getActivity().getSharedPreferences("UserInfo", MODE_PRIVATE);
         Boolean turnOn = sharedPreferences.getBoolean("turnOn", false); // 디퓨저 작동하는지 가져오기
 
-        intent = new Intent(getActivity(), MyService.class);
+        // todo 서비스 지우기 intent = new Intent(getActivity(), MyService.class);
+        pushId = sharedPreferences.getString("pushID", ""); // 저장되어 있는 pushId 불러오기
+
+        totalInfoList = new ArrayList<>();
+        bringScent(); // 저장되어 있는 향 정보
 
         // 꺼져 있으면
         if( !turnOn ){
@@ -121,14 +132,77 @@ public class TurnonFragment extends Fragment {
 
         // 향 남기기 버튼 클릭했을 때
         save.setOnClickListener(new View.OnClickListener() {
+            @SuppressLint("ResourceAsColor")
             @Override
             public void onClick(View v) {
-                SaveDialog saveDialog = new SaveDialog(getActivity());
-                saveDialog.saveInfo(catridgeInfos);
+
+                String temp = isSave();
+
+                if( temp.equals("0")){
+                    SaveDialog saveDialog = new SaveDialog(getActivity());
+                    saveDialog.saveInfo(catridgeInfos);
+                }else{
+                    // 이미 저장되어 있으면 알려주기!
+                    LayoutInflater inflater = getLayoutInflater();
+                    View toastDesign = inflater.inflate(R.layout.toast_design, (ViewGroup)viewGroup.findViewById(R.id.toast_design_root));
+                    TextView textView = toastDesign.findViewById(R.id.toast_design_textview); // 토스트 꾸미기 위함
+                    textView.setTextColor(R.color.colorPrimaryDark);
+
+                    textView.setText(temp + "으로 이미 저장되어 있어요");
+                   Toast toast = new Toast(getContext());
+                    toast.setGravity(Gravity.BOTTOM, 0, 30);
+                    toast.setDuration(Toast.LENGTH_SHORT);
+                    toast.setView(toastDesign);
+                    toast.show();
+
+                }
+
             }
         });
 
         return viewGroup;
+    }
+
+    // 저장되어 있는 향 정보 저장하는 코드
+    public void bringScent(){
+        FirebaseDatabase.getInstance().getReference("storage").child(pushId).addValueEventListener(new ValueEventListener() {
+
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                totalInfoList.clear();
+
+                for(DataSnapshot snapshot : dataSnapshot.getChildren()){
+                    TotalInfo totalInfo = snapshot.getValue(TotalInfo.class);
+                    totalInfoList.add(totalInfo);
+                    }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
+    }
+
+    public String isSave() {
+
+        final String[] name = new String[1];
+        name[0] = "0";
+
+        for(int i=0; i<totalInfoList.size(); i++ ) {
+            // 이미 동일한 정보가 저장되어 있으면
+            if (totalInfoList.get(i).getCatridgeInfo1().getName().equals(catridgeInfo1.getName()) && totalInfoList.get(i).getCatridgeInfo1().getRest() == catridgeInfo1.getRest()
+                    && totalInfoList.get(i).getCatridgeInfo2().getName().equals(catridgeInfo2.getName()) && totalInfoList.get(i).getCatridgeInfo2().getRest() == catridgeInfo2.getRest()
+                    && totalInfoList.get(i).getCatridgeInfo3().getName().equals(catridgeInfo3.getName()) && totalInfoList.get(i).getCatridgeInfo3().getRest() == catridgeInfo3.getRest()
+                    && totalInfoList.get(i).getCatridgeInfo4().getName().equals(catridgeInfo4.getName()) && totalInfoList.get(i).getCatridgeInfo4().getRest() == catridgeInfo4.getRest()
+                    && totalInfoList.get(i).getCatridgeInfo5().getName().equals(catridgeInfo5.getName()) && totalInfoList.get(i).getCatridgeInfo5().getRest() == catridgeInfo5.getRest()
+                    && totalInfoList.get(i).getCatridgeInfo6().getName().equals(catridgeInfo6.getName()) && totalInfoList.get(i).getCatridgeInfo6().getRest() == catridgeInfo6.getRest()) {
+
+                return totalInfoList.get(i).getName();
+            }
+        }
+
+        return "0";
     }
 
     // 디퓨저 동작하는 코드
