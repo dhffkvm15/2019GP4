@@ -235,7 +235,15 @@ public class MakeFragment extends Fragment {
                             + String.valueOf(catridgeInfo5.getRest()) + "/"
                             + String.valueOf(catridgeInfo6.getRest());
 
+                    String nameT = catridgeInfo1.getName() + "/"
+                            + catridgeInfo2.getName() + "/"
+                            + catridgeInfo3.getName() + "/"
+                            + catridgeInfo4.getName() + "/"
+                            + catridgeInfo5.getName() + "/"
+                            + catridgeInfo6.getName();
+
                     editor.putString("before", temp);
+                    editor.putString("beforeName", nameT);
                     editor.commit(); // 이전에 켰었던 정보 저장
 
                     Fragment turnonfragment = new TurnonFragment();

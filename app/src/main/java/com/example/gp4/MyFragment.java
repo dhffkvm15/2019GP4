@@ -153,9 +153,24 @@ public class MyFragment extends Fragment {
                         if( compareWith(totalInfos.get(i)) ){
 
                             SharedPreferences.Editor editor = sharedPreferences.edit();
-                            String temp = "2/2/2/2/2/2";
+
+                            String temp = String.valueOf(totalInfos.get(i).getCatridgeInfo1().getRest()) + "/"
+                                    + String.valueOf(totalInfos.get(i).getCatridgeInfo2().getRest()) + "/"
+                                    + String.valueOf(totalInfos.get(i).getCatridgeInfo3().getRest()) + "/"
+                                    + String.valueOf(totalInfos.get(i).getCatridgeInfo4().getRest()) + "/"
+                                    + String.valueOf(totalInfos.get(i).getCatridgeInfo5().getRest()) + "/"
+                                    + String.valueOf(totalInfos.get(i).getCatridgeInfo6().getRest());
+
+                            String nameT = totalInfos.get(i).getCatridgeInfo1().getName() + "/"
+                                    + totalInfos.get(i).getCatridgeInfo2().getName() + "/"
+                                    + totalInfos.get(i).getCatridgeInfo3().getName() + "/"
+                                    + totalInfos.get(i).getCatridgeInfo4().getName() + "/"
+                                    + totalInfos.get(i).getCatridgeInfo5().getName() + "/"
+                                    + totalInfos.get(i).getCatridgeInfo6().getName();
 
                             editor.putString("before", temp);
+                            editor.putString("beforeName", nameT);
+
                             editor.commit(); // 이전에 켰었던 정보 저장
 
                             Bundle bundle = new Bundle();

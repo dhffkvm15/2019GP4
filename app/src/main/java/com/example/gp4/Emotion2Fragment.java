@@ -109,21 +109,21 @@ public class Emotion2Fragment extends Fragment {
                 KomoranResult komoranResult = komoran.analyze(strToAnalyze);
 
                 List<Token> tokenList = komoranResult.getTokenList();
-                String word = "";
+                //String word = "";
 
                 // 형태소 분석하기
                 for(Token token : tokenList){
-                    word = word + token.getMorph() +"," +token.getPos() +"/";
-                pos.add(token.getPos()); // 형태소 분석 품사 넣기
+                    //word = word + token.getMorph() +"," +token.getPos() +"/";
+                    pos.add(token.getPos()); // 형태소 분석 품사 넣기
                     emolist.add( whatIs(token.getMorph(),stress) ); // 감정 결과 넣기
                 }
 
-                //Todo log 지우기 및 word 지우기
-                Log.v("태그", "형태소 분석 " +word);
-                for(int i=0; i<emolist.size(); i++){
-                    Log.v("태그", "형태소" + pos.get(i));
-                    Log.v("태그", "감정 " + emolist.get(i));
-                }
+
+//                Log.v("태그", "형태소 분석 " +word);
+//                for(int i=0; i<emolist.size(); i++){
+//                    Log.v("태그", "형태소" + pos.get(i));
+//                    Log.v("태그", "감정 " + emolist.get(i));
+//                }
 
                 int tempCount = 0;
 
@@ -160,20 +160,25 @@ public class Emotion2Fragment extends Fragment {
 
                             } else if (emolist.get(i).equals("joy")) {
                                 str = str + "기쁨 ";
-                                // todo 이미지 변경
+                                imageView.setImageResource(R.drawable.joy);
                             } else if (emolist.get(i).equals("fear")) {
                                     str = str + "두려움 ";
+                                    imageView.setImageResource(R.drawable.fear);
                             } else if (emolist.get(i).equals("sadness")) {
                                     str = str + "슬픔 ";
+                                    imageView.setImageResource(R.drawable.sad);
                             } else if (emolist.get(i).equals("disgust")) {
                                     str = str + "무기력 ";
+                                    imageView.setImageResource(R.drawable.disgust);
                             } else if (emolist.get(i).equals("anger")) {
                                     str = str + "분노 ";
+                                    imageView.setImageResource(R.drawable.anger);
                             }
 
                         }
                         if(noexpression) {
 
+                            imageView.setImageResource(R.drawable.disgust);
                             if(str.contains("많이")) {
                                 str = "";
                                 str = "많이 무기력";
@@ -231,13 +236,13 @@ public class Emotion2Fragment extends Fragment {
                             }
                         } // 부정어 표현 정리
 
-                        //Todo log 지우기
-                        Log.v("태그", "부정어 정리후 emolist size : " + emolist.size());
-                        Log.v("태그", "부정어 정리후");
-                        for(int i=0; i<emolist.size(); i++){
-                            Log.v("태그", "감정 " + emolist.get(i));
-                        }
-                        Log.v("태그", "부정어 정리후 끝");
+
+//                        Log.v("태그", "부정어 정리후 emolist size : " + emolist.size());
+//                        Log.v("태그", "부정어 정리후");
+//                        for(int i=0; i<emolist.size(); i++){
+//                            Log.v("태그", "감정 " + emolist.get(i));
+//                        }
+//                        Log.v("태그", "부정어 정리후 끝");
 
                         // 감정 강도 비교
                         for(int i=0; i<emolist.size(); i++){
@@ -304,11 +309,10 @@ public class Emotion2Fragment extends Fragment {
                         // 강도 큰 감정이 하나가 아니라면
                         if(highIndex.size() >= 2){
 
-                            Log.v("태그", "highIndex 사이즈 : "+highIndex.size());
-                            // todo 지우기
-                            for(int i=0; i<highIndex.size(); i++){
-                                Log.v("태그","highIndex : " + highIndex.get(i));
-                            }
+//                            Log.v("태그", "highIndex 사이즈 : "+highIndex.size());
+//                            for(int i=0; i<highIndex.size(); i++){
+//                                Log.v("태그","highIndex : " + highIndex.get(i));
+//                            }
 
                             str = "";
                             ArrayList highPosition = new ArrayList(); // 가장 높은 품사 단어 위치 저장
@@ -390,7 +394,7 @@ public class Emotion2Fragment extends Fragment {
                                         break;
                                 }
                             }else if(highPosition.size() == 0){
-                                Log.v("태그", "특정 품사가 없는 경우");
+                                //Log.v("태그", "특정 품사가 없는 경우");
                                 str = "";
                                 switch (emolist.get(Integer.valueOf( highIndex.get(0).toString() )).toString()) {
                                     case "joy":
@@ -412,7 +416,7 @@ public class Emotion2Fragment extends Fragment {
                             }else{
                                 str = "";
                                 // 첫 번째 위치 감정으로 설정
-                                Log.v("태그", "여기 감정 : " + highPosition.get(0).toString() ) ;
+                               // Log.v("태그", "여기 감정 : " + highPosition.get(0).toString() ) ;
                                 switch (emolist.get(Integer.valueOf( highPosition.get(0).toString() )).toString()) {
                                     case "joy":
                                         str = "기쁨 ";
@@ -441,6 +445,18 @@ public class Emotion2Fragment extends Fragment {
                             }else if(emolist.get(i).equals("-")){
                                 str = "조금 " +str;
                             }
+                        }
+
+                        if(str.contains("기쁨")){
+                            imageView.setImageResource(R.drawable.joy);
+                        }else if(str.contains("두려움")){
+                            imageView.setImageResource(R.drawable.fear);
+                        }else if(str.contains("슬픔")){
+                            imageView.setImageResource(R.drawable.sad);
+                        }else if(str.contains("무기력")){
+                            imageView.setImageResource(R.drawable.disgust);
+                        }else if(str.contains("분노")){
+                            imageView.setImageResource(R.drawable.anger);
                         }
                     } // 감정 표현이 여러개일 때 끝
 

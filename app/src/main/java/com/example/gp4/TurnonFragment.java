@@ -44,13 +44,13 @@ public class TurnonFragment extends Fragment {
     private Boolean isOn = true; // 켜져 있는지 확인
     private int time = 0; // 디퓨저 동작하는 시간
 
-    private CatridgeInfo[] catridgeInfos = {};
     private CatridgeInfo catridgeInfo1;
     private CatridgeInfo catridgeInfo2;
     private CatridgeInfo catridgeInfo3;
     private CatridgeInfo catridgeInfo4;
     private CatridgeInfo catridgeInfo5;
     private CatridgeInfo catridgeInfo6;
+    private CatridgeInfo[] catridgeInfos = {};
 
     private String pushId; // 사용자 키 값
     private List<TotalInfo> totalInfoList;
@@ -108,6 +108,23 @@ public class TurnonFragment extends Fragment {
             catridgeInfo5 = (CatridgeInfo) bundle.getSerializable("obj5");
             catridgeInfo6 = (CatridgeInfo) bundle.getSerializable("obj6");
             catridgeInfos = new CatridgeInfo[]{catridgeInfo1, catridgeInfo2, catridgeInfo3, catridgeInfo4, catridgeInfo5, catridgeInfo6};
+        }else{
+            // 플로팅 버튼을 통해 바로 들어왔을 때 catridge 정보 받아오기
+
+            String temp = sharedPreferences.getString("before", "2/2/2/2/2/2");
+            String[] arr = temp.split("/"); // 이전에 켰던 향의 세기 정보 가져오기
+
+            String temp1 = sharedPreferences.getString("beforeName", "2/2/2/2/2/2");
+            String[] arr1 = temp1.split("/"); // 이전에 켰던 향의 세기 정보 가져오기
+
+            catridgeInfo1 = new CatridgeInfo(arr1[0], Integer.valueOf( arr[0] ));
+            catridgeInfo2 = new CatridgeInfo(arr1[1], Integer.valueOf( arr[1] ));
+            catridgeInfo3 = new CatridgeInfo(arr1[2], Integer.valueOf( arr[2] ));
+            catridgeInfo4 = new CatridgeInfo(arr1[3], Integer.valueOf( arr[3] ));
+            catridgeInfo5 = new CatridgeInfo(arr1[4], Integer.valueOf( arr[4] ));
+            catridgeInfo6 = new CatridgeInfo(arr1[5], Integer.valueOf( arr[5] ));
+            catridgeInfos = new CatridgeInfo[]{catridgeInfo1, catridgeInfo2, catridgeInfo3, catridgeInfo4, catridgeInfo5, catridgeInfo6};
+
         }
 
         startPlaying();
@@ -212,6 +229,12 @@ public class TurnonFragment extends Fragment {
         DatabaseReference databaseReference = firebaseDatabase.getReference();
         Map<String, Object> taskMap = new HashMap<String, Object>();
         taskMap.put("Motor", 1);
+        taskMap.put("1Status", catridgeInfo1.getRest());
+        taskMap.put("2Status", catridgeInfo2.getRest());
+        taskMap.put("3Status", catridgeInfo3.getRest());
+        taskMap.put("4Status", catridgeInfo4.getRest());
+        taskMap.put("5Status", catridgeInfo5.getRest());
+        taskMap.put("6Status", catridgeInfo6.getRest());
         databaseReference.updateChildren(taskMap);
 
 //        intent.putExtra("time", time);

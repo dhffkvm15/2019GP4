@@ -35,12 +35,12 @@
         android:textAlignment="center" />
 
     <ImageView
-        android:layout_width="wrap_content"
-        android:layout_height="250dp"
-        android:src="@drawable/loading"
+        android:layout_width="match_parent"
+        android:layout_height="280dp"
+        android:src="@drawable/basicemo"
         android:id="@+id/emotion2_fragment_imageview"
         android:layout_below="@id/emotion2_fragment_textview_stt"
-        android:layout_marginTop="50dp"/>
+        android:layout_marginTop="40dp"/>
 
     <TextView
         android:layout_width="match_parent"
