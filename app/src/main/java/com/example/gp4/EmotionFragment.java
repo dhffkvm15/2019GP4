@@ -376,7 +376,7 @@ public class EmotionFragment extends Fragment {
                     newType = TYPE.GREEN;
                 }
 
-                if (averageIndex == averageArraySize) averageIndex = 0;
+                if (averageIndex == averageArraySize) averageIndex = 0; // 기존 averageArraySize = 4
                 averageArray[averageIndex] = imgAvg;
                 averageIndex++;
 
