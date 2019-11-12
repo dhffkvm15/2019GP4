@@ -109,21 +109,21 @@ public class Emotion2Fragment extends Fragment {
                 KomoranResult komoranResult = komoran.analyze(strToAnalyze);
 
                 List<Token> tokenList = komoranResult.getTokenList();
-                //String word = "";
+                String word = "";
 
                 // 형태소 분석하기
                 for(Token token : tokenList){
-                    //word = word + token.getMorph() +"," +token.getPos() +"/";
+                    word = word + token.getMorph() +"," +token.getPos() +"/";
                     pos.add(token.getPos()); // 형태소 분석 품사 넣기
                     emolist.add( whatIs(token.getMorph(),stress) ); // 감정 결과 넣기
                 }
 
 
-//                Log.v("태그", "형태소 분석 " +word);
-//                for(int i=0; i<emolist.size(); i++){
-//                    Log.v("태그", "형태소" + pos.get(i));
-//                    Log.v("태그", "감정 " + emolist.get(i));
-//                }
+                Log.v("태그", "형태소 분석 " +word);
+                for(int i=0; i<emolist.size(); i++){
+                    Log.v("태그", "형태소" + pos.get(i));
+                    Log.v("태그", "감정 " + emolist.get(i));
+                }
 
                 int tempCount = 0;
 
